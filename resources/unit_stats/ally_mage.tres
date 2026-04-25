@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="UnitStats" load_steps=4 format=3 uid="uid://3u4awgliii57"]
+
+[ext_resource type="Texture2D" uid="uid://bg8ovc14n13vq" path="res://assets/images/characters/goblin_summon.png" id="1_p4ib5"]
+[ext_resource type="Script" uid="uid://d2pre0q0hthyw" path="res://important_scripts/unit/unit_stats.gd" id="2_lh1lo"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vxwl7"]
+atlas = ExtResource("1_p4ib5")
+region = Rect2(0, 108, 24, 27)
+
+[resource]
+resource_name = "MageStats"
+script = ExtResource("2_lh1lo")
+health = 60
+cost = 4
+attack_damage = 35
+attack_speed = 0.8
+attack_type = 1
+move_speed = 100.0
+view_distance = 350.0
+attack_distance = 300.0
+unit_id = "ally_mage"
+display_name = "Mage"
+button_icon = SubResource("AtlasTexture_vxwl7")

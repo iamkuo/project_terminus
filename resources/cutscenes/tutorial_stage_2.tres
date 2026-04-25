@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="CutsceneScript" load_steps=5 format=3 uid="uid://dta0qbm6vmtlq"]
+
+[ext_resource type="Script" uid="uid://c7505rjkk6rpg" path="res://resources/data_structures/cutscene_script.gd" id="1_cutscene_script"]
+[ext_resource type="Script" uid="uid://b2sxig6otw26p" path="res://resources/data_structures/cutscene_step.gd" id="2_cutscene_step"]
+
+[sub_resource type="Resource" id="Resource_tutorial_step_1"]
+script = ExtResource("2_cutscene_step")
+type = 2
+text = "既然你已經開始了旅程，記得從背包中管理你的技能和記憶。"
+
+[sub_resource type="Resource" id="Resource_tutorial_step_2"]
+script = ExtResource("2_cutscene_step")
+type = 2
+text = "注意你的經驗值和水晶數量，它們是成長的關鍵。"
+
+[resource]
+script = ExtResource("1_cutscene_script")
+id = "tutorial_stage_2"
+steps = Array[ExtResource("2_cutscene_step")]([SubResource("Resource_tutorial_step_1"), SubResource("Resource_tutorial_step_2")])
+metadata/_custom_type_script = "uid://b2sxig6otw26p"

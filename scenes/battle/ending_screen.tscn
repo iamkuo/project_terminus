@@ -1,0 +1,86 @@
+[gd_scene load_steps=4 format=3 uid="uid://quque6ani7t8"]
+
+[ext_resource type="Script" uid="uid://c8ix4311atj3g" path="res://important_scripts/ui/ending_screen.gd" id="1_4vp0n"]
+[ext_resource type="Texture2D" uid="uid://cjmwhv0846in6" path="res://assets/images/ui/panels/04 Border 03.png" id="1_61pod"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_4vp0n"]
+texture = ExtResource("1_61pod")
+texture_margin_left = 48.0
+texture_margin_top = 48.0
+texture_margin_right = 48.0
+texture_margin_bottom = 48.0
+region_rect = Rect2(576, 0, 192, 192)
+
+[node name="EndingScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_4vp0n")
+
+[node name="BackgroundPanel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.1
+anchor_top = 0.1
+anchor_right = 0.9
+anchor_bottom = 0.9
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_4vp0n")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="BackgroundPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 20.0
+offset_top = 20.0
+offset_right = -20.0
+offset_bottom = -20.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TitleLabel" type="Label" parent="BackgroundPanel/VBoxContainer"]
+layout_mode = 2
+text = "Battle Complete!"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="BackgroundPanel/VBoxContainer"]
+layout_mode = 2
+
+[node name="ResultLabel" type="Label" parent="BackgroundPanel/VBoxContainer"]
+layout_mode = 2
+text = "Victory!"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="StatsLabel" type="Label" parent="BackgroundPanel/VBoxContainer"]
+layout_mode = 2
+text = "Enemies Defeated: 0
+Damage Dealt: 0
+Time Elapsed: 0:00"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HSeparator2" type="HSeparator" parent="BackgroundPanel/VBoxContainer"]
+layout_mode = 2
+
+[node name="ButtonContainer" type="HBoxContainer" parent="BackgroundPanel/VBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="RestartButton" type="Button" parent="BackgroundPanel/VBoxContainer/ButtonContainer"]
+layout_mode = 2
+text = "Restart"
+
+[node name="MainMenuButton" type="Button" parent="BackgroundPanel/VBoxContainer/ButtonContainer"]
+layout_mode = 2
+text = "Main Menu"
+
+[connection signal="pressed" from="BackgroundPanel/VBoxContainer/ButtonContainer/RestartButton" to="." method="_on_restart_pressed"]
+[connection signal="pressed" from="BackgroundPanel/VBoxContainer/ButtonContainer/MainMenuButton" to="." method="_on_main_menu_pressed"]

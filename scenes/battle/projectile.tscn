@@ -1,0 +1,97 @@
+[gd_scene load_steps=15 format=3 uid="uid://gerl1nl20c62"]
+
+[ext_resource type="Script" uid="uid://dgxty4bxgyunr" path="res://important_scripts/projectile.gd" id="1_4c6dc"]
+[ext_resource type="Texture2D" uid="uid://cllqhhnbalfxs" path="res://assets/images/objects/ally/alley_bow.png" id="2_6q2a6"]
+[ext_resource type="Texture2D" uid="uid://cwf34dq5vxovy" path="res://assets/images/objects/ally/alley_wand.png" id="2_softn"]
+[ext_resource type="Texture2D" uid="uid://bnexb4v2r3ceg" path="res://assets/images/objects/rickroll.png" id="4_6q2a6"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_03owx"]
+radius = 26.0
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ejmht"]
+atlas = ExtResource("2_6q2a6")
+region = Rect2(0, 229, 229, 229)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6q2a6"]
+atlas = ExtResource("2_softn")
+region = Rect2(0, 620, 157, 155)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_byeak"]
+atlas = ExtResource("2_softn")
+region = Rect2(0, 775, 157, 155)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jxwu6"]
+atlas = ExtResource("2_softn")
+region = Rect2(0, 930, 157, 155)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_w7nm8"]
+atlas = ExtResource("2_softn")
+region = Rect2(0, 1085, 157, 155)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6c2e5"]
+atlas = ExtResource("2_softn")
+region = Rect2(0, 1240, 157, 155)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pl1gp"]
+atlas = ExtResource("2_softn")
+region = Rect2(157, 620, 157, 155)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_031o2"]
+atlas = ExtResource("4_6q2a6")
+region = Rect2(220, 0, 220, 220)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_proj"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ejmht")
+}],
+"loop": true,
+"name": &"ally_archer",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6q2a6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_byeak")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jxwu6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_w7nm8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6c2e5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pl1gp")
+}],
+"loop": true,
+"name": &"ally_mage",
+"speed": 15.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_031o2")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[node name="projectile" type="Area2D"]
+collision_mask = 2
+script = ExtResource("1_4c6dc")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_03owx")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(4.7683716e-07, 0)
+scale = Vector2(0.4, 0.4)
+sprite_frames = SubResource("SpriteFrames_proj")
+animation = &"ally_archer"
+autoplay = "default"

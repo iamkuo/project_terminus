@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="SkillData" load_steps=2 format=3 uid="uid://df2s7r5vwpqj1"]
+
+[ext_resource type="Script" uid="uid://b20bkn2tup6no" path="res://resources/data_structures/skill_data.gd" id="1_gywnn"]
+
+[resource]
+script = ExtResource("1_gywnn")
+id = "skill_fireball"
+name = "火球術"
+description = "釋放一顆充滿熱能的微型火球，接觸敵人後爆炸。"
+base_cost = 150
+metadata/_custom_type_script = "uid://b20bkn2tup6no"

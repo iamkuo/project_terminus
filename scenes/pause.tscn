@@ -1,0 +1,205 @@
+[gd_scene load_steps=22 format=3 uid="uid://cpog3fskyl4m7"]
+
+[ext_resource type="Script" uid="uid://bsa684qtsf8iq" path="res://other_scripts/pause.gd" id="1_pauses"]
+[ext_resource type="FontFile" uid="uid://dxc2pi1bwr1uu" path="res://assets/fonts/Cubic_11.ttf" id="3_cubic"]
+[ext_resource type="Texture2D" uid="uid://ctsb3wvh450d3" path="res://assets/images/objects/owowowwo.png" id="3_wen6a"]
+[ext_resource type="Texture2D" uid="uid://7ga0ljs8vtel" path="res://assets/images/ui/elements/Icons.png" id="4_cml1b"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_aicil"]
+font_size = 36
+
+[sub_resource type="LabelSettings" id="LabelSettings_jn4bt"]
+font_size = 24
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_ipoc1"]
+color = Color(0.3137255, 0.7294118, 0.15294118, 1)
+thickness = 10
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_8jl4h"]
+color = Color(0.29358447, 0.39963317, 0.14063469, 1)
+thickness = 10
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_kkkdg"]
+
+[sub_resource type="DPITexture" id="DPITexture_swtu5"]
+_source = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"32\" height=\"16\"><rect width=\"30\" height=\"14\" x=\"1\" y=\"1\" fill=\"#fff\" fill-opacity=\".37\" rx=\"7\"/><circle cx=\"24\" cy=\"8\" r=\"5\" fill=\"#1a1a1a\" fill-opacity=\".5\"/></svg>
+"
+
+[sub_resource type="DPITexture" id="DPITexture_qudjn"]
+_source = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"32\" height=\"16\"><rect width=\"30\" height=\"14\" x=\"1\" y=\"1\" fill=\"#fff\" fill-opacity=\".75\" rx=\"7\"/><circle cx=\"8\" cy=\"8\" r=\"5\" fill=\"#1a1a1a\"/></svg>
+"
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kdq54"]
+atlas = ExtResource("4_cml1b")
+region = Rect2(36, 35, 9, 11)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_liqfm"]
+texture = SubResource("AtlasTexture_kdq54")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_aicil"]
+texture = SubResource("AtlasTexture_kdq54")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_jn4bt"]
+texture = SubResource("AtlasTexture_kdq54")
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_r1fnm"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_sr1c3"]
+atlas = ExtResource("4_cml1b")
+region = Rect2(67, 35, 11, 11)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_urbfd"]
+texture = SubResource("AtlasTexture_sr1c3")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_wen6a"]
+texture = SubResource("AtlasTexture_sr1c3")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_cml1b"]
+texture = SubResource("AtlasTexture_sr1c3")
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_jn4bt"]
+
+[node name="Pause" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_pauses")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.490196)
+
+[node name="Panel" type="Panel" parent="."]
+custom_minimum_size = Vector2(400, 320)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.2
+anchor_top = 0.2
+anchor_right = 0.8
+anchor_bottom = 0.8
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.05
+anchor_top = 0.05
+anchor_right = 0.95
+anchor_bottom = 0.95
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 25
+
+[node name="Label" type="Label" parent="Panel/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_cubic")
+theme_override_font_sizes/font_size = 24
+text = "遊戲暫停"
+label_settings = SubResource("LabelSettings_aicil")
+horizontal_alignment = 1
+
+[node name="GridContainer" type="GridContainer" parent="Panel/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 6
+theme_override_constants/h_separation = 20
+theme_override_constants/v_separation = 15
+columns = 2
+
+[node name="main_volume_label" type="Label" parent="Panel/VBoxContainer/GridContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_cubic")
+theme_override_font_sizes/font_size = 12
+text = "主音量"
+label_settings = SubResource("LabelSettings_jn4bt")
+vertical_alignment = 1
+
+[node name="main_volume_slider" type="HSlider" parent="Panel/VBoxContainer/GridContainer"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_override_icons/grabber = ExtResource("3_wen6a")
+theme_override_icons/grabber_highlight = ExtResource("3_wen6a")
+theme_override_styles/slider = SubResource("StyleBoxLine_ipoc1")
+theme_override_styles/grabber_area = SubResource("StyleBoxLine_8jl4h")
+theme_override_styles/grabber_area_highlight = SubResource("StyleBoxLine_8jl4h")
+value = 50.0
+
+[node name="music_label" type="Label" parent="Panel/VBoxContainer/GridContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_cubic")
+theme_override_font_sizes/font_size = 12
+text = "音樂"
+label_settings = SubResource("LabelSettings_jn4bt")
+vertical_alignment = 1
+
+[node name="music_slider" type="HSlider" parent="Panel/VBoxContainer/GridContainer"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_override_icons/grabber = ExtResource("3_wen6a")
+theme_override_icons/grabber_highlight = ExtResource("3_wen6a")
+theme_override_styles/slider = SubResource("StyleBoxLine_ipoc1")
+theme_override_styles/grabber_area = SubResource("StyleBoxLine_8jl4h")
+theme_override_styles/grabber_area_highlight = SubResource("StyleBoxLine_8jl4h")
+value = 50.0
+
+[node name="sound_effect_label" type="Label" parent="Panel/VBoxContainer/GridContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_cubic")
+theme_override_font_sizes/font_size = 12
+text = "音效"
+label_settings = SubResource("LabelSettings_jn4bt")
+vertical_alignment = 1
+
+[node name="sound_effect_slider" type="HSlider" parent="Panel/VBoxContainer/GridContainer"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_override_icons/grabber = ExtResource("3_wen6a")
+theme_override_icons/grabber_highlight = ExtResource("3_wen6a")
+theme_override_styles/slider = SubResource("StyleBoxLine_ipoc1")
+theme_override_styles/grabber_area = SubResource("StyleBoxLine_8jl4h")
+theme_override_styles/grabber_area_highlight = SubResource("StyleBoxLine_8jl4h")
+value = 50.0
+
+[node name="check_button" type="CheckButton" parent="Panel/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 24
+theme_override_styles/focus = SubResource("StyleBoxEmpty_kkkdg")
+theme_override_icons/checked = SubResource("DPITexture_swtu5")
+theme_override_icons/unchecked = SubResource("DPITexture_qudjn")
+text = "全螢幕/視窗"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Panel/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 40
+alignment = 1
+
+[node name="continue_button" type="Button" parent="Panel/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxTexture_liqfm")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_aicil")
+theme_override_styles/hover = SubResource("StyleBoxTexture_jn4bt")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_r1fnm")
+
+[node name="exit_button" type="Button" parent="Panel/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxTexture_urbfd")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_wen6a")
+theme_override_styles/hover = SubResource("StyleBoxTexture_cml1b")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_jn4bt")

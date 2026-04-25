@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="StageData" load_steps=2 format=3]
+
+[ext_resource type="Script" uid="uid://bfg5kjb0bo8cr" path="res://resources/data_structures/stage_data.gd" id="1_stage_data"]
+
+[resource]
+script = ExtResource("1_stage_data")
+id = "universal_startup"
+name = "通用啟動"
+req_exp = 0
+cutscene_id = "startup_intro_cutscene"
+unlocks_memory_id = "mem_test_shard"
+metadata/_custom_type_script = "uid://bfg5kjb0bo8cr"

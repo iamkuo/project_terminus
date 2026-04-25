@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="SkillData" load_steps=2 format=3 uid="uid://cg8r5vwpqj1d2"]
+
+[ext_resource type="Script" uid="uid://b20bkn2tup6no" path="res://resources/data_structures/skill_data.gd" id="1_gywnn"]
+
+[resource]
+script = ExtResource("1_gywnn")
+id = "skill_heal"
+name = "治癒之風"
+description = "一陣撫慰身心的微風，隨著時間緩慢恢復施法者的生命力。"
+base_cost = 200
+metadata/_custom_type_script = "uid://b20bkn2tup6no"

@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="UnitStats" load_steps=4 format=3 uid="uid://br4we7xgmywi6"]
+
+[ext_resource type="Texture2D" uid="uid://bg8ovc14n13vq" path="res://assets/images/characters/goblin_summon.png" id="1_t87gd"]
+[ext_resource type="Script" uid="uid://d2pre0q0hthyw" path="res://important_scripts/unit/unit_stats.gd" id="2_g7lhi"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tp8w7"]
+atlas = ExtResource("1_t87gd")
+region = Rect2(0, 0, 24, 27)
+
+[resource]
+resource_name = "WarriorStats"
+script = ExtResource("2_g7lhi")
+health = 200
+defense = 5
+cost = 4
+attack_damage = 30
+view_distance = 250.0
+attack_distance = 100.0
+unit_id = "ally_warrior"
+display_name = "Warrior"
+button_icon = SubResource("AtlasTexture_tp8w7")

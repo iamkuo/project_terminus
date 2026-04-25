@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="SkillData" load_steps=2 format=3 uid="uid://ba7s7r5vwpqj3"]
+
+[ext_resource type="Script" uid="uid://b20bkn2tup6no" path="res://resources/data_structures/skill_data.gd" id="1_gywnn"]
+
+[resource]
+script = ExtResource("1_gywnn")
+id = "skill_dash"
+name = "迅捷衝刺"
+description = "朝移動方向迅速衝刺，閃避即將到來的攻擊。"
+base_cost = 120
+metadata/_custom_type_script = "uid://b20bkn2tup6no"

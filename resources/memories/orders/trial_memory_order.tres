@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="MemoryOrder" load_steps=2 format=3]
+
+[ext_resource type="Script" uid="uid://b6a0wprwmwr0o" path="res://resources/data_structures/memory_order.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+ordered_memory_ids = Array[String](["mem_startup", "mem_mini_level", "mem_open_world", "mem_first_village", "mem_get_map", "mem_goblin_capital", "mem_human_territory", "mem_human_capital", "mem_ending_trial"])
+metadata/_custom_type_script = "uid://b6a0wprwmwr0o"
