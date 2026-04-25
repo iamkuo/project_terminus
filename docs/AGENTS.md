@@ -9,17 +9,17 @@ applyTo: ["**/*.gd", "**/*.tscn", "**/*.tres", "*.md"]
 ## Prerequisites
 Before assisting with any task in this workspace, you **MUST** read and understand:
 - `README.md` - Complete project architecture, resource management system, and core design patterns
-- `RESOURCES.md` - Complete inventory of all game resources (stages, memories, skills, cutscenes) organized by game mode
-- `BUGS_ARCHIVED.md` - Historical bugs and their solutions (prevents regression)
+- `docs/ARCHITECTURE.md` - Mermaid graphs of signal interactions between different scenes and scripts
+- `docs/BUGS_ARCHIVED.md` - Historical bugs and their solutions (prevents regression)
 
 ## Core Responsibilities
 
 ### Documentation Maintenance
 **Always update markdown files when making changes:**
-1. **BUGS_ARCHIVED.md** - Add any bugs you fix with problem, root cause, and solution
-2. **RESOURCES.md** - Update if adding/modifying stages, memories, skills, or cutscenes
+1. **docs/BUGS_ARCHIVED.md** - Add any bugs you fix with problem, root cause, and solution
+2. **docs/ARCHITECTURE.md** - Update if you add new cross-script signal interactions
 3. **README.md** - Update architecture notes if you change core systems
-4. **AGENTS.md** - Update this file if you discover new patterns or best practices to document
+4. **docs/AGENTS.md** - Update this file if you discover new patterns or best practices to document
 
 Format for bug documentation:
 - Clear problem statement with symptoms
@@ -44,7 +44,7 @@ When writing code:
 5. **Async patterns:** Use `await` for cutscenes, transitions, and long operations
 
 ### Bug Prevention
-Reference `BUGS_ARCHIVED.md` to avoid:
+Reference `docs/BUGS_ARCHIVED.md` to avoid:
 - SceneSwitcher managing GuiManager's UI nodes
 - Duplicate function calls in property setters
 - Incorrect default scene animation states
@@ -66,6 +66,7 @@ If unclear about:
 ## File Organization
 ```
 /important_scripts/    - Singletons and core managers (DO NOT MODIFY lightly)
+  /battle/             - Battle system managers and scripts
 /other_scripts/        - Game-specific logic (safer to modify)
 /resources/            - Data-driven content and definitions
   /cutscenes/          - CutsceneScript resources

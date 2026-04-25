@@ -506,13 +506,13 @@ Additionally, Properties UI must be in the "properties_ui" group:
 
 **Files Changed:**
 - `other_scripts/spawn_ui.gd` - Dynamic mouse_filter switching based on Properties UI visibility
-- `important_scripts/ui/properties_ui.gd` - Added `add_to_group("properties_ui")` in `_ready()`
-- `scenes/ui/properties_ui.tscn` - Added `groups = ["properties_ui"]` to node definition
-- `scenes/spawn_ui.tscn` - Added comment documenting mouse_filter behavior
+- `important_scripts/battle/ui/properties_ui.gd` - Added `add_to_group("properties_ui")` in `_ready()`
+- `scenes/battle/ui/properties_ui.tscn` - Added `groups = ["properties_ui"]` to node definition
+- `scenes/battle/spawn_ui.tscn` - Added comment documenting mouse_filter behavior
 
 ---
 
 ## Related Documentation
-- [`README.md`](README.md) - Project architecture and core systems
-- [`RESOURCES.md`](RESOURCES.md) - Complete inventory of stages, memories, skills, and cutscenes
+- [`../README.md`](../README.md) - Project architecture and core systems
+- [`ARCHITECTURE.md`](ARCHITECTURE.md) - Game architecture and signal interaction graphs
 - [`AGENTS.md`](AGENTS.md) - Agent instructions and best practices

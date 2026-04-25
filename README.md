@@ -32,7 +32,7 @@ The project is structured around several key singletons that manage different as
 
 ## Resource Management
 
-**For a complete inventory of all resources, stages, memories, and their relationships, see [`RESOURCES.md`](RESOURCES.md).**
+**For details on game architecture and interactions, see [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).**
 
 The game's data-driven logic relies on custom `Resource` types defined in `resources/data_structures/`. Actual data instances are stored as `.tres` files in their respective folders under `resources/`. **Resources are loaded recursively from their respective directories, allowing for subfolder-based organization (e.g., for labels or grouping).**
 
@@ -157,6 +157,7 @@ The game's data-driven logic relies on custom `Resource` types defined in `resou
 
 ## Documentation Reference
 
-- **[`RESOURCES.md`](RESOURCES.md)** - Complete inventory of all game resources: stages by mode, memories, skills, cutscenes, and their relationships
-- **[`BUGS_ARCHIVED.md`](BUGS_ARCHIVED.md)** - Historical bugs and their solutions for reference and regression prevention
-- **[`AGENTS.md`](AGENTS.md)** - AI agent instructions and development patterns
+- **[`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)** - Game architecture and Mermaid graphs of signal interactions between different scenes and scripts.
+- **[`docs/BUGS_ARCHIVED.md`](docs/BUGS_ARCHIVED.md)** - Historical bugs and their solutions for reference and regression prevention.
+- **[`docs/AGENTS.md`](docs/AGENTS.md)** - AI agent instructions and development patterns.
+- **[`docs/implementation_plan.md`](docs/implementation_plan.md)** - The recent merge implementation plan.
