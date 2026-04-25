@@ -1,8 +1,8 @@
 {
     "godotTools.editorPath.godot4": "d:\\program\\godot\\Godot_v4.5.1-stable_win64.exe",
     "files.exclude": {
-        "**/*.uid": "explorer",
-        "**/*.import": "explorer"
+        "**/*.uid": true,
+        "**/*.import": true
     },
     "search.exclude": {
         "**/*.uid": true,
