@@ -2,8 +2,8 @@
 extends Control
 
 # 預載入 UI 小節點
-const skill_node_tscn = preload("res://scenes/skill.tscn")
-const torch_tscn = preload("res://scenes/torch.tscn")
+const skill_node_tscn = preload("res://scenes/main_world/skill.tscn")
+const torch_tscn = preload("res://scenes/main_world/torch.tscn")
 
 # Player skill levels and current skill ID are managed locally for UI interaction
 # var player_skill_levels: Dictionary = {} # REMOVED: Centralized in ProgressManager

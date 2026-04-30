@@ -11,6 +11,8 @@ var _return_scene: String = "main_world"
 ## --- Forward Transition: World → Battle ---
 ## Called by tp_point.gd with a config dictionary built from its @export vars.
 func start_battle(config: Dictionary, return_scene: String = "main_world") -> void:
+	if not config.has("background_scene") or not config.background_scene:
+		config.background_scene = load("res://scenes/battle/default_background.tscn")
 	current_config = config
 	_return_scene = return_scene
 	battle_started.emit(config)

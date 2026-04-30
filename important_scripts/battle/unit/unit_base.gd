@@ -21,7 +21,7 @@ signal enemy_killed(target: Node)
 
 enum LifecycleState {ALIVE, DYING, DEAD}
 
-@export var stats: UnitStats
+var stats: UnitStats
 
 var current_health: int
 var lifecycle_state: LifecycleState = LifecycleState.ALIVE
@@ -39,12 +39,7 @@ var is_attacking: bool = false
 @onready var properties_ui: Control = $PropertiesUI if has_node("PropertiesUI") else null
 
 func _ready():
-	if stats:
-		current_health = stats.health
-	else:
-		current_health = 100
-		stats = UnitStats.new()
-
+	current_health = stats.health
 func _physics_process(delta: float):
 	if lifecycle_state != LifecycleState.ALIVE:
 		return

@@ -1,13 +1,12 @@
 extends Node
 
-@onready var player = get_tree().current_scene.get_node("Player")
 signal game_state_changed(state: String)
 
 enum Team { PLAYER = 0, OPPONENT = 1 }
 
 const SPAWN_LANES: int = 3
-const AI_COOLDOWN_MIN: float = 2.0
-const AI_COOLDOWN_MAX: float = 5.0
+var ai_cooldown_min: float = 2.0
+var ai_cooldown_max: float = 5.0
 const AI_SPAWN_CHANCE: float = 1.0
 var time : float = 0.0
 var minutes: int =0
@@ -25,17 +24,18 @@ var game_state: String = "idle"
 var unit_stats_registry: Dictionary = {}
 var ai_enabled: bool = true
 var ai_cooldown: float = 0.0
+var current_config: Dictionary = {}
+var background_instance: Node
+
 func _ready() -> void:
-	curr = get_tree().current_scene
-	if curr:
-		spawn_points = get_tree().root.get_node("Main/SpawnPoints")
-		allies_container = get_tree().root.get_node("Main/AlliesContainer")
-		opponents_container = get_tree().root.get_node("Main/EnemiesContainer")
-		elixir = get_tree().root.get_node("Main/UI/SpawnUI")
-	else:
-		print("DEBUG: FAIL - curr is null in _ready!")
-		
-	# Only load enemy stats for AI spawning
+	SceneSwitcher.scene_transition_finished.connect(_on_scene_transition_finished)
+	BattleTransitionManager.battle_started.connect(_on_battle_started)
+	game_state = "idle"
+
+func _on_battle_started(config: Dictionary) -> void:
+	current_config = config
+	
+	# Only load enemy stats for AI spawning when battle starts
 	unit_stats_registry.clear()
 	var dir = DirAccess.open("res://resources/unit_stats/")
 	if dir:
@@ -46,8 +46,59 @@ func _ready() -> void:
 				var resource = load("res://resources/unit_stats/" + file_name)
 				if resource and "cost" in resource and resource.team == Team.OPPONENT:
 					unit_stats_registry[file_name.replace(".tres", "")] = resource
+
+func _on_scene_transition_finished(scene_name: String) -> void:
+	if scene_name == "battle_scene":
+		_initialize_battle()
+	elif scene_name != "battle_scene" and game_state != "idle":
+		_cleanup_battle()
+
+func _initialize_battle() -> void:
+	curr = get_tree().current_scene
+	if curr:
+		spawn_points = curr.get_node_or_null("SpawnPoints")
+		allies_container = curr.get_node_or_null("AlliesContainer")
+		opponents_container = curr.get_node_or_null("EnemiesContainer")
+		elixir = curr.get_node_or_null("UI/SpawnUI")
+		
+		if current_config.has("background_scene") and current_config.background_scene:
+			var bg_node = curr.get_node_or_null("Background")
+			if bg_node:
+				background_instance = current_config.background_scene.instantiate()
+				bg_node.add_child(background_instance)
+				
+		if current_config.has("ai_cooldown_min") and current_config.has("ai_cooldown_max"):
+			ai_cooldown_min = current_config.ai_cooldown_min
+			ai_cooldown_max = current_config.ai_cooldown_max
+			
+	# Reset state
+	time = 0.0
+	minutes = 0
+	seconds = 0
+	enemy_killed = 0
+	damage_dealt = 0.0
+	battle_time = 0.0
+	ai_enabled = true
+	ai_cooldown = randf_range(ai_cooldown_min, ai_cooldown_max)
+	
 	game_state = "ready"
 	game_state_changed.emit(game_state)
+
+func _cleanup_battle() -> void:
+	game_state = "idle"
+	game_state_changed.emit(game_state)
+	
+	if is_instance_valid(background_instance):
+		background_instance.queue_free()
+	background_instance = null
+	
+	curr = null
+	spawn_points = null
+	allies_container = null
+	opponents_container = null
+	elixir = null
+	ai_enabled = false
+	current_config.clear()
 
 func _process(delta) -> void:
 	time+= delta
@@ -58,7 +109,7 @@ func _process(delta) -> void:
 	ai_cooldown -= delta
 	if ai_cooldown > 0:
 		return
-	ai_cooldown = randf_range(AI_COOLDOWN_MIN, AI_COOLDOWN_MAX)
+	ai_cooldown = randf_range(ai_cooldown_min, ai_cooldown_max)
 	if randf() >= AI_SPAWN_CHANCE:
 		return
 		

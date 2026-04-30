@@ -10,7 +10,7 @@ var last_update_time: float = 0.0
 @onready var elixir_label: Label = $ElixirUI/ElixirLabel
 @onready var cards_container: Control = $CardsUI/CardsContainer
 
-var card_scene: PackedScene = preload("res://scenes/battle/card.tscn")
+var card_scene: PackedScene = preload("res://scenes/battle/ui/card.tscn")
 var active_cards: Array[Button] = []
 
 func _ready():

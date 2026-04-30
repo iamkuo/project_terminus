@@ -1,6 +1,6 @@
 [gd_scene load_steps=9 format=3 uid="uid://quque6ani7t8"]
 
-[ext_resource type="Script" uid="uid://c8ix4311atj3g" path="res://important_scripts/ui/ending_screen.gd" id="1_4vp0n"]
+[ext_resource type="Script" uid="uid://c8ix4311atj3g" path="res://important_scripts/battle/ui/ending_screen.gd" id="1_4vp0n"]
 [ext_resource type="Texture2D" uid="uid://cjmwhv0846in6" path="res://assets/images/ui/panels/04 Border 03.png" id="1_61pod"]
 [ext_resource type="FontFile" uid="uid://dxc2pi1bwr1uu" path="res://assets/fonts/Cubic_11.ttf" id="3_t4ahs"]
 

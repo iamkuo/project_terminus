@@ -28,7 +28,19 @@ func _deferred_switch_scene(scene_name: String, transition_type: String):
 	animation_player.play("%s_in" % transition_type)
 	await animation_player.animation_finished
 	current_scene.queue_free()
-	var new_scene = load("res://scenes/%s.tscn" % scene_name)
+	
+	var direct_path = "res://scenes/%s.tscn" % scene_name
+	var new_scene
+	if ResourceLoader.exists(direct_path):
+		new_scene = load(direct_path)
+	else:
+		var search_name = scene_name.get_file()
+		var scene_path = _find_scene_path("res://scenes", search_name)
+		if scene_path == "":
+			push_error("Scene not found: " + scene_name)
+			return
+		new_scene = load(scene_path)
+		
 	current_scene = new_scene.instantiate()
 	scene_container.add_child(current_scene)  # Add to the fixed container
 	animation_player.play("%s_out" % transition_type)
@@ -39,3 +51,21 @@ func _deferred_switch_scene(scene_name: String, transition_type: String):
 
 	# Emit signal that transition is complete
 	scene_transition_finished.emit(scene_name)
+
+func _find_scene_path(path: String, scene_name: String) -> String:
+	var target_file = scene_name + ".tscn"
+	var dir = DirAccess.open(path)
+	if dir:
+		dir.list_dir_begin()
+		var file_name = dir.get_next()
+		while file_name != "":
+			if dir.current_is_dir():
+				if file_name != "." and file_name != "..":
+					var found_path = _find_scene_path(path + "/" + file_name, scene_name)
+					if found_path != "":
+						return found_path
+			else:
+				if file_name.trim_suffix(".remap") == target_file:
+					return path + "/" + target_file
+			file_name = dir.get_next()
+	return ""

@@ -8,6 +8,7 @@ var follow_player_button: Button
 var attack_enemy_button: Button
 var attack_tower_button: Button
 var close_button: Button
+var bg_close_button : Button
 
 func _ready():
 	visible = false
@@ -36,7 +37,12 @@ func _ready():
 	close_button = get_node("PanelContainer/MarginContainer/VBoxContainer/CloseButton")
 	print("close_button found: ", close_button != null)
 	
+	bg_close_button = get_node("BgCloseButton")
+	
 	# Connect button signals
+	
+	if bg_close_button:
+		bg_close_button.pressed.connect(hide_panel)
 	if stay_button:
 		stay_button.pressed.connect(_on_pattern_selected.bind(BehaviorPattern.PatternType.STAY))
 		print("stay_button connected")

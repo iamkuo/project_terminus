@@ -14,7 +14,6 @@ extends AnimatedSprite2D
 
 ## --- Player Constraints ---
 @export var starting_elixir: float = 5.0
-@export var allowed_unit_ids: Array[String] = []
 
 ## --- Tower Stats ---
 @export var player_tower_hp: int = 1000
@@ -36,7 +35,6 @@ func _build_config() -> Dictionary:
 		"ai_cooldown_min": ai_cooldown_min,
 		"ai_cooldown_max": ai_cooldown_max,
 		"starting_elixir": starting_elixir,
-		"allowed_unit_ids": allowed_unit_ids,
 		"player_tower_hp": player_tower_hp,
 		"enemy_tower_hp": enemy_tower_hp,
 		"exp_reward_victory": exp_reward_victory,

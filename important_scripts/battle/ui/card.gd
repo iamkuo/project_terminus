@@ -17,7 +17,7 @@ var lane: int = 1
 var team: Team = Team.PLAYER
 
 func _ready():
-	gm = get_tree().root.get_node("Main")
+	gm = BattleManager
 	connect("pressed", _on_pressed)
 	_setup_ui()
 
