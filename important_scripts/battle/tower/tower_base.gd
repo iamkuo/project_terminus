@@ -33,7 +33,7 @@ func _on_health_bar_changed(cur: int, max_hp: int) -> void:
 	else:
 		_health_bar.value = 100.0 * float(cur) / float(max_hp)
 
-func take_damage(amount: int) -> void:
+func take_damage(amount: int, target: Node) -> void:
 	if is_destroyed: return
 
 	var actual_damage = max(0, amount - defense)

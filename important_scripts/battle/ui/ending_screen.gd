@@ -4,41 +4,29 @@ enum Team { PLAYER = 0, OPPONENT = 1 }
 
 @export var win_color: Color = Color.GREEN
 @export var lose_color: Color = Color.RED
-
+@export var player_team: Team = Team.PLAYER
 @onready var result_label: Label = $BackgroundPanel/VBoxContainer/ResultLabel
-@onready var exp_label: Label = $BackgroundPanel/VBoxContainer/ExpLabel
-@onready var crystal_label: Label = $BackgroundPanel/VBoxContainer/CrystalLabel
 @onready var background: Panel = $BackgroundPanel
-
-var _pending_exp: int = 0
-var _pending_crystals: int = 0
-
+@onready var kills_label: Label = $BackgroundPanel/VBoxContainer/killslable
+@onready var damage_label: Label = $BackgroundPanel/VBoxContainer/damagelable
+@onready var time_label: Label = $BackgroundPanel/VBoxContainer/timelabel
 func _ready():
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	visible = false
-
-## Called by BattleManager with pre-calculated reward values
-func show_result_with_rewards(is_victory: bool, exp_earned: int, crystals_earned: int) -> void:
-	_pending_exp = exp_earned
-	_pending_crystals = crystals_earned
+func show_result(winning_team: int):
 	visible = true
-	
-	if is_victory:
+	kills_label.text = "Defeats:" + str(BattleManager.enemy_killed)
+	damage_label.text = "Damage Dealt:" +str(BattleManager.damage_dealt)
+	time_label.text = "Time Spent:" + str("%01d" % BattleManager.minutes) + str("m")+ str("%02d" % BattleManager.seconds) + str("s")
+	if winning_team == player_team:
 		result_label.text = "VICTORY!"
 		result_label.modulate = win_color
 	else:
 		result_label.text = "DEFEAT"
 		result_label.modulate = lose_color
-	
-	if exp_label:
-		exp_label.text = "+%d EXP" % exp_earned
-	if crystal_label:
-		crystal_label.text = "+%d 水晶" % crystals_earned
 
 func _on_restart_pressed():
-	get_tree().paused = false
-	BattleTransitionManager.start_battle(BattleTransitionManager.current_config)
+	get_tree().reload_current_scene()
 
-func _on_return_pressed():
-	get_tree().paused = false
-	BattleTransitionManager.end_battle(_pending_exp, _pending_crystals)
+func _on_main_menu_pressed():
+	get_tree().change_scene_to_file("res://scenes/main_menu.tscn")

@@ -3,7 +3,7 @@ extends CharacterBody2D
 
 enum Team {PLAYER = 0, OPPONENT = 1}
 
-const unit_selection_circle = preload("res://important_scripts/battle/ui/unit_selection_circle.gd")
+const unit_selection_circle = preload("res://important_scripts/ui/unit_selection_circle.gd")
 
 const ARRIVAL_DISTANCE: float = 5.0
 const MOVING_SPEED_THRESHOLD: float = 5.0
@@ -28,41 +28,23 @@ var team: Team = Team.PLAYER
 var lane: int = 1
 var behavior_pattern: BehaviorPattern = null
 var selected: bool = false
-
 var current_target: Node = null
 var attack_cooldown: float = 0.0
 var is_attacking: bool = false
+signal damage_dealt (amout: float, target: Node)
+signal enemy_killed (target: Node)
+
 
 @onready var sprite: AnimatedSprite2D = $AnimatedSprite2D if has_node("AnimatedSprite2D") else null
 @onready var selection_circle: Node2D = $SelectionCircle if has_node("SelectionCircle") else null
 @onready var properties_ui: Control = $PropertiesUI if has_node("PropertiesUI") else null
-@onready var _health_bar: ProgressBar = $Control/ProgressBar
+
 func _ready():
 	if stats:
 		current_health = stats.health
 	else:
 		current_health = 100
 		stats = UnitStats.new()
-
-
-
-	current_health = stats.health
-	add_to_group("unit")
-	emit_signal("health_changed",current_health,current_health)
-	
-	if not is_instance_valid(_health_bar):
-		return
-	health_changed.connect(_on_health_bar_changed)
-	call_deferred("_on_health_bar_changed", current_health, stats.health)
-
-func _on_health_bar_changed(cur: int, max_hp: int) -> void:
-	if not _health_bar:
-		return
-	if max_hp <= 0:
-		_health_bar.value = 0.0
-	else:
-		_health_bar.value = 100.0 * float(cur) / float(max_hp)
-
 
 func _physics_process(delta: float):
 	if lifecycle_state != LifecycleState.ALIVE:
@@ -111,7 +93,7 @@ func _perform_attack(target: Node):
 	match stats.attack_type:
 		UnitStats.AttackType.DIRECT:
 			if target.has_method("take_damage"):
-				target.take_damage(stats.attack_damage)
+				target.take_damage(stats.attack_damage, target)
 				dealt_damage.emit(stats.attack_damage, target)
 		UnitStats.AttackType.PROJECTILE:
 			ProjectileManager.spawn_projectile(self, target)
@@ -120,12 +102,23 @@ func _perform_attack(target: Node):
 
 	is_attacking = false
 
-func take_damage(amount: int) -> void:
+
+
+func take_damage(amount: int, target: Node) -> void:
+	if team == 1:
+		damage_dealt.emit(amount)
+		BattleManager.on_unit_damage_dealt(self, amount, target)
+	else:
+		pass
 	var actual_damage = max(0, amount - stats.defense)
 	current_health -= actual_damage
 	health_changed.emit(current_health, stats.health)
-
 	if current_health <= 0:
+		if team == 1:
+			enemy_killed.emit(target)
+			BattleManager.on_unit_enemy_killed(self, target)
+		else:
+			pass
 		lifecycle_state = LifecycleState.DYING
 		_play_action("die")
 		await get_tree().create_timer(DEATH_ANIMATION_DELAY).timeout
