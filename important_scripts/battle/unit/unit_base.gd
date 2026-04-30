@@ -3,7 +3,7 @@ extends CharacterBody2D
 
 enum Team {PLAYER = 0, OPPONENT = 1}
 
-const unit_selection_circle = preload("res://important_scripts/ui/unit_selection_circle.gd")
+const unit_selection_circle = preload("res://important_scripts/battle/ui/unit_selection_circle.gd")
 
 const ARRIVAL_DISTANCE: float = 5.0
 const MOVING_SPEED_THRESHOLD: float = 5.0
@@ -16,7 +16,8 @@ const DEATH_ANIMATION_DELAY: float = 0.5
 
 signal health_changed(current: int, max: int)
 signal died(unit: UnitBase)
-signal dealt_damage(amount: int, target: Node)
+signal damage_dealt(amount: int, target: Node)
+signal enemy_killed(target: Node)
 
 enum LifecycleState {ALIVE, DYING, DEAD}
 
@@ -31,8 +32,6 @@ var selected: bool = false
 var current_target: Node = null
 var attack_cooldown: float = 0.0
 var is_attacking: bool = false
-signal damage_dealt (amout: float, target: Node)
-signal enemy_killed (target: Node)
 
 
 @onready var sprite: AnimatedSprite2D = $AnimatedSprite2D if has_node("AnimatedSprite2D") else null
@@ -80,8 +79,12 @@ func _play_action(action: String):
 		if action in sprite.sprite_frames.get_animation_names():
 			sprite.play(action)
 
+func _get_battle_manager() -> Node:
+	if is_instance_valid(get_tree().current_scene):
+		return get_tree().current_scene.get_node_or_null("BattleManager")
+	return null
 
-func _perform_attack(target: Node):
+func _perform_attack(target: Node) -> void:
 	if is_attacking or not target or not is_instance_valid(target):
 		return
 
@@ -93,32 +96,28 @@ func _perform_attack(target: Node):
 	match stats.attack_type:
 		UnitStats.AttackType.DIRECT:
 			if target.has_method("take_damage"):
-				target.take_damage(stats.attack_damage, target)
-				dealt_damage.emit(stats.attack_damage, target)
+				target.take_damage(stats.attack_damage, self )
+				damage_dealt.emit(stats.attack_damage, target)
+				if team == Team.PLAYER:
+					var bm = _get_battle_manager()
+					if bm:
+						bm.on_unit_damage_dealt(self , stats.attack_damage, target)
 		UnitStats.AttackType.PROJECTILE:
-			ProjectileManager.spawn_projectile(self, target)
+			ProjectileManager.spawn_projectile(self , target)
 
 	await get_tree().create_timer(ATTACK_ANIMATION_DELAY).timeout
 
 	is_attacking = false
 
 
-
-func take_damage(amount: int, target: Node) -> void:
-	if team == 1:
-		damage_dealt.emit(amount)
-		BattleManager.on_unit_damage_dealt(self, amount, target)
-	else:
-		pass
+func take_damage(amount: int, attacker: Node) -> void:
 	var actual_damage = max(0, amount - stats.defense)
 	current_health -= actual_damage
 	health_changed.emit(current_health, stats.health)
 	if current_health <= 0:
-		if team == 1:
-			enemy_killed.emit(target)
-			BattleManager.on_unit_enemy_killed(self, target)
-		else:
-			pass
+		# Notify the attacker so it can emit enemy_killed and update BattleManager
+		if attacker and attacker.has_method("_on_killed_target"):
+			attacker._on_killed_target(self )
 		lifecycle_state = LifecycleState.DYING
 		_play_action("die")
 		await get_tree().create_timer(DEATH_ANIMATION_DELAY).timeout
@@ -126,6 +125,14 @@ func take_damage(amount: int, target: Node) -> void:
 		died.emit(self )
 		queue_free()
 
+
+## Called by the victim unit when it is killed by this unit.
+## Allows the attacker to emit enemy_killed and update BattleManager.
+func _on_killed_target(target: Node) -> void:
+	enemy_killed.emit(target)
+	var bm = _get_battle_manager()
+	if bm:
+		bm.on_unit_enemy_killed(self , target)
 
 func set_behavior_pattern(pattern: BehaviorPattern):
 	behavior_pattern = pattern
@@ -158,7 +165,7 @@ func _handle_combat(target: Node, move_target: Vector2):
 # Returns where the unit should move based on behavior pattern
 func _get_movement_target(attack_target: Node = null) -> Vector2:
 	if behavior_pattern:
-		return behavior_pattern.get_movement_target(self, attack_target)
+		return behavior_pattern.get_movement_target(self , attack_target)
 	
 	# Fallback: if has attack target, move toward it, else lane goal
 	if attack_target:
@@ -190,12 +197,12 @@ func _input(event: InputEvent):
 
 func _show_control_panel():
 	if properties_ui and properties_ui.has_method("show_for_unit"):
-		properties_ui.show_for_unit(self)
+		properties_ui.show_for_unit(self )
 
 
 func _find_target() -> Node:
 	if behavior_pattern:
-		return behavior_pattern.get_target_for(self)
+		return behavior_pattern.get_target_for(self )
 	
 	# Fallback: find any enemy in view distance, then tower
 	var enemy = _find_nearest_enemy_fallback()
