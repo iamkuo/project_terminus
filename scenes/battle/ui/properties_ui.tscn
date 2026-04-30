@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://bdw7ku2f5uedd"]
 
-[ext_resource type="Script" uid="uid://b0idkfv2w51qc" path="res://important_scripts/ui/properties_ui.gd" id="1_properties_ui"]
+[ext_resource type="Script" uid="uid://d2jwrdvfdicfl" path="res://important_scripts/battle/ui/properties_ui.gd" id="1_properties_ui"]
 
 [node name="PropertiesUI" type="Control"]
 custom_minimum_size = Vector2(140, 130)

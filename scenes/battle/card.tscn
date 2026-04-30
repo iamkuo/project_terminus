@@ -1,6 +1,6 @@
 [gd_scene load_steps=7 format=3 uid="uid://cw1xa547r3cf1"]
 
-[ext_resource type="Script" uid="uid://fbve7n5dsau" path="res://important_scripts/ui/card.gd" id="1_card"]
+[ext_resource type="Script" uid="uid://ceeyqxjhhe5b8" path="res://important_scripts/battle/ui/card.gd" id="1_card"]
 [ext_resource type="Texture2D" uid="uid://cknfvs18y6snr" path="res://assets/images/ui/panels/archerborder.png" id="3_ktuci"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ulu11"]

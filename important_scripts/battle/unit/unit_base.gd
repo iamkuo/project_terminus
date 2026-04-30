@@ -3,7 +3,7 @@ extends CharacterBody2D
 
 enum Team {PLAYER = 0, OPPONENT = 1}
 
-const unit_selection_circle = preload("res://important_scripts/ui/unit_selection_circle.gd")
+const unit_selection_circle = preload("res://important_scripts/battle/ui/unit_selection_circle.gd")
 
 const ARRIVAL_DISTANCE: float = 5.0
 const MOVING_SPEED_THRESHOLD: float = 5.0

@@ -1,6 +1,6 @@
 extends Node
 
-const PROJECTILE_SCENE = preload("res://scenes/projectile.tscn")
+const PROJECTILE_SCENE = preload("res://scenes/battle/projectile.tscn")
 
 ## Called by UnitBase to fire a projectile.
 ## Only needs the shooter and target — all data is read from the unit's own stats.

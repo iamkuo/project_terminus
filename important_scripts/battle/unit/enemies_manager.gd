@@ -3,7 +3,7 @@ extends Node2D
 enum Team { PLAYER = 0, OPPONENT = 1 }
 
 const SPAWN_LANES: int = 3
-const UNIT_SCENES_PATH: String = "res://scenes/unit.tscn"
+const UNIT_SCENES_PATH: String = "res://scenes/battle/unit.tscn"
 
 var opponent_team: Team = Team.OPPONENT
 

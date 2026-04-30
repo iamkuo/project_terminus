@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://quque6ani7t8"]
 
-[ext_resource type="Script" uid="uid://c8ix4311atj3g" path="res://important_scripts/ui/ending_screen.gd" id="1_4vp0n"]
+[ext_resource type="Script" uid="uid://gjhfuviek4ek" path="res://important_scripts/battle/ui/ending_screen.gd" id="1_4vp0n"]
 [ext_resource type="Texture2D" uid="uid://cjmwhv0846in6" path="res://assets/images/ui/panels/04 Border 03.png" id="1_61pod"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_4vp0n"]

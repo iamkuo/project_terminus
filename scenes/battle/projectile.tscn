@@ -1,6 +1,6 @@
 [gd_scene load_steps=15 format=3 uid="uid://gerl1nl20c62"]
 
-[ext_resource type="Script" uid="uid://dgxty4bxgyunr" path="res://important_scripts/projectile.gd" id="1_4c6dc"]
+[ext_resource type="Script" uid="uid://oj0mmsyxot4c" path="res://important_scripts/battle/projectile.gd" id="1_4c6dc"]
 [ext_resource type="Texture2D" uid="uid://cllqhhnbalfxs" path="res://assets/images/objects/ally/alley_bow.png" id="2_6q2a6"]
 [ext_resource type="Texture2D" uid="uid://cwf34dq5vxovy" path="res://assets/images/objects/ally/alley_wand.png" id="2_softn"]
 [ext_resource type="Texture2D" uid="uid://bnexb4v2r3ceg" path="res://assets/images/objects/rickroll.png" id="4_6q2a6"]

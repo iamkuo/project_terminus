@@ -6,10 +6,10 @@ signal unit_spawned(unit: Node, spawn_info: Dictionary)
 signal spawn_failed(reason: String)
 
 const SPAWN_LANES: int = 3
-const UNIT_SCENES_PATH: String = "res://scenes/unit.tscn"
+const UNIT_SCENES_PATH: String = "res://scenes/battle/unit.tscn"
 
 # Default behavior pattern for newly spawned units
-const DEFAULT_BEHAVIOR = preload("res://important_scripts/unit/behavior_pattern.gd")
+const DEFAULT_BEHAVIOR = preload("res://important_scripts/battle/unit/behavior_pattern.gd")
 
 var local_team: Team = Team.PLAYER
 

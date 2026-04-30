@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://cl7hmeq86ar3y"]
 
-[ext_resource type="Script" uid="uid://bc57y06owrfa" path="res://important_scripts/tower/tower_base.gd" id="1_tower"]
+[ext_resource type="Script" uid="uid://diye52n646koe" path="res://important_scripts/battle/tower/tower_base.gd" id="1_tower"]
 [ext_resource type="Texture2D" uid="uid://dlayypi5c8aj3" path="res://assets/images/environment/house.png" id="2_kl3vk"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_tower"]

@@ -1,7 +1,8 @@
-[gd_scene load_steps=16 format=3 uid="uid://dm625ksy5738w"]
+[gd_scene load_steps=17 format=3 uid="uid://dm625ksy5738w"]
 
 [ext_resource type="Texture2D" uid="uid://cjmwhv0846in6" path="res://assets/images/ui/panels/04 Border 03.png" id="1_mfius"]
 [ext_resource type="FontFile" uid="uid://dxc2pi1bwr1uu" path="res://assets/fonts/Cubic_11.ttf" id="2_ynd5l"]
+[ext_resource type="PackedScene" uid="uid://bv8xk2m4n5p6q" path="res://scenes/message_ui.tscn" id="3_ynd5l"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_s0nni"]
 texture = ExtResource("1_mfius")
@@ -323,3 +324,5 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 mouse_filter = 2
 color = Color(0, 0, 0, 0)
+
+[node name="MessageUI" parent="." instance=ExtResource("3_ynd5l")]
