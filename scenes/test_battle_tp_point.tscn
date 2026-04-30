@@ -1,7 +1,7 @@
-[gd_scene load_steps=6 format=3 uid="uid://hjwobmyip8lh"]
+[gd_scene load_steps=6 format=3]
 
 [ext_resource type="Texture2D" uid="uid://dpwll505d2ym" path="res://assets/images/objects/teleport_point.png" id="1_dvxg5"]
-[ext_resource type="Script" uid="uid://bdfybhcd4oc5i" path="res://other_scripts/tp_point.gd" id="2_dvxg5"]
+[ext_resource type="Script" path="res://other_scripts/test_battle_tp_point.gd" id="2_dvxg5"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_1v2qx"]
 atlas = ExtResource("1_dvxg5")
@@ -21,7 +21,8 @@ animations = [{
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_nwa0e"]
 size = Vector2(45, 48)
 
-[node name="TpPoint" type="AnimatedSprite2D"]
+[node name="TestBattleTpPoint" type="AnimatedSprite2D"]
+modulate = Color(1, 0.5, 1, 1)
 sprite_frames = SubResource("SpriteFrames_f8pil")
 script = ExtResource("2_dvxg5")
 
