@@ -5,6 +5,7 @@
 [ext_resource type="FontFile" uid="uid://dxc2pi1bwr1uu" path="res://assets/fonts/Cubic_11.ttf" id="2_ekxnf"]
 [ext_resource type="Texture2D" uid="uid://ctsb3wvh450d3" path="res://assets/images/objects/owowowwo.png" id="5_oa1go"]
 
+[ext_resource type="PackedScene" uid="uid://cpog3fskyl4m7" path="res://scenes/main_world/pause.tscn" id="6_pause"]
 [sub_resource type="LabelSettings" id="LabelSettings_ekxnf"]
 line_spacing = 5.0
 font_size = 60
@@ -346,120 +347,7 @@ theme_override_styles/hover = SubResource("StyleBoxFlat_svtp6")
 theme_override_styles/focus = SubResource("StyleBoxEmpty_1dfpl")
 text = "離開"
 
-[node name="OptionsPanel" type="Panel" parent="."]
-visible = false
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="Content" type="VBoxContainer" parent="OptionsPanel"]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.3
-anchor_top = 0.15
-anchor_right = 0.7
-anchor_bottom = 0.85
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_constants/separation = 25
-alignment = 1
-
-[node name="SettingsTitle" type="Label" parent="OptionsPanel/Content"]
-layout_mode = 2
-theme_override_fonts/font = ExtResource("2_ekxnf")
-theme_override_font_sizes/font_size = 36
-text = "選項"
-horizontal_alignment = 1
-
-[node name="SettingsGrid" type="GridContainer" parent="OptionsPanel/Content"]
-layout_mode = 2
-theme_override_constants/h_separation = 20
-theme_override_constants/v_separation = 20
-columns = 2
-
-[node name="MasterLabel" type="Label" parent="OptionsPanel/Content/SettingsGrid"]
-layout_mode = 2
-size_flags_horizontal = 0
-theme_override_fonts/font = ExtResource("2_ekxnf")
-theme_override_font_sizes/font_size = 24
-text = "主音量"
-horizontal_alignment = 2
-
-[node name="MasterSlider" type="HSlider" parent="OptionsPanel/Content/SettingsGrid"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 4
-theme_override_icons/grabber = ExtResource("5_oa1go")
-theme_override_icons/grabber_highlight = ExtResource("5_oa1go")
-theme_override_styles/slider = SubResource("StyleBoxLine_8ln24")
-theme_override_styles/grabber_area = SubResource("StyleBoxLine_rtw2f")
-theme_override_styles/grabber_area_highlight = SubResource("StyleBoxLine_rtw2f")
-value = 50.0
-
-[node name="SfxLabel" type="Label" parent="OptionsPanel/Content/SettingsGrid"]
-layout_mode = 2
-size_flags_horizontal = 0
-theme_override_fonts/font = ExtResource("2_ekxnf")
-theme_override_font_sizes/font_size = 24
-text = "音效"
-horizontal_alignment = 2
-
-[node name="SfxSlider" type="HSlider" parent="OptionsPanel/Content/SettingsGrid"]
-custom_minimum_size = Vector2(0, 40)
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 4
-theme_override_icons/grabber = ExtResource("5_oa1go")
-theme_override_icons/grabber_highlight = ExtResource("5_oa1go")
-theme_override_styles/slider = SubResource("StyleBoxLine_8ln24")
-theme_override_styles/grabber_area = SubResource("StyleBoxLine_rtw2f")
-theme_override_styles/grabber_area_highlight = SubResource("StyleBoxLine_rtw2f")
-value = 50.0
-
-[node name="MusicLabel" type="Label" parent="OptionsPanel/Content/SettingsGrid"]
-layout_mode = 2
-size_flags_horizontal = 0
-theme_override_fonts/font = ExtResource("2_ekxnf")
-theme_override_font_sizes/font_size = 24
-text = "音樂"
-horizontal_alignment = 2
-
-[node name="MusicSlider" type="HSlider" parent="OptionsPanel/Content/SettingsGrid"]
-custom_minimum_size = Vector2(0, 40)
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 4
-theme_override_icons/grabber = ExtResource("5_oa1go")
-theme_override_icons/grabber_highlight = ExtResource("5_oa1go")
-theme_override_styles/slider = SubResource("StyleBoxLine_8ln24")
-theme_override_styles/grabber_area = SubResource("StyleBoxLine_rtw2f")
-theme_override_styles/grabber_area_highlight = SubResource("StyleBoxLine_rtw2f")
-value = 50.0
-
-[node name="FullscreenButton" type="CheckButton" parent="OptionsPanel/Content"]
-layout_mode = 2
-size_flags_horizontal = 4
-theme_override_fonts/font = ExtResource("2_ekxnf")
-theme_override_font_sizes/font_size = 24
-theme_override_styles/focus = SubResource("StyleBoxEmpty_oa1go")
-theme_override_icons/checked = SubResource("DPITexture_rtw2f")
-theme_override_icons/unchecked = SubResource("DPITexture_oa1go")
-text = "全螢幕/視窗"
-
-[node name="BackButton" type="Button" parent="OptionsPanel/Content"]
-custom_minimum_size = Vector2(200, 40)
-layout_mode = 2
-size_flags_horizontal = 4
-theme = SubResource("Theme_l6cm7")
-theme_override_fonts/font = ExtResource("2_ekxnf")
-theme_override_font_sizes/font_size = 24
-theme_override_styles/normal = SubResource("StyleBoxFlat_8ln24")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_tbmy8")
-theme_override_styles/hover = SubResource("StyleBoxFlat_jk1qb")
-text = "回到遊戲"
+[node name="Pause" parent="." instance=ExtResource("6_pause")]
 
 [node name="AboutPanel" type="Panel" parent="."]
 visible = false
@@ -520,5 +408,4 @@ text = "返回"
 [connection signal="pressed" from="MainButtons/SettingsButton" to="." method="_on_settings_button_pressed"]
 [connection signal="pressed" from="MainButtons/AboutButton" to="." method="_on_about_button_pressed"]
 [connection signal="pressed" from="MainButtons/QuitButton" to="." method="_on_quit_button_pressed"]
-[connection signal="pressed" from="OptionsPanel/Content/BackButton" to="." method="_on_back_button_pressed"]
 [connection signal="pressed" from="AboutPanel/VBoxContent/AboutBackButton" to="." method="_on_back_button_pressed"]
