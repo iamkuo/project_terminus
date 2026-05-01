@@ -1,11 +1,11 @@
 [gd_scene load_steps=38 format=3 uid="uid://ypplfbkktob5"]
 
-[ext_resource type="Script" uid="uid://bdf0jm8drjafc" path="res://important_scripts/main_menu.gd" id="1_8ln24"]
+[ext_resource type="Script" uid="uid://bdf0jm8drjafc" path="res://scripts/main_menu/main_menu.gd" id="1_8ln24"]
 [ext_resource type="Texture2D" uid="uid://ca1w24r726wp3" path="res://assets/images/backgrounds/main_menu_bg.png" id="1_l6cm7"]
 [ext_resource type="FontFile" uid="uid://dxc2pi1bwr1uu" path="res://assets/fonts/Cubic_11.ttf" id="2_ekxnf"]
 [ext_resource type="Texture2D" uid="uid://ctsb3wvh450d3" path="res://assets/images/objects/owowowwo.png" id="5_oa1go"]
-
 [ext_resource type="PackedScene" uid="uid://cpog3fskyl4m7" path="res://scenes/main_world/pause.tscn" id="6_pause"]
+
 [sub_resource type="LabelSettings" id="LabelSettings_ekxnf"]
 line_spacing = 5.0
 font_size = 60

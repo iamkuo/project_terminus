@@ -1,6 +1,6 @@
 [gd_scene load_steps=9 format=3 uid="uid://d2kbgk6v4hfw4"]
 
-[ext_resource type="Script" uid="uid://y3dw53edymkq" path="res://other_scripts/spawn_ui.gd" id="1_c3msa"]
+[ext_resource type="Script" uid="uid://dfixfufnxf5fe" path="res://scripts/battle/ui/spawn_ui.gd" id="1_c3msa"]
 [ext_resource type="Texture2D" uid="uid://cjmwhv0846in6" path="res://assets/images/ui/panels/04 Border 03.png" id="2_73l6q"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_2h25i"]

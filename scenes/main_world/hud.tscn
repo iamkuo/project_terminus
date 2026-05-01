@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://bmq6fpmu037ux"]
 
 [ext_resource type="Texture2D" uid="uid://7ga0ljs8vtel" path="res://assets/images/ui/elements/Icons.png" id="1_ahhtf"]
-[ext_resource type="Script" uid="uid://jlq3wtd2h8tu" path="res://other_scripts/hud.gd" id="1_huds"]
+[ext_resource type="Script" uid="uid://jlq3wtd2h8tu" path="res://scripts/main_world/hud.gd" id="1_huds"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_urbfd"]
 atlas = ExtResource("1_ahhtf")

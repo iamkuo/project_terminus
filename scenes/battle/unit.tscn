@@ -1,11 +1,11 @@
 [gd_scene load_steps=52 format=3 uid="uid://bs71l34xeqxed"]
 
-[ext_resource type="Script" uid="uid://coyj5pgpo364x" path="res://important_scripts/battle/unit/unit.gd" id="1_k673f"]
+[ext_resource type="Script" uid="uid://coyj5pgpo364x" path="res://scripts/battle/unit/unit.gd" id="1_k673f"]
 [ext_resource type="Texture2D" uid="uid://bg8ovc14n13vq" path="res://assets/images/characters/goblin_summon.png" id="2_k673f"]
-[ext_resource type="Script" uid="uid://c0ncr1jav0yc7" path="res://important_scripts/battle/ui/unit_selection_circle.gd" id="3_selection_circle"]
+[ext_resource type="Script" uid="uid://c0ncr1jav0yc7" path="res://scripts/battle/ui/unit_selection_circle.gd" id="3_selection_circle"]
 [ext_resource type="PackedScene" uid="uid://bdw7ku2f5uedd" path="res://scenes/battle/ui/properties_ui.tscn" id="4_properties_ui"]
 [ext_resource type="FontFile" uid="uid://dxc2pi1bwr1uu" path="res://assets/fonts/Cubic_11.ttf" id="5_ruro2"]
-[ext_resource type="Script" uid="uid://du72fit35e2ys" path="res://other_scripts/label.gd" id="6_e8hdl"]
+[ext_resource type="Script" uid="uid://du72fit35e2ys" path="res://scripts/battle/label.gd" id="6_e8hdl"]
 
 [sub_resource type="Resource" id="UnitStats_warrior"]
 resource_name = "UnitStats"

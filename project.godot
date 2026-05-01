@@ -21,14 +21,13 @@ buses/default_layout="res://default_bus_layout.tres"
 
 [autoload]
 
-SceneSwitcher="*res://important_scripts/scene_switcher.gd"
-GuiManager="*res://important_scripts/gui_manager.gd"
-CutsceneManager="*res://important_scripts/cutscene_manager.gd"
-ProgressManager="*res://important_scripts/progress_manager.gd"
-BattleTransitionManager="*res://important_scripts/battle_transition_manager.gd"
-ProjectileManager="*res://important_scripts/battle/projectile_manager.gd"
-MessageManager="*res://important_scripts/battle/ui/message_manager.gd"
-BattleManager="*res://important_scripts/battle/battle_manager.gd"
+SceneSwitcher="*res://scripts/global/scene_switcher.gd"
+GuiManager="*res://scripts/global/gui_manager.gd"
+CutsceneManager="*res://scripts/global/cutscene_manager.gd"
+ProgressManager="*res://scripts/global/progress_manager.gd"
+ProjectileManager="*res://scripts/battle/main/projectile_manager.gd"
+MessageManager="*res://scripts/battle/ui/message_manager.gd"
+BattleManager="*res://scripts/battle/main/battle_manager.gd"
 
 [display]
 

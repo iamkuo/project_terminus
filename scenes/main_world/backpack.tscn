@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://d24suq71w264f"]
 
-[ext_resource type="Script" uid="uid://b4rdmkvok4hm2" path="res://important_scripts/backpack_ui.gd" id="1_460lo"]
+[ext_resource type="Script" uid="uid://b4rdmkvok4hm2" path="res://scripts/main_world/backpack_ui.gd" id="1_460lo"]
 [ext_resource type="Texture2D" uid="uid://cjmwhv0846in6" path="res://assets/images/ui/panels/04 Border 03.png" id="1_q7lps"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_5gcru"]

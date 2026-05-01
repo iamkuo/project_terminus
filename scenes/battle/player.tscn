@@ -1,6 +1,6 @@
 [gd_scene load_steps=13 format=3 uid="uid://tu7tole1qm3h"]
 
-[ext_resource type="Script" uid="uid://d2y0jdekf27wc" path="res://important_scripts/battle/player_in_battle.gd" id="1_g2els"]
+[ext_resource type="Script" uid="uid://d2y0jdekf27wc" path="res://scripts/battle/player_in_battle.gd" id="1_g2els"]
 [ext_resource type="Texture2D" uid="uid://b0oecl585bnd3" path="res://assets/images/characters/player.png" id="2_qhqgy"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_c01mt"]

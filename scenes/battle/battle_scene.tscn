@@ -1,14 +1,14 @@
-[gd_scene load_steps=9 format=3 uid="uid://dbm3ecaqtfqdr"]
+[gd_scene load_steps=10 format=3 uid="uid://dbm3ecaqtfqdr"]
 
 [ext_resource type="PackedScene" uid="uid://tu7tole1qm3h" path="res://scenes/battle/player.tscn" id="4_rarhs"]
 [ext_resource type="PackedScene" uid="uid://d2kbgk6v4hfw4" path="res://scenes/battle/spawn_ui.tscn" id="6_nxtc6"]
 [ext_resource type="PackedScene" uid="uid://quque6ani7t8" path="res://scenes/battle/ending_screen.tscn" id="7_jlsqs"]
 [ext_resource type="PackedScene" uid="uid://bv8xk2m4n5p6q" path="res://scenes/global/message_ui.tscn" id="8_message_ui"]
-[ext_resource type="PackedScene" uid="uid://cpog3fskyl4m7" path="res://scenes/main_world/pause.tscn" id="pause_scene"]
 [ext_resource type="PackedScene" uid="uid://cl7hmeq86ar3y" path="res://scenes/battle/Tower.tscn" id="8_tower_scene"]
-[ext_resource type="Script" uid="uid://bj5rgdbachtib" path="res://important_scripts/battle/tower/tower_manager.gd" id="9_tower_mgr"]
-[ext_resource type="Script" uid="uid://d1p045ha2ggom" path="res://important_scripts/battle/unit/allies_manager.gd" id="script_allies"]
-[ext_resource type="Script" uid="uid://c5g2dyd8mbwcg" path="res://important_scripts/battle/unit/enemies_manager.gd" id="script_enemies"]
+[ext_resource type="Script" uid="uid://bj5rgdbachtib" path="res://scripts/battle/tower/tower_manager.gd" id="9_tower_mgr"]
+[ext_resource type="PackedScene" uid="uid://cpog3fskyl4m7" path="res://scenes/main_world/pause.tscn" id="pause_scene"]
+[ext_resource type="Script" uid="uid://d1p045ha2ggom" path="res://scripts/battle/unit/allies_manager.gd" id="script_allies"]
+[ext_resource type="Script" uid="uid://c5g2dyd8mbwcg" path="res://scripts/battle/unit/enemies_manager.gd" id="script_enemies"]
 
 [node name="Main" type="Node2D"]
 
@@ -93,6 +93,7 @@ anchor_right = 0.95
 offset_left = -49.600002
 offset_top = -133.0
 offset_right = 65.599976
+script = null
 
 [node name="MessageUI" parent="UI" instance=ExtResource("8_message_ui")]
 
