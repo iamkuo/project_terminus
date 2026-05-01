@@ -59,7 +59,7 @@ theme_override_constants/separation = 11
 layout_mode = 2
 theme_override_fonts/font = ExtResource("3_t4ahs")
 theme_override_font_sizes/font_size = 55
-text = "Battle Complete!"
+text = "戰鬥完成！"
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -71,7 +71,7 @@ theme_override_constants/separation = 30
 layout_mode = 2
 theme_override_fonts/font = ExtResource("3_t4ahs")
 theme_override_font_sizes/font_size = 40
-text = "Victory!"
+text = "勝利！"
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -107,6 +107,6 @@ theme_override_fonts/font = ExtResource("3_t4ahs")
 theme_override_font_sizes/font_size = 27
 theme_override_styles/normal = SubResource("StyleBoxFlat_jkwpc")
 theme_override_styles/focus = SubResource("StyleBoxEmpty_jkwpc")
-text = "Return"
+text = "返回"
 
 [connection signal="pressed" from="BackgroundPanel/VBoxContainer/ReturnButton" to="." method="_on_return_pressed"]

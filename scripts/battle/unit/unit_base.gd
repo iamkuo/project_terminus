@@ -126,8 +126,12 @@ func _perform_attack(target: Node) -> void:
 func take_damage(amount: int, attacker: Node) -> void:
 	var actual_damage = max(0, amount - stats.defense)
 	current_health -= actual_damage
-	health_changed.emit(current_health, stats.health)
-	if current_health <= 0:
+	
+	# Only emit health_changed if unit is still alive (not dying or dead)
+	if lifecycle_state == LifecycleState.ALIVE:
+		health_changed.emit(max(0, current_health), stats.health)
+	
+	if current_health <= 0 and lifecycle_state == LifecycleState.ALIVE:
 		# Notify the attacker so it can emit enemy_killed and update BattleManager
 		if attacker and attacker.has_method("_on_killed_target"):
 			attacker._on_killed_target(self)

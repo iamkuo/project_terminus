@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://d2kbgk6v4hfw4"]
+[gd_scene load_steps=5 format=3 uid="uid://d2kbgk6v4hfw4"]
 
 [ext_resource type="Script" uid="uid://dfixfufnxf5fe" path="res://scripts/battle/ui/spawn_ui.gd" id="1_c3msa"]
 [ext_resource type="Texture2D" uid="uid://cjmwhv0846in6" path="res://assets/images/ui/panels/04 Border 03.png" id="2_73l6q"]
@@ -14,29 +14,6 @@ texture_margin_top = 45.0
 texture_margin_right = 42.0
 texture_margin_bottom = 45.0
 region_rect = Rect2(4, 2, 183, 186)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_elixir_bar"]
-bg_color = Color(0.5094243, 0.0014038777, 0.67029357, 1)
-border_color = Color(0.1, 0.2, 0.5, 1)
-corner_radius_top_left = 4
-corner_radius_top_right = 4
-corner_radius_bottom_right = 4
-corner_radius_bottom_left = 4
-
-[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_c3msa"]
-load_path = "res://.godot/imported/02 Border 02 去背板.png-affcb891c36feb25ef35b97e94e0824a.ctex"
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_73l6q"]
-atlas = SubResource("CompressedTexture2D_c3msa")
-region = Rect2(0, 1, 63, 61)
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_d7tge"]
-texture = SubResource("AtlasTexture_73l6q")
-texture_margin_left = 15.0
-texture_margin_top = 15.0
-texture_margin_right = 15.0
-texture_margin_bottom = 15.0
-region_rect = Rect2(0, 0, 62, 61)
 
 [node name="SpawnUI" type="Control"]
 z_index = 1
@@ -61,55 +38,10 @@ grow_vertical = 2
 mouse_filter = 1
 theme_override_styles/panel = SubResource("StyleBoxTexture_t2po6")
 
-[node name="ElixirUI" type="Control" parent="."]
-layout_mode = 1
-anchor_left = 0.05
-anchor_top = 0.55
-anchor_right = 0.95
-anchor_bottom = 0.6
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="ElixirLabel" type="Label" parent="ElixirUI"]
-layout_mode = 1
-anchors_preset = -1
-anchor_right = 0.1
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-text = "5/10"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="ElixirBar" type="ProgressBar" parent="ElixirUI"]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.1
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_styles/fill = SubResource("StyleBoxFlat_elixir_bar")
-max_value = 10.0
-value = 5.0
-show_percentage = false
-
-[node name="BarBorder" type="Panel" parent="ElixirUI"]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.1
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_bottom = 3.1999817
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-theme_override_styles/panel = SubResource("StyleBoxTexture_d7tge")
-
 [node name="CardsUI" type="Control" parent="."]
 layout_mode = 1
 anchor_left = 0.05
-anchor_top = 0.65
+anchor_top = 0.55
 anchor_right = 0.95
 anchor_bottom = 0.95
 grow_horizontal = 2

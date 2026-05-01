@@ -1,0 +1,77 @@
+[gd_scene load_steps=8 format=3 uid="uid://bgd0dkk53lljq"]
+
+[ext_resource type="Script" uid="uid://cawsq0hb0qqga" path="res://scripts/battle/ui/elixir_ui.gd" id="1_elixir_ui"]
+[ext_resource type="FontFile" uid="uid://dxc2pi1bwr1uu" path="res://assets/fonts/Cubic_11.ttf" id="2_5kger"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_edtvx"]
+font = ExtResource("2_5kger")
+font_size = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_elixir_bar"]
+bg_color = Color(0.5094243, 0.0014038777, 0.67029357, 1)
+border_color = Color(0.1, 0.2, 0.5, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_c3msa"]
+load_path = "res://.godot/imported/02 Border 02 去背板.png-affcb891c36feb25ef35b97e94e0824a.ctex"
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_73l6q"]
+atlas = SubResource("CompressedTexture2D_c3msa")
+region = Rect2(0, 1, 63, 61)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_d7tge"]
+texture = SubResource("AtlasTexture_73l6q")
+texture_margin_left = 15.0
+texture_margin_top = 15.0
+texture_margin_right = 15.0
+texture_margin_bottom = 15.0
+region_rect = Rect2(0, 0, 62, 61)
+
+[node name="ElixirUI" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_elixir_ui")
+
+[node name="ElixirLabel" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 0.1
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "魔力: 5/10"
+label_settings = SubResource("LabelSettings_edtvx")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ElixirBar" type="ProgressBar" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.1
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/fill = SubResource("StyleBoxFlat_elixir_bar")
+max_value = 10.0
+value = 5.0
+show_percentage = false
+
+[node name="BarBorder" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_bottom = 3.1999817
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_d7tge")

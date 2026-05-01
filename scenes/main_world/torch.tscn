@@ -108,5 +108,5 @@ offset_top = -20.0
 offset_right = 40.0
 offset_bottom = -5.0
 grow_horizontal = 2
-text = "Memory"
+text = "記憶"
 alignment = 1

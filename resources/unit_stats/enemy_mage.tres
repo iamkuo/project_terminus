@@ -15,3 +15,4 @@ move_speed = 100.0
 view_distance = 350.0
 attack_distance = 300.0
 unit_id = "enemy_mage"
+display_name = "敵方法師"

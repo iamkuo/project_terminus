@@ -727,6 +727,59 @@ func _return_to_main_world() -> void:
 
 ---
 
+## Bug 16: Enemies Spawning From Destroyed Towers (FIXED)
+**Status:** ✅ FIXED
+
+### Symptoms
+- After all enemy towers are destroyed, enemies continue to spawn in the battle
+- AI spawning system attempts to spawn enemies even when no towers are available
+- Spawn attempts fail but continue repeatedly, wasting processing resources
+
+### Root Cause
+The AI spawning system in `BattleManager._process_ai_spawning()` was not checking if there were any alive enemy towers before attempting to spawn enemies. While the `get_spawn_point()` function correctly returned `Vector2.ZERO` when no towers were alive, the AI system continued to try spawning every cooldown cycle.
+
+**The flow:**
+1. All enemy towers destroyed → towers marked as `is_destroyed = true`
+2. AI spawning continues → calls `_process_ai_spawning()` every frame
+3. Function checks general conditions (ai_enabled, game_ended, unit_stats_registry) but **not tower availability**
+4. Attempts to spawn → `get_spawn_point()` returns `Vector2.ZERO` (no valid spawn location)
+5. `spawn_enemy()` returns early due to zero position
+6. Loop repeats every AI cooldown
+
+### Solution
+Added explicit check for alive enemy towers in the AI spawning system:
+
+```gdscript
+# Check if there are any alive enemy towers to spawn from
+var enemy_towers = get_tree().get_nodes_in_group("towers")
+var alive_enemy_towers = []
+
+for tower in enemy_towers:
+    if tower.team == Team.OPPONENT and not tower.is_destroyed:
+        alive_enemy_towers.append(tower)
+
+# If no alive enemy towers, don't attempt spawning
+if alive_enemy_towers.is_empty():
+    return
+```
+
+**Key improvement:**
+- AI spawning now checks tower availability **before** attempting to spawn
+- Prevents unnecessary spawn attempts when all towers are destroyed
+- Reduces processing overhead and eliminates failed spawn attempts
+- Maintains existing `get_spawn_point()` safety checks as backup
+
+**Files Changed:**
+- `scripts/battle/main/battle_manager.gd` - Added alive tower check in `_process_ai_spawning()`
+
+### Result
+✅ AI spawning stops when all enemy towers are destroyed
+✅ No more failed spawn attempts after towers destroyed
+✅ Processing resources conserved during end-game state
+✅ Existing tower destruction and game ending logic preserved
+
+---
+
 ## Related Documentation
 - [`../README.md`](../README.md) - Project architecture and core systems
 - [`ARCHITECTURE.md`](ARCHITECTURE.md) - Game architecture and signal interaction graphs

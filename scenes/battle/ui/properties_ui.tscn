@@ -1,6 +1,9 @@
-[gd_scene load_steps=2 format=3 uid="uid://bdw7ku2f5uedd"]
+[gd_scene load_steps=3 format=3 uid="uid://bdw7ku2f5uedd"]
 
 [ext_resource type="Script" uid="uid://d2jwrdvfdicfl" path="res://scripts/battle/ui/properties_ui.gd" id="1_properties_ui"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_pu5tw"]
+font_size = 24
 
 [node name="PropertiesUI" type="Control"]
 custom_minimum_size = Vector2(140, 130)
@@ -44,7 +47,8 @@ layout_mode = 2
 
 [node name="TitleLabel" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
-text = "Unit Properties"
+text = "單位屬性"
+label_settings = SubResource("LabelSettings_pu5tw")
 horizontal_alignment = 1
 
 [node name="HSeparator" type="HSeparator" parent="PanelContainer/MarginContainer/VBoxContainer"]
@@ -55,23 +59,28 @@ layout_mode = 2
 
 [node name="StayButton" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer/PatternButtons"]
 layout_mode = 2
-text = "Stay"
+theme_override_font_sizes/font_size = 12
+text = "停留"
 
 [node name="FollowPlayerButton" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer/PatternButtons"]
 layout_mode = 2
-text = "Follow Player"
+theme_override_font_sizes/font_size = 12
+text = "跟隨玩家"
 
 [node name="AttackEnemyButton" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer/PatternButtons"]
 layout_mode = 2
-text = "Attack Enemy"
+theme_override_font_sizes/font_size = 12
+text = "攻擊敵人"
 
 [node name="AttackTowerButton" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer/PatternButtons"]
 layout_mode = 2
-text = "Attack Tower"
+theme_override_font_sizes/font_size = 12
+text = "攻擊防禦塔"
 
 [node name="HSeparator2" type="HSeparator" parent="PanelContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
 
 [node name="CloseButton" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
-text = "✕ Close"
+theme_override_font_sizes/font_size = 24
+text = "✕ 關閉"

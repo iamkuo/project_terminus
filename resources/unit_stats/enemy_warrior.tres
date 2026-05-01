@@ -13,3 +13,4 @@ attack_damage = 30
 view_distance = 250.0
 attack_distance = 100.0
 unit_id = "enemy_warrior"
+display_name = "敵方戰士"

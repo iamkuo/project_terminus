@@ -22,9 +22,9 @@ func _ready():
 	_setup_ui()
 
 func _setup_ui():
-	cost_label = $MarginContainer/VBoxContainer/CostLabel
-	name_label = $MarginContainer/VBoxContainer/NameLabel
-	icon_texture = $MarginContainer/VBoxContainer/IconTexture
+	cost_label = $VBoxContainer/CostLabel
+	name_label = $VBoxContainer/NameLabel
+	icon_texture = $VBoxContainer/IconTexture
 	
 	if unit_stats:
 		if cost_label:

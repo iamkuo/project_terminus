@@ -163,13 +163,16 @@ func _initialize_battle() -> void:
 	spawn_points = curr.get_node_or_null("SpawnPoints")
 	allies_container = curr.get_node_or_null("AlliesContainer")
 	opponents_container = curr.get_node_or_null("EnemiesContainer")
-	elixir = curr.get_node_or_null("UI/SpawnUI")
+	elixir = curr.get_node_or_null("UI/ElixirUI")
 	
 	# Connect tower signals
 	if curr:
 		var tower_manager = curr.get_node_or_null("Towers")
-		if tower_manager and tower_manager.has_signal("all_towers_destroyed"):
-			tower_manager.all_towers_destroyed.connect(_on_all_towers_destroyed)
+		if tower_manager:
+			if tower_manager.has_signal("all_towers_destroyed"):
+				tower_manager.all_towers_destroyed.connect(_on_all_towers_destroyed)
+			if tower_manager.has_signal("tower_destroyed_notify"):
+				tower_manager.tower_destroyed_notify.connect(on_tower_destroyed)
 	
 	# Apply battle configuration
 	# Apply AI configuration
@@ -228,6 +231,9 @@ func _cleanup_battle() -> void:
 # ============================================================================
 
 func _process_ai_spawning(delta: float) -> void:
+	# DEBUG: Log AI spawning state
+	print("[AI Spawn] AI enabled: ", ai_enabled, " Game ended: ", game_ended, " Cooldown: ", ai_cooldown)
+	
 	if not (ai_enabled and not game_ended):
 		return
 	
@@ -242,12 +248,30 @@ func _process_ai_spawning(delta: float) -> void:
 	if unit_stats_registry.is_empty():
 		return
 	
+	# Check if there are any alive enemy towers to spawn from
+	var enemy_towers = get_tree().get_nodes_in_group("towers")
+	var alive_enemy_towers = []
+	
+	print("[AI Spawn] Total towers found: ", enemy_towers.size())
+	for tower in enemy_towers:
+		print("[AI Spawn] Tower - Team: ", tower.team, " Destroyed: ", tower.is_destroyed if "is_destroyed" in tower else "N/A")
+		if tower.team == Team.OPPONENT and not tower.is_destroyed:
+			alive_enemy_towers.append(tower)
+	
+	print("[AI Spawn] Alive enemy towers: ", alive_enemy_towers.size())
+	
+	# If no alive enemy towers, don't attempt spawning
+	if alive_enemy_towers.is_empty():
+		print("[AI Spawn] No alive enemy towers - skipping spawn attempt")
+		return
+	
 	ai_cooldown = randf_range(ai_cooldown_min, ai_cooldown_max)
 	
 	var stats_ids = unit_stats_registry.keys()
 	var random_stat = unit_stats_registry[stats_ids[randi() % stats_ids.size()]]
 	var lane = randi() % SPAWN_LANES
 	
+	print("[AI Spawn] Attempting to spawn enemy - Lane: ", lane)
 	spawn_enemy(random_stat, lane)
 
 # ============================================================================
@@ -260,27 +284,36 @@ func get_spawn_point(team: int, lane: int) -> Vector2:
 			var player = get_tree().get_first_node_in_group("player")
 			return player.global_position if is_instance_valid(player) else Vector2.ZERO
 		Team.OPPONENT:
+			print("[Get Spawn Point] Getting enemy spawn point for lane: ", lane)
 			# Check if there are any alive enemy towers to spawn from
 			var enemy_towers = get_tree().get_nodes_in_group("towers")
 			var alive_enemy_towers = []
 			
+			print("[Get Spawn Point] Checking towers for enemy spawning...")
 			for tower in enemy_towers:
+				print("[Get Spawn Point] Tower - Team: ", tower.team, " Destroyed: ", tower.is_destroyed if "is_destroyed" in tower else "N/A")
 				if tower.team == Team.OPPONENT and not tower.is_destroyed:
 					alive_enemy_towers.append(tower)
 			
+			print("[Get Spawn Point] Alive enemy towers: ", alive_enemy_towers.size())
+			
 			# If no alive enemy towers, don't spawn enemies
 			if alive_enemy_towers.is_empty():
+				print("[Get Spawn Point] No alive enemy towers - returning ZERO position")
 				return Vector2.ZERO
 			
 			# Use spawn points if available, but only if there are alive towers
 			if not spawn_points:
+				print("[Get Spawn Point] No spawn points available - returning ZERO")
 				return Vector2.ZERO
 			
 			var suffixes = ["Top", "Middle", "Bottom"]
 			var suffix = suffixes[lane] if lane >= 0 and lane < suffixes.size() else "Middle"
 			var spawn_node = spawn_points.get_node_or_null("R_" + suffix)
 			
-			return spawn_node.global_position if spawn_node else Vector2.ZERO
+			var result = spawn_node.global_position if spawn_node else Vector2.ZERO
+			print("[Get Spawn Point] Spawn node found: ", spawn_node != null, " Position: ", result)
+			return result
 		_:
 			return Vector2.ZERO
 
@@ -289,21 +322,26 @@ func spawn_ally(stats: UnitStats, lane: int) -> void:
 		return
 	
 	if elixir and not elixir.try_consume(stats.cost):
-		MessageManager.show_message("Not enough elixir!")
+		MessageManager.show_message("聖水不足！")
 		return
 	
 	var pos = get_spawn_point(Team.PLAYER, lane)
 	allies_container.spawn_unit(stats, pos, lane)
 
 func spawn_enemy(stats: UnitStats, lane: int) -> void:
+	print("[Spawn Enemy] Called - Game ended: ", game_ended, " Stats valid: ", stats != null, " Container valid: ", opponents_container != null)
+	
 	if not stats or not opponents_container:
 		return
 	
 	var pos = get_spawn_point(Team.OPPONENT, lane)
+	print("[Spawn Enemy] Got spawn position: ", pos)
 	
 	if pos == Vector2.ZERO:
+		print("[Spawn Enemy] Spawn position is ZERO - cancelling spawn")
 		return
 	
+	print("[Spawn Enemy] Spawning enemy at position: ", pos)
 	opponents_container.spawn_unit(stats, pos, lane)
 
 func can_spawn(team: int, cost: int) -> bool:
@@ -338,11 +376,15 @@ func show_ending_screen(winning_team: int) -> void:
 		get_tree().paused = true
 
 func on_tower_destroyed(tower: Node) -> void:
-	var win_team = Team.PLAYER if tower.team == Team.OPPONENT else Team.OPPONENT
-	MessageManager.show_message("Team %d won!" % win_team, 5.0)
-	game_state = GameState.GAME_OVER
-	game_state_changed.emit(game_state)
-	get_tree().paused = true
+	print("[Tower Destroyed] Tower destroyed - Team: ", tower.team, " Game ended: ", game_ended)
+	
+	# Don't end the game for single tower destruction
+	# Only the TowerManager should handle game ending when all towers are destroyed
+	# This function is now just for logging/debug purposes
+	if tower.team == Team.OPPONENT:
+		print("[Tower Destroyed] Enemy tower destroyed - AI spawning will check for remaining towers")
+	elif tower.team == Team.PLAYER:
+		print("[Tower Destroyed] Player tower destroyed")
 
 func _on_all_towers_destroyed(winning_team: int) -> void:
 	print("[BattleManager] All towers destroyed! Winning team: ", winning_team)
@@ -403,4 +445,3 @@ func _on_return_scene_finished(scene_name: String) -> void:
 		# Disconnect to avoid multiple calls
 		if SceneSwitcher.scene_transition_finished.is_connected(_on_return_scene_finished):
 			SceneSwitcher.scene_transition_finished.disconnect(_on_return_scene_finished)
-

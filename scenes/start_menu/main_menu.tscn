@@ -1,9 +1,8 @@
-[gd_scene load_steps=38 format=3 uid="uid://ypplfbkktob5"]
+[gd_scene load_steps=29 format=3 uid="uid://ypplfbkktob5"]
 
 [ext_resource type="Script" uid="uid://bdf0jm8drjafc" path="res://scripts/main_menu/main_menu.gd" id="1_8ln24"]
 [ext_resource type="Texture2D" uid="uid://ca1w24r726wp3" path="res://assets/images/backgrounds/main_menu_bg.png" id="1_l6cm7"]
 [ext_resource type="FontFile" uid="uid://dxc2pi1bwr1uu" path="res://assets/fonts/Cubic_11.ttf" id="2_ekxnf"]
-[ext_resource type="Texture2D" uid="uid://ctsb3wvh450d3" path="res://assets/images/objects/owowowwo.png" id="5_oa1go"]
 [ext_resource type="PackedScene" uid="uid://cpog3fskyl4m7" path="res://scenes/main_world/pause.tscn" id="6_pause"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_ekxnf"]
@@ -172,61 +171,6 @@ shadow_size = 7
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_1dfpl"]
 
-[sub_resource type="StyleBoxLine" id="StyleBoxLine_8ln24"]
-color = Color(0.3137255, 0.7294118, 0.15294118, 1)
-thickness = 10
-
-[sub_resource type="StyleBoxLine" id="StyleBoxLine_rtw2f"]
-color = Color(0.29358447, 0.39963317, 0.14063469, 1)
-thickness = 10
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_oa1go"]
-
-[sub_resource type="DPITexture" id="DPITexture_rtw2f"]
-_source = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"32\" height=\"16\"><rect width=\"30\" height=\"14\" x=\"1\" y=\"1\" fill=\"#fff\" fill-opacity=\".37\" rx=\"7\"/><circle cx=\"24\" cy=\"8\" r=\"5\" fill=\"#1a1a1a\" fill-opacity=\".5\"/></svg>
-"
-
-[sub_resource type="DPITexture" id="DPITexture_oa1go"]
-_source = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"32\" height=\"16\"><rect width=\"30\" height=\"14\" x=\"1\" y=\"1\" fill=\"#fff\" fill-opacity=\".75\" rx=\"7\"/><circle cx=\"8\" cy=\"8\" r=\"5\" fill=\"#1a1a1a\"/></svg>
-"
-
-[sub_resource type="Theme" id="Theme_l6cm7"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8ln24"]
-bg_color = Color(0.2159017, 0.21590173, 0.2159017, 0.49803922)
-border_width_left = 2
-border_width_bottom = 2
-border_color = Color(0.096204735, 0.09620475, 0.096204735, 0.5803922)
-corner_radius_top_left = 1
-corner_radius_top_right = 1
-corner_radius_bottom_right = 1
-corner_radius_bottom_left = 1
-corner_detail = 1
-expand_margin_left = 2.0
-expand_margin_top = 5.0
-shadow_size = 2
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tbmy8"]
-bg_color = Color(0.06879827, 0.06879828, 0.06879828, 0.53333336)
-border_width_top = 3
-border_width_right = 3
-border_color = Color(1, 1, 1, 0)
-corner_radius_top_left = 2
-corner_radius_top_right = 2
-corner_radius_bottom_right = 2
-corner_radius_bottom_left = 2
-shadow_color = Color(0.04755766, 0.047557645, 0.047557645, 0.49019608)
-shadow_size = 7
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jk1qb"]
-bg_color = Color(0.019607844, 0, 0.047058824, 0.5568628)
-corner_radius_top_left = 3
-corner_radius_top_right = 3
-corner_radius_bottom_right = 3
-corner_radius_bottom_left = 3
-shadow_color = Color(0.029506557, 0.029506557, 0.029506557, 0.45490196)
-shadow_size = 7
-
 [sub_resource type="LabelSettings" id="LabelSettings_8ln24"]
 font_size = 36
 
@@ -348,6 +292,7 @@ theme_override_styles/focus = SubResource("StyleBoxEmpty_1dfpl")
 text = "離開"
 
 [node name="Pause" parent="." instance=ExtResource("6_pause")]
+layout_mode = 1
 
 [node name="AboutPanel" type="Panel" parent="."]
 visible = false
@@ -386,9 +331,9 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_AboutText")
 layout_mode = 2
 theme_override_fonts/font = ExtResource("2_ekxnf")
 theme_override_font_sizes/font_size = 24
-text = "主世界程式設計:郭睿元
+text = "核心程式&系統設計、專案管理與除錯:郭睿元
 UI設計:徐安霆
-戰鬥機制設計:潘羽恆
+戰鬥機制發想&戰鬥畫面程式草稿:潘羽恆
 素材製作&美術總監:王郁政"
 label_settings = SubResource("LabelSettings_wu84c")
 horizontal_alignment = 1

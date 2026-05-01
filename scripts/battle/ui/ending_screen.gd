@@ -10,6 +10,7 @@ enum Team { PLAYER = 0, OPPONENT = 1 }
 @onready var kills_label: Label = $BackgroundPanel/VBoxContainer/killslable
 @onready var damage_label: Label = $BackgroundPanel/VBoxContainer/damagelable
 @onready var time_label: Label = $BackgroundPanel/VBoxContainer/timelabel
+@onready var title_label: Label = $BackgroundPanel/VBoxContainer/TitleLabel
 func _ready():
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	visible = false
@@ -18,17 +19,30 @@ func show_result(winning_team: int):
 	print("[EndingScreen] show_result called with winning_team: ", winning_team)
 	visible = true
 	print("[EndingScreen] Visible set to true")
-	kills_label.text = "Defeats:" + str(BattleManager.enemy_killed)
-	damage_label.text = "Damage Dealt:" +str(BattleManager.damage_dealt)
-	time_label.text = "Time Spent:" + str("%01d" % BattleManager.minutes) + str("m")+ str("%02d" % BattleManager.seconds) + str("s")
+	
+	# Merge battle name and result in title
+	var battle_name = "戰鬥"
+	if BattleManager.current_config.has("battle_name"):
+		battle_name = BattleManager.current_config.battle_name
+	elif BattleManager.current_config.has("stage_data") and BattleManager.current_config.stage_data:
+		battle_name = BattleManager.current_config.stage_data.name
+	
+	var result_text = "勝利！" if winning_team == player_team else "失敗"
+	title_label.text = battle_name + " - " + result_text
+	
 	if winning_team == player_team:
-		result_label.text = "VICTORY!"
-		result_label.modulate = win_color
+		title_label.modulate = win_color
 		print("[EndingScreen] Set to VICTORY")
 	else:
-		result_label.text = "DEFEAT"
-		result_label.modulate = lose_color
+		title_label.modulate = lose_color
 		print("[EndingScreen] Set to DEFEAT")
+	
+	# Hide the separate result label since it's now merged with title
+	result_label.visible = false
+	
+	kills_label.text = "擊敗數:" + str(BattleManager.enemy_killed)
+	damage_label.text = "造成傷害:" +str(BattleManager.damage_dealt)
+	time_label.text = "戰鬥時間:" + str("%01d" % BattleManager.minutes) + str("分")+ str("%02d" % BattleManager.seconds) + str("秒")
 	print("[EndingScreen] show_result completed")
 
 func _on_restart_pressed():
