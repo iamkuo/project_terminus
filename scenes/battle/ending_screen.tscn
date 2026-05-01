@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://quque6ani7t8"]
+[gd_scene load_steps=7 format=3 uid="uid://quque6ani7t8"]
 
 [ext_resource type="Script" uid="uid://gjhfuviek4ek" path="res://scripts/battle/ui/ending_screen.gd" id="1_4vp0n"]
 [ext_resource type="Texture2D" uid="uid://cjmwhv0846in6" path="res://assets/images/ui/panels/04 Border 03.png" id="1_61pod"]
@@ -11,15 +11,6 @@ texture_margin_top = 48.0
 texture_margin_right = 48.0
 texture_margin_bottom = 48.0
 region_rect = Rect2(576, 0, 192, 192)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_t4ahs"]
-bg_color = Color(0.056291588, 0.05629161, 0.05629155, 1)
-corner_radius_top_left = 3
-corner_radius_top_right = 3
-corner_radius_bottom_right = 3
-corner_radius_bottom_left = 3
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_t4ahs"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jkwpc"]
 bg_color = Color(0.05490196, 0.05490196, 0.05490196, 1)
@@ -107,30 +98,15 @@ horizontal_alignment = 1
 layout_mode = 2
 theme_override_constants/separation = 30
 
-[node name="ButtonContainer" type="HBoxContainer" parent="BackgroundPanel/VBoxContainer"]
-layout_mode = 2
-theme_override_constants/separation = 50
-alignment = 1
-
-[node name="RestartButton" type="Button" parent="BackgroundPanel/VBoxContainer/ButtonContainer"]
+[node name="ReturnButton" type="Button" parent="BackgroundPanel/VBoxContainer"]
 custom_minimum_size = Vector2(150, 40)
 layout_mode = 2
-theme_override_constants/h_separation = 11
-theme_override_constants/icon_max_width = 500
-theme_override_fonts/font = ExtResource("3_t4ahs")
-theme_override_font_sizes/font_size = 27
-theme_override_styles/normal = SubResource("StyleBoxFlat_t4ahs")
-theme_override_styles/focus = SubResource("StyleBoxEmpty_t4ahs")
-text = "Restart"
-
-[node name="MainMenuButton" type="Button" parent="BackgroundPanel/VBoxContainer/ButtonContainer"]
-custom_minimum_size = Vector2(150, 40)
-layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
 theme_override_fonts/font = ExtResource("3_t4ahs")
 theme_override_font_sizes/font_size = 27
 theme_override_styles/normal = SubResource("StyleBoxFlat_jkwpc")
 theme_override_styles/focus = SubResource("StyleBoxEmpty_jkwpc")
-text = "Main Menu"
+text = "Return"
 
-[connection signal="pressed" from="BackgroundPanel/VBoxContainer/ButtonContainer/RestartButton" to="." method="_on_restart_pressed"]
-[connection signal="pressed" from="BackgroundPanel/VBoxContainer/ButtonContainer/MainMenuButton" to="." method="_on_main_menu_pressed"]
+[connection signal="pressed" from="BackgroundPanel/VBoxContainer/ReturnButton" to="." method="_on_return_pressed"]

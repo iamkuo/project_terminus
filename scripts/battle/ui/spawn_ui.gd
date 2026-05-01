@@ -57,7 +57,7 @@ func _create_card(stats: UnitStats):
 		card.call("set_hotkey", str(active_cards.size()))
 
 func _input(event: InputEvent) -> void:
-	# Check if any Properties UI is visible and adjust mouse filter
+	# Check if any Properties UI is visible
 	var all_properties = get_tree().get_nodes_in_group("properties_ui")
 	var any_visible = false
 	for p in all_properties:
@@ -65,21 +65,18 @@ func _input(event: InputEvent) -> void:
 			any_visible = true
 			break
 	
-	# CRITICAL: Change mouse_filter to allow clicks through to Properties UI
-	# 0 = PASS, 1 = STOP (blocks everything), 2 = IGNORE
+	# CRITICAL: Disable SpawnUI entirely when Properties UI is open due to CanvasLayer priority
 	if any_visible:
-		mouse_filter = Control.MOUSE_FILTER_IGNORE  # Let clicks pass through
-	else:
-		mouse_filter = Control.MOUSE_FILTER_STOP   # Normal blocking behavior
+		# Only allow TAB to toggle visibility when Properties UI is open
+		if event.is_action_pressed("ui_accept") or (event is InputEventKey and event.keycode == KEY_TAB and event.pressed):
+			visible = not visible
+			get_viewport().set_input_as_handled()
+		return  # Block all other input when Properties UI is open
 	
-	# Always allow toggling visibility with TAB even when properties UI is open
+	# Normal input handling when no Properties UI is visible
 	if event.is_action_pressed("ui_accept") or (event is InputEventKey and event.keycode == KEY_TAB and event.pressed):
 		visible = not visible
 		get_viewport().set_input_as_handled()
-		return
-	
-	# Block other inputs (number keys) when properties UI is visible
-	if any_visible:
 		return
 		
 	if event is InputEventKey and event.pressed:

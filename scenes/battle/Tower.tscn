@@ -1,16 +1,23 @@
-[gd_scene load_steps=4 format=3 uid="uid://cl7hmeq86ar3y"]
+[gd_scene load_steps=7 format=3 uid="uid://cl7hmeq86ar3y"]
 
 [ext_resource type="Script" uid="uid://diye52n646koe" path="res://scripts/battle/tower/tower_base.gd" id="1_tower"]
 [ext_resource type="Texture2D" uid="uid://dlayypi5c8aj3" path="res://assets/images/environment/house.png" id="2_kl3vk"]
+[ext_resource type="FontFile" uid="uid://dxc2pi1bwr1uu" path="res://assets/fonts/Cubic_11.ttf" id="3_abwh7"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_tower"]
-size = Vector2(80, 100)
+size = Vector2(40, 40)
+
+[sub_resource type="LabelSettings" id="LabelSettings_bthrv"]
+font = ExtResource("3_abwh7")
+font_size = 12
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_abwh7"]
+size = Vector2(500, 200)
 
 [node name="Tower" type="Node2D"]
 script = ExtResource("1_tower")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-position = Vector2(0, 48)
 texture = ExtResource("2_kl3vk")
 
 [node name="Area2D" type="Area2D" parent="."]
@@ -18,16 +25,16 @@ collision_layer = 2
 collision_mask = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
-position = Vector2(0, 48)
+position = Vector2(0, -10)
 shape = SubResource("RectangleShape2D_tower")
 
 [node name="BarRoot" type="Control" parent="."]
 layout_mode = 3
 anchors_preset = 0
-offset_left = -28.0
-offset_top = -4.0
-offset_right = 28.0
-offset_bottom = 4.0
+offset_left = -30.0
+offset_top = -50.0
+offset_right = 30.0
+offset_bottom = -42.0
 
 [node name="ProgressBar" type="ProgressBar" parent="BarRoot"]
 layout_mode = 1
@@ -40,3 +47,29 @@ grow_horizontal = 2
 grow_vertical = 2
 value = 100.0
 show_percentage = false
+
+[node name="HealthLabel" type="Label" parent="BarRoot"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -9.0
+offset_right = 20.0
+offset_bottom = 11.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "1000"
+label_settings = SubResource("LabelSettings_bthrv")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="RestrictionArea" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RestrictionArea"]
+position = Vector2(-250, 0)
+shape = SubResource("RectangleShape2D_abwh7")

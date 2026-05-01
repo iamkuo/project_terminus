@@ -1,6 +1,6 @@
 [gd_resource type="Resource" script_class="UnitStats" load_steps=2 format=3 uid="uid://dbdoso6n8jdev"]
 
-[ext_resource type="Script" uid="uid://d2pre0q0hthyw" path="res://important_scripts/battle/unit/unit_stats.gd" id="1_stats"]
+[ext_resource type="Script" uid="uid://d2pre0q0hthyw" path="res://scripts/battle/unit/unit_stats.gd" id="1_stats"]
 
 [resource]
 resource_name = "EnemyArcherStats"

@@ -73,7 +73,6 @@ func _check_stage_progression() -> void:
 
 		# 符合條件：更新進度
 		current_stage_index = next_idx
-		print("advanced stage to " + str(current_stage_index) + " at exp " + str(current_exp))
 		
 		# Unlock the memory shard associated with this stage (if any)
 		if stage.unlocks_memory_id:
@@ -122,11 +121,11 @@ func _load_resources(path: String, type: GDScript) -> Dictionary:
 func collect_memory(id: String) -> void:
 	if id not in unlocked_memory_ids:
 		unlocked_memory_ids.append(id)
-		print("Signal emitted: memory_collected for ID ", id)
 		memory_collected.emit(id)
 		data_updated.emit()
 	else:
-		print("Memory already collected: ", id)
+		# Memory already collected
+		pass
 
 func upgrade_player_skill(id: String) -> bool:
 	var skill = active_skills.get(id)

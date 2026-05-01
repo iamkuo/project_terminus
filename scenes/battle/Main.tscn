@@ -1,6 +1,6 @@
 [gd_scene load_steps=17 format=4 uid="uid://dqrfpbww1utr2"]
 
-[ext_resource type="Script" path="res://important_scripts/battle_manager.gd" id="1_nxtc6"]
+[ext_resource type="Script" path="res://scripts/battle/main/battle_manager.gd" id="1_nxtc6"]
 [ext_resource type="Texture2D" uid="uid://dtu2mud6hhf86" path="res://assets/images/environment/landscape/decor_8x8.png" id="1_vcsgt"]
 [ext_resource type="Texture2D" uid="uid://co5n7bwvy1gmq" path="res://assets/images/environment/landscape/plains.png" id="2_vcsgt"]
 [ext_resource type="Texture2D" uid="uid://dlayypi5c8aj3" path="res://assets/images/environment/house.png" id="3_vcsgt"]
@@ -9,9 +9,9 @@
 [ext_resource type="PackedScene" uid="uid://quque6ani7t8" path="res://scenes/battle/ending_screen.tscn" id="7_jlsqs"]
 [ext_resource type="PackedScene" uid="uid://bv8xk2m4n5p6q" path="res://scenes/global/message_ui.tscn" id="8_message_ui"]
 [ext_resource type="PackedScene" uid="uid://cl7hmeq86ar3y" path="res://scenes/battle/Tower.tscn" id="8_tower_scene"]
-[ext_resource type="Script" path="res://important_scripts/tower/tower_manager.gd" id="9_tower_mgr"]
-[ext_resource type="Script" path="res://important_scripts/unit/allies_manager.gd" id="script_allies"]
-[ext_resource type="Script" path="res://important_scripts/unit/enemies_manager.gd" id="script_enemies"]
+[ext_resource type="Script" path="res://scripts/battle/tower/tower_manager.gd" id="9_tower_mgr"]
+[ext_resource type="Script" path="res://scripts/battle/unit/allies_manager.gd" id="script_allies"]
+[ext_resource type="Script" path="res://scripts/battle/unit/enemies_manager.gd" id="script_enemies"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jlsqs"]
 texture = ExtResource("1_vcsgt")

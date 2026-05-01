@@ -110,11 +110,9 @@ func _find_nearest_tower(unit: Node2D) -> Node:
 	return nearest
 
 func _get_lane_goal_pos(unit: Node2D) -> Vector2:
-	const PLAYER_GOAL_X: float = 1400.0
-	const OPPONENT_GOAL_X: float = 200.0
-	
 	if unit is UnitBase:
-		var x = PLAYER_GOAL_X if unit.team == UnitBase.Team.PLAYER else OPPONENT_GOAL_X
-		return Vector2(x, unit.global_position.y)
+		# Use the same logic as unit_base.gd for consistency
+		return unit._get_lane_goal_pos()
 	
-	return Vector2(PLAYER_GOAL_X, unit.global_position.y)
+	# Fallback for non-unit nodes
+	return Vector2(1100.0, unit.global_position.y)

@@ -164,7 +164,6 @@ func _on_memory_collected(memory_id: String):
 	var torch = _memory_torches.get(memory_id)
 	if torch:
 		torch.refresh_visuals(true)
-		print("Torch lit for memory: ", memory_id)
 
 func perform_upgrade():
 	if current_skill_id == "": return
@@ -181,7 +180,8 @@ func perform_upgrade():
 		# Re-open detail window to show updated level
 		open_skill_detail(current_skill_id)
 	else:
-		print("水晶不足") # Not enough crystals
+		# Not enough crystals
+		pass
 
 	# Call the centralized upgrade function in ProgressManager
 	var success = ProgressManager.upgrade_player_skill(current_skill_id)
@@ -190,4 +190,5 @@ func perform_upgrade():
 		# Re-open detail window to show updated level and potentially new cost
 		open_skill_detail(current_skill_id)
 	else:
-		print("Skill upgrade failed.") # Error message printed by ProgressManager
+		# Skill upgrade failed
+		pass

@@ -4,8 +4,7 @@ extends Node2D
 
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D # Corrected node reference
 
-func _on_area_2d_body_entered(body: Node2D) -> void:
-	print("touched a shard: ", memory_resource.id)
+func _on_area_2d_body_entered(_body: Node2D) -> void:
 	ProgressManager.collect_memory(memory_resource.id)
 	
 	if memory_resource.cutscene_id != "":

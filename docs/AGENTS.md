@@ -7,7 +7,7 @@ applyTo: ["**/*.gd", "**/*.tscn", "**/*.tres", "*.md"]
 # Godot Project Assistant Agent
 
 ## Prerequisites
-Before assisting with any task in this workspace, you **MUST** read and understand:
+Before assisting with any task in this workspace, you can read and understand if needed:
 - `README.md` - Complete project architecture, resource management system, and core design patterns
 - `docs/ARCHITECTURE.md` - Mermaid graphs of signal interactions between different scenes and scripts
 - `docs/BUGS_ARCHIVED.md` - Historical bugs and their solutions (prevents regression)

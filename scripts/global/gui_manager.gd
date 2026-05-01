@@ -16,6 +16,8 @@ var text_end: Label
 @onready var dialog_color_rect: ColorRect # New reference for dialog overlay
 @onready var fullscreen_label: Label
 @onready var texture_rect: TextureRect
+var animation_player : AnimationPlayer
+var transition_rect : ColorRect	
 
 # =============================
 # State Variables
@@ -45,7 +47,6 @@ signal fullscreen_finished()
 
 func _ready() -> void:
 	await get_tree().process_frame
-	print("GUI Manager: Initializing...")
 	dialog = get_node("/root/Game/GUI/Dialog") as Control
 	text_label = dialog.get_node("HBoxContainer/Label") as Label
 	text_end = dialog.get_node("HBoxContainer/End") as Label
@@ -54,8 +55,9 @@ func _ready() -> void:
 	dialog_color_rect = fullscreen_ui.get_node("DialogOverlay") as ColorRect 
 	fullscreen_label = fullscreen_ui.get_node("Label") as Label
 	texture_rect = fullscreen_ui.get_node("TextureRect") as TextureRect
+	animation_player = fullscreen_ui.get_node("AnimationPlayer") as AnimationPlayer
+	transition_rect = fullscreen_ui.get_node("TransitionColorRect") as ColorRect
 	
-	print("GUI Manager: Nodes initialized successfully")
 	dialog.hide()
 	fullscreen_ui.hide()
 	_change_state(gui_state.READY)
@@ -93,13 +95,10 @@ func _process(_delta: float) -> void:
 # =============================
 
 func queue_text(text: String) -> void:
-	print("GUI Manager: Queueing text: ", text)
 	main_queue.push_back({"type" : "dialog","content" : text})
 	
 func queue_texts(texts: Array[String]) -> void:
-	print("GUI Manager: Queueing ", texts.size(), " texts")
 	for t in texts:
-		print("GUI Manager: - ", t)
 		main_queue.push_back({"type" : "dialog","content" : t})
 
 func queue_fullscreen(item_data: Dictionary) -> void:
@@ -192,3 +191,33 @@ func _show_fullscreen_logic(data: Dictionary) -> void:
 			texture_rect.show()
 			texture_rect.texture = data.texture
 			_change_state(gui_state.FULLSCREEN_FINISHED)
+
+# =============================
+# Transition Functions
+# =============================
+
+# 統一處理「退場動畫」（畫面被遮住）
+func transition_out(type: String = "none") -> void:
+	transition_rect.mouse_filter = Control.MOUSE_FILTER_STOP
+	if fullscreen_ui:
+		fullscreen_ui.show()
+	transition_rect.show()
+	
+	var animation_name = "%s_in" % type
+	if not animation_player.has_animation(animation_name):
+		animation_name = "none_in"
+	
+	animation_player.play(animation_name)
+	await animation_player.animation_finished
+
+# 統一處理「進場動畫」（畫面重新亮起）
+func transition_in(type: String = "none") -> void:
+	var animation_name = "%s_out" % type
+	if not animation_player.has_animation(animation_name):
+		animation_name = "none_out"
+	
+	animation_player.play(animation_name)
+	await animation_player.animation_finished
+	
+	transition_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	transition_rect.hide()

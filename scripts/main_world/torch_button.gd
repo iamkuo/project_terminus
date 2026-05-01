@@ -21,11 +21,9 @@ func refresh_visuals(is_unlocked = null) -> void:
 			if state_to_apply:
 				animated_sprite.play("lit")
 				self.modulate = Color.WHITE
-				print("[Debug] ", name, ": Lit")
 			else:
 				animated_sprite.play("unlit")
 				self.modulate = Color(0.6, 0.6, 0.6)
-				print("[Debug] ", name, ": Unlit")
 
 	# 2. 修正縮放與置中邏輯
 	_update_layout()

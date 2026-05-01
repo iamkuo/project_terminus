@@ -83,8 +83,10 @@ position = Vector2(584, 328)
 [node name="UI" type="CanvasLayer" parent="."]
 
 [node name="Pause" parent="UI" instance=ExtResource("pause_scene")]
+visible = false
 
 [node name="SpawnUI" parent="UI" instance=ExtResource("6_nxtc6")]
+visible = false
 z_index = 0
 anchors_preset = -1
 anchor_left = 0.05
@@ -93,10 +95,8 @@ anchor_right = 0.95
 offset_left = -49.600002
 offset_top = -133.0
 offset_right = 65.599976
-script = null
 
 [node name="MessageUI" parent="UI" instance=ExtResource("8_message_ui")]
 
 [node name="EndingScreen" parent="UI" instance=ExtResource("7_jlsqs")]
 visible = false
-script = null

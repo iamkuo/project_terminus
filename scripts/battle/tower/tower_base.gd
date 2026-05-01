@@ -15,25 +15,52 @@ var current_health: int = 0
 var is_destroyed: bool = false
 
 @onready var _health_bar: ProgressBar = $BarRoot/ProgressBar
+@onready var _health_label: Label = $BarRoot/HealthLabel if has_node("BarRoot/HealthLabel") else null
+@onready var _restriction_area: Area2D = $RestrictionArea if has_node("RestrictionArea") else null
 
 func _ready():
 	current_health = max_health
 	add_to_group("towers")
 	
-	if not is_instance_valid(_health_bar):
-		return
+	# Set up restriction area for enemy towers
+	if team == Team.OPPONENT and _restriction_area:
+		_restriction_area.add_to_group("tower_restrictions")
+		# Make it detect player units (player units are on layer 1)
+		# Override the scene file settings with proper collision setup
+		_restriction_area.collision_layer = 4  # Restriction layer
+		_restriction_area.collision_mask = 1   # Detect player layer
+		
+		# Make restriction area visible in editor for debugging
+		if Engine.is_editor_hint():
+			_restriction_area.visible = true
+		else:
+			_restriction_area.visible = false
+	
+	# Connect health changed signal for both health bar and label
 	health_changed.connect(_on_health_bar_changed)
+	
+	# Debug: Check if health label was found
+	print("[Tower] Health label found: ", _health_label != null, " Health bar found: ", _health_bar != null)
+	
+	# Initialize health display
 	call_deferred("_on_health_bar_changed", current_health, max_health)
 
 func _on_health_bar_changed(cur: int, max_hp: int) -> void:
-	if not _health_bar:
-		return
-	if max_hp <= 0:
-		_health_bar.value = 0.0
+	# Update health bar
+	if _health_bar:
+		if max_hp <= 0:
+			_health_bar.value = 0.0
+		else:
+			_health_bar.value = 100.0 * float(cur) / float(max_hp)
+	
+	# Update health label
+	if _health_label:
+		_health_label.text = str(cur) + "/" + str(max_hp)
+		print("[Tower] Health label updated: ", _health_label.text)
 	else:
-		_health_bar.value = 100.0 * float(cur) / float(max_hp)
+		print("[Tower] Health label not found!")
 
-func take_damage(amount: int, target: Node) -> void:
+func take_damage(amount: int, _target: Node) -> void:
 	if is_destroyed: return
 
 	var actual_damage = max(0, amount - defense)
@@ -45,8 +72,12 @@ func take_damage(amount: int, target: Node) -> void:
 
 func _destroy():
 	is_destroyed = true
+	
+	# Remove restriction area if it exists
+	if _restriction_area and is_instance_valid(_restriction_area):
+		_restriction_area.queue_free()
+	
 	tower_destroyed.emit(self)
-
 	_play_destruction_effect()
 	queue_free()
 

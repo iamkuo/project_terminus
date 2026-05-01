@@ -9,7 +9,7 @@ const ARRIVAL_DISTANCE: float = 5.0
 const MOVING_SPEED_THRESHOLD: float = 5.0
 const MAX_SEARCH_DISTANCE: float = 1e9
 const CLICK_COLLISION_RADIUS: float = 20.0
-const PLAYER_GOAL_X: float = 1400.0
+const PLAYER_GOAL_X: float = 1100.0
 const OPPONENT_GOAL_X: float = 200.0
 const ATTACK_ANIMATION_DELAY: float = 0.3
 const DEATH_ANIMATION_DELAY: float = 0.5
@@ -42,15 +42,28 @@ func _ready():
 	if stats:
 		if team == 1:
 			current_health = int(stats.health * BattleManager.enemy_multiplyer)
-		current_health = stats.health
+		else:
+			current_health = stats.health
 	else:
 		current_health = 100
 		stats = UnitStats.new()
+	
+	# Emit health changed signal to initialize UI display
+	health_changed.emit(current_health, stats.health)
 
 func _physics_process(delta: float):
 	if lifecycle_state != LifecycleState.ALIVE:
 		return
-
+	
+	# Check if game has ended - stop movement for non-player units
+	var battle_manager = _get_battle_manager()
+	if battle_manager and battle_manager.has_method("is_game_ended") and battle_manager.is_game_ended():
+		# Only allow player movement when game has ended
+		if team != Team.PLAYER:
+			velocity = Vector2.ZERO
+			_play_action("idle")
+			return
+	
 	var was_moving = velocity.length() > MOVING_SPEED_THRESHOLD
 	attack_cooldown = max(0.0, attack_cooldown - delta)
 	
@@ -117,7 +130,7 @@ func take_damage(amount: int, attacker: Node) -> void:
 	if current_health <= 0:
 		# Notify the attacker so it can emit enemy_killed and update BattleManager
 		if attacker and attacker.has_method("_on_killed_target"):
-			attacker._on_killed_target(self )
+			attacker._on_killed_target(self)
 		lifecycle_state = LifecycleState.DYING
 		_play_action("die")
 		await get_tree().create_timer(DEATH_ANIMATION_DELAY).timeout
@@ -180,6 +193,11 @@ func _move_towards(target_pos: Vector2):
 		velocity = dir.normalized() * stats.move_speed
 		if sprite:
 			sprite.flip_h = dir.x < 0
+	
+	# Check for tower restriction areas before moving
+	if team == Team.PLAYER and _is_path_blocked_by_restriction():
+		velocity = Vector2.ZERO
+	
 	move_and_slide()
 
 
@@ -244,6 +262,55 @@ func _find_nearest_tower_fallback() -> Node:
 	return nearest
 
 func _get_lane_goal_pos() -> Vector2:
-	var x = PLAYER_GOAL_X if team == Team.PLAYER else OPPONENT_GOAL_X
-	return Vector2(x, global_position.y)
+	# For player units, use actual enemy tower positions as goal
+	if team == Team.PLAYER:
+		var enemy_towers = get_tree().get_nodes_in_group("towers")
+		var nearest_tower: Node2D = null
+		var nearest_dist: float = 1e9
+		
+		for tower in enemy_towers:
+			if tower.team == Team.PLAYER or tower.is_destroyed:
+				continue
+			var dist = global_position.distance_to(tower.global_position)
+			if dist < nearest_dist:
+				nearest_dist = dist
+				nearest_tower = tower
+		
+		if nearest_tower:
+			# Move to a position slightly before the tower (for attack range)
+			var direction = (nearest_tower.global_position - global_position).normalized()
+			return nearest_tower.global_position - direction * 50.0
+		else:
+			# Fallback to hardcoded position if no towers found
+			return Vector2(PLAYER_GOAL_X, global_position.y)
+	else:
+		# For enemy units, use hardcoded position or find player towers
+		var player_towers = get_tree().get_nodes_in_group("towers")
+		var nearest_tower: Node2D = null
+		var nearest_dist: float = 1e9
+		
+		for tower in player_towers:
+			if tower.team == Team.OPPONENT or tower.is_destroyed:
+				continue
+			var dist = global_position.distance_to(tower.global_position)
+			if dist < nearest_dist:
+				nearest_dist = dist
+				nearest_tower = tower
+		
+		if nearest_tower:
+			var direction = (nearest_tower.global_position - global_position).normalized()
+			return nearest_tower.global_position - direction * 50.0
+		else:
+			return Vector2(OPPONENT_GOAL_X, global_position.y)
+
+func _is_path_blocked_by_restriction() -> bool:
+	# Check if unit is inside any tower restriction area
+	var restrictions = get_tree().get_nodes_in_group("tower_restrictions")
+	for restriction in restrictions:
+		if is_instance_valid(restriction):
+			# Try to find the unit's Area2D node
+			var unit_area = get_node_or_null("Area2D")
+			if unit_area and restriction.overlaps_area(unit_area):
+				return true
+	return false
 	

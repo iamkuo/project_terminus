@@ -80,7 +80,7 @@ func _on_hit(hit_obj: Node) -> void:
 		return # Friendly fire or invalid team
 		
 	# Apply damage
-	target_entity.take_damage(damage)
+	target_entity.take_damage(damage, shooter)
 	
 	# Signal shooter
 	if shooter and shooter.has_signal("dealt_damage"):

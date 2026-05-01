@@ -1,17 +1,33 @@
-[gd_scene load_steps=6 format=3 uid="uid://dw1mwbbepdoi1"]
+[gd_scene load_steps=10 format=3 uid="uid://dw1mwbbepdoi1"]
 
 [ext_resource type="PackedScene" uid="uid://bm5dlf6je4yve" path="res://scenes/main_world/main_world_goblin_map.tscn" id="1_x1dih"]
+[ext_resource type="Script" uid="uid://bvh8x7n4k2nap" path="res://resources/data_structures/transition_config.gd" id="2_vjrnk"]
 [ext_resource type="PackedScene" uid="uid://cpog3fskyl4m7" path="res://scenes/main_world/pause.tscn" id="3_bokwj"]
 [ext_resource type="PackedScene" uid="uid://d24suq71w264f" path="res://scenes/main_world/backpack.tscn" id="4_avgj4"]
 [ext_resource type="PackedScene" uid="uid://dw83txjhdwws0" path="res://scenes/main_world/player.tscn" id="7_so2xy"]
 [ext_resource type="PackedScene" uid="uid://bmq6fpmu037ux" path="res://scenes/main_world/hud.tscn" id="14_urbfd"]
+[ext_resource type="Script" uid="uid://btrt2pnsydcpq" path="res://scripts/main_world/map_transition_manager.gd" id="15_trans_mgr"]
+
+[sub_resource type="Resource" id="Resource_vjrnk"]
+script = ExtResource("2_vjrnk")
+zone_marker = "TransitionZoneUpper"
+target_scene = "res://scenes/main_world/main_world_human_map.tscn"
+spawn_marker = "SpawnPointLower"
+
+[sub_resource type="Resource" id="Resource_4lrb5"]
+script = ExtResource("2_vjrnk")
+zone_marker = "TransitionZoneLower"
+target_scene = "res://scenes/main_world/main_world_goblin_map.tscn"
+spawn_marker = "SpawnPointUpper"
 
 [node name="MainWorld" type="Node2D"]
 y_sort_enabled = true
+script = ExtResource("15_trans_mgr")
+transitions = Array[TransitionConfig]([SubResource("Resource_vjrnk"), SubResource("Resource_4lrb5")])
 
-[node name="Map" type="Node2D" parent="."]
+[node name="MapContainer" type="Node2D" parent="."]
 
-[node name="GoblinMap" parent="Map" instance=ExtResource("1_x1dih")]
+[node name="GoblinMap" parent="MapContainer" instance=ExtResource("1_x1dih")]
 
 [node name="Player" parent="." instance=ExtResource("7_so2xy")]
 unique_name_in_owner = true

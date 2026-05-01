@@ -16,26 +16,18 @@ func _ready():
 	# Ensure we're in the properties_ui group for input blocking detection
 	add_to_group("properties_ui")
 	
-	print("PropertiesUI _ready() called, in group: ", is_in_group("properties_ui"))
-	
 	# Get node references
 	title_label = get_node("PanelContainer/MarginContainer/VBoxContainer/TitleLabel")
-	print("title_label found: ", title_label != null)
 	
 	stay_button = get_node("PanelContainer/MarginContainer/VBoxContainer/PatternButtons/StayButton")
-	print("stay_button found: ", stay_button != null)
 	
 	follow_player_button = get_node("PanelContainer/MarginContainer/VBoxContainer/PatternButtons/FollowPlayerButton")
-	print("follow_player_button found: ", follow_player_button != null)
 	
 	attack_enemy_button = get_node("PanelContainer/MarginContainer/VBoxContainer/PatternButtons/AttackEnemyButton")
-	print("attack_enemy_button found: ", attack_enemy_button != null)
 	
 	attack_tower_button = get_node("PanelContainer/MarginContainer/VBoxContainer/PatternButtons/AttackTowerButton")
-	print("attack_tower_button found: ", attack_tower_button != null)
 	
 	close_button = get_node("PanelContainer/MarginContainer/VBoxContainer/CloseButton")
-	print("close_button found: ", close_button != null)
 	
 	bg_close_button = get_node("BgCloseButton")
 	
@@ -45,19 +37,14 @@ func _ready():
 		bg_close_button.pressed.connect(hide_panel)
 	if stay_button:
 		stay_button.pressed.connect(_on_pattern_selected.bind(BehaviorPattern.PatternType.STAY))
-		print("stay_button connected")
 	if follow_player_button:
 		follow_player_button.pressed.connect(_on_pattern_selected.bind(BehaviorPattern.PatternType.FOLLOW_PLAYER))
-		print("follow_player_button connected")
 	if attack_enemy_button:
 		attack_enemy_button.pressed.connect(_on_pattern_selected.bind(BehaviorPattern.PatternType.ATTACK_NEAREST_ENEMY))
-		print("attack_enemy_button connected")
 	if attack_tower_button:
 		attack_tower_button.pressed.connect(_on_pattern_selected.bind(BehaviorPattern.PatternType.ATTACK_NEAREST_TOWER))
-		print("attack_tower_button connected")
 	if close_button:
 		close_button.pressed.connect(hide_panel)
-		print("close_button connected")
 
 func show_for_unit(unit: UnitBase):
 	parent_unit = unit

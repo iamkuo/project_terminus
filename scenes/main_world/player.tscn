@@ -147,6 +147,7 @@ rotation = -0.0145766
 collision_mask = 14
 script = ExtResource("1_qhqgy")
 speed = 100.0
+groups = ["player"]
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(1, -12)

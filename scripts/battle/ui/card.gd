@@ -42,7 +42,6 @@ func _setup_ui():
 
 func _on_pressed():
 	if not gm: return
-	print("Card pressed: ", unit_stats.resource_name, ", cost=", unit_stats.cost)
 	
 	# gm.spawn_ally will handle consumption and show message if elixir is low
 	gm.spawn_ally(unit_stats, lane)

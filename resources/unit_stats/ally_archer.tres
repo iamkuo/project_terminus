@@ -1,7 +1,7 @@
 [gd_resource type="Resource" script_class="UnitStats" load_steps=4 format=3 uid="uid://bwvvqgpogmf3h"]
 
 [ext_resource type="Texture2D" uid="uid://bg8ovc14n13vq" path="res://assets/images/characters/goblin_summon.png" id="1_x5juq"]
-[ext_resource type="Script" uid="uid://d2pre0q0hthyw" path="res://important_scripts/battle/unit/unit_stats.gd" id="2_uk6ul"]
+[ext_resource type="Script" uid="uid://d2pre0q0hthyw" path="res://scripts/battle/unit/unit_stats.gd" id="2_uk6ul"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_2h1lr"]
 atlas = ExtResource("1_x5juq")
@@ -10,7 +10,9 @@ region = Rect2(0, 54, 24, 27)
 [resource]
 resource_name = "ArcherStats"
 script = ExtResource("2_uk6ul")
+team = 0
 health = 80
+cost = 3
 attack_damage = 20
 attack_speed = 1.2
 attack_type = 1

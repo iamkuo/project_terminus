@@ -18,15 +18,16 @@ func _ready() -> void:
 func switch_scene(scene_name: String, transition_type: String):
 	call_deferred("_deferred_switch_scene", scene_name, transition_type)
 
+func switch_to_preloaded_scene(preloaded_scene: PackedScene, scene_name: String, transition_type: String):
+	call_deferred("_deferred_switch_to_preloaded", preloaded_scene, scene_name, transition_type)
+
+func switch_to_scene_instance(scene_instance: Node, scene_name: String, transition_type: String):
+	call_deferred("_deferred_switch_to_instance", scene_instance, scene_name, transition_type)
+
 func _deferred_switch_scene(scene_name: String, transition_type: String):
-	print("switching scene")
-	transition_rect.mouse_filter = Control.MOUSE_FILTER_STOP
-	# Show fullscreen_ui so transition_rect (its child) is visible
-	fullscreen_ui.show()
-	transition_rect.color = Color(0, 0, 0, 0) # Start transparent for fade-in
-	transition_rect.show() # Make sure it's visible
-	animation_player.play("%s_in" % transition_type)
-	await animation_player.animation_finished
+	# Use GUIManager for fade out transition
+	await GuiManager.transition_out(transition_type)
+	
 	current_scene.queue_free()
 	
 	var direct_path = "res://scenes/%s.tscn" % scene_name
@@ -43,12 +44,40 @@ func _deferred_switch_scene(scene_name: String, transition_type: String):
 		
 	current_scene = new_scene.instantiate()
 	scene_container.add_child(current_scene)  # Add to the fixed container
-	animation_player.play("%s_out" % transition_type)
-	await animation_player.animation_finished
-	print("scene switched")
-	transition_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	transition_rect.hide()
+	
+	# Use GUIManager for fade in transition
+	await GuiManager.transition_in(transition_type)
+	
+	# Emit signal that transition is complete
+	scene_transition_finished.emit(scene_name)
 
+func _deferred_switch_to_preloaded(preloaded_scene: PackedScene, scene_name: String, transition_type: String):
+	# Use GUIManager for fade out transition
+	await GuiManager.transition_out(transition_type)
+	
+	current_scene.queue_free()
+	
+	current_scene = preloaded_scene.instantiate()
+	scene_container.add_child(current_scene)
+	
+	# Use GUIManager for fade in transition
+	await GuiManager.transition_in(transition_type)
+	
+	# Emit signal that transition is complete
+	scene_transition_finished.emit(scene_name)
+
+func _deferred_switch_to_instance(scene_instance: Node, scene_name: String, transition_type: String):
+	# Use GUIManager for fade out transition
+	await GuiManager.transition_out(transition_type)
+	
+	current_scene.queue_free()
+	
+	current_scene = scene_instance
+	scene_container.add_child(current_scene)
+	
+	# Use GUIManager for fade in transition
+	await GuiManager.transition_in(transition_type)
+	
 	# Emit signal that transition is complete
 	scene_transition_finished.emit(scene_name)
 
