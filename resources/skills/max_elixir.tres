@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="SkillData" load_steps=2 format=3 uid="uid://c5p6s5vwpqj35"]
+
+[ext_resource type="Script" uid="uid://b20bkn2tup6no" path="res://resources/data_structures/skill_data.gd" id="1_gywnn"]
+
+[resource]
+script = ExtResource("1_gywnn")
+id = "max_elixir"
+name = "聖水上限"
+description = "增加聖水的最大容量。每級提升 20點 最大聖水值。"
+base_cost = 180
+metadata/_custom_type_script = "uid://b20bkn2tup6no"

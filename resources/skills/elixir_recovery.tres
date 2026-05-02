@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="SkillData" load_steps=2 format=3 uid="uid://c4p6s5vwpqj34"]
+
+[ext_resource type="Script" uid="uid://b20bkn2tup6no" path="res://resources/data_structures/skill_data.gd" id="1_gywnn"]
+
+[resource]
+script = ExtResource("1_gywnn")
+id = "elixir_recovery"
+name = "聖水恢復"
+description = "增加聖水的恢復速度。每級提升 15% 恢復率。"
+base_cost = 150
+metadata/_custom_type_script = "uid://b20bkn2tup6no"

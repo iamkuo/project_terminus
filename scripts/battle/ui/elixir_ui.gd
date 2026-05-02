@@ -5,6 +5,7 @@ signal elixir_changed(current: int)
 @export var regen_per_sec: float = 1.0
 var current: float = 5.0
 var last_update_time: float = 0.0
+var accumulated_time: float = 0.0
 
 @onready var elixir_bar: ProgressBar = $ElixirBar
 @onready var elixir_label: Label = $ElixirLabel
@@ -18,11 +19,18 @@ func _ready():
 	elixir_changed.connect(_update_ui)
 
 func _process(delta):
-	current = min(max_elixir, current + regen_per_sec * delta)
-	var now: float = Time.get_ticks_msec() / 1000.0
-	if now - last_update_time >= 1.0:
-		last_update_time = now
-		emit_signal("elixir_changed", int(floor(current)))
+	# Accumulate time for precise 1-second intervals
+	accumulated_time += delta
+	
+	# Check if we've accumulated enough time for 1 second of regeneration
+	var regen_interval: float = 1.0 / regen_per_sec
+	if accumulated_time >= regen_interval:
+		# Reset accumulated time and increment by exactly 1
+		accumulated_time -= regen_interval
+		var current_int = int(floor(current))
+		if current_int < max_elixir:
+			current = current_int + 1.0
+			emit_signal("elixir_changed", current_int + 1)
 
 func _update_ui(current_amount: int):
 	if elixir_bar:

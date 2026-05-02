@@ -2,9 +2,9 @@ extends Control
 
 # Export dictionary for mapping mode prefixes to display names
 @export var mode_display_names: Dictionary = {
-	"full": "完整模式(~40分鐘)",
-	"trial": "試玩模式(~5分鐘)", 
-	"test": "測試模式(~1分鐘)"
+	"full": "完整模式  (~40分鐘)",
+	"trial": "試玩模式  (~5分鐘)", 
+	"test": "測試模式  (~1分鐘)"
 }
 
 # Nodes

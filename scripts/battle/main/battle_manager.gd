@@ -176,9 +176,15 @@ func _initialize_battle() -> void:
 	ai_cooldown_min = ConfigManager.ai_cooldown_min
 	ai_cooldown_max = ConfigManager.ai_cooldown_max
 	
-	# Apply elixir configuration
+	# Apply elixir configuration with skill bonuses
 	if elixir:
 		elixir.current = ConfigManager.starting_elixir
+		# Apply max elixir bonus from skills
+		elixir.max_elixir = elixir.max_elixir + SkillManager.max_elixir_bonus
+		# Apply elixir recovery multiplier from skills
+		elixir.regen_per_sec = elixir.regen_per_sec * SkillManager.elixir_recovery_mult
+		# Update UI to reflect new max elixir
+		elixir.elixir_bar.max_value = elixir.max_elixir
 		elixir.emit_signal("elixir_changed", int(floor(elixir.current)))
 	
 	# Update background reference

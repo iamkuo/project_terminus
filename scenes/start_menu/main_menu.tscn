@@ -1,9 +1,8 @@
-[gd_scene load_steps=30 format=3 uid="uid://ypplfbkktob5"]
+[gd_scene load_steps=29 format=3 uid="uid://ypplfbkktob5"]
 
 [ext_resource type="Script" uid="uid://bdf0jm8drjafc" path="res://scripts/main_menu/main_menu.gd" id="1_8ln24"]
 [ext_resource type="Texture2D" uid="uid://ca1w24r726wp3" path="res://assets/images/backgrounds/main_menu_bg.png" id="1_l6cm7"]
 [ext_resource type="FontFile" uid="uid://dxc2pi1bwr1uu" path="res://assets/fonts/Cubic_11.ttf" id="2_ekxnf"]
-[ext_resource type="PackedScene" uid="uid://cpog3fskyl4m7" path="res://scenes/main_world/pause.tscn" id="6_pause"]
 [ext_resource type="Script" uid="uid://co8460w8wemww" path="res://scripts/main_menu/game_mode_selector.gd" id="7_mode_selector"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_ekxnf"]
@@ -292,10 +291,6 @@ theme_override_styles/hover = SubResource("StyleBoxFlat_svtp6")
 theme_override_styles/focus = SubResource("StyleBoxEmpty_1dfpl")
 text = "離開"
 
-[node name="Pause" parent="." instance=ExtResource("6_pause")]
-visible = false
-layout_mode = 1
-
 [node name="AboutPanel" type="Panel" parent="."]
 visible = false
 layout_mode = 1
@@ -352,6 +347,7 @@ theme_override_styles/hover = SubResource("StyleBoxFlat_flqon")
 text = "返回"
 
 [node name="GameModeSelector" type="Control" parent="."]
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0

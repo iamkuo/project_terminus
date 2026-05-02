@@ -9,7 +9,9 @@ func _ready() -> void:
 	
 	# Find the MessageUI node in the Main scene
 	var main_scene = get_tree().current_scene
-	var ui: CanvasLayer = main_scene.get_node_or_null("GUI")
+	var ui: CanvasLayer = main_scene.get_node_or_null("UI")
+	if not ui:
+		ui = main_scene.get_node_or_null("GUI")  # Fallback for non-battle scenes
 	var message_ui: Control = ui.get_node_or_null("MessageUI")
 	if message_ui:
 		message_label = message_ui.get_node_or_null("MessageLabel")

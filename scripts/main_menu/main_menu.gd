@@ -4,10 +4,11 @@ extends Control
 @onready var main_buttons: VBoxContainer = $MainButtons
 @onready var about_panel: Panel = $AboutPanel
 @onready var game_mode_selector: Control = $GameModeSelector
+var pause
 
-@onready var pause_scene = $Pause
 
 func _ready() -> void:
+	pause = get_tree().get_root().get_node_or_null("Game/GUI/Pause")
 	about_panel.hide()
 	game_mode_selector.hide()
 	main_buttons.show()
@@ -28,7 +29,8 @@ func _on_start_button_pressed() -> void:
 	game_mode_selector.show()
 
 func _on_settings_button_pressed() -> void:
-	pause_scene.toggle_pause()
+	if pause:
+		pause.toggle_pause()
 
 func _on_about_button_pressed() -> void:
 	main_buttons.hide()

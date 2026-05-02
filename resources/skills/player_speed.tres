@@ -6,6 +6,6 @@
 script = ExtResource("1_gywnn")
 id = "player_speed"
 name = "玩家速度"
-description = "增加玩家在戰鬥中的移動速度。每級提升 10%。"
+description = "增加玩家在戰鬥和主世界的移動速度。每級提升 10%。"
 base_cost = 100
 metadata/_custom_type_script = "uid://b20bkn2tup6no"
