@@ -11,6 +11,9 @@ func _ready() -> void:
 	self.visible = true
 	ProgressManager.data_updated.connect(_refresh_hud_labels)
 	BattleManager.rewards_applied.connect(_show_reward_toast)
+	
+	# Set initial cheat button visibility
+	_update_cheat_button_visibility()
 
 func _on_hud_button_pressed() -> void:
 	ProgressManager.crystal_count += 1000
@@ -33,3 +36,10 @@ func _refresh_hud_labels() -> void:
 func _show_reward_toast(exp_earned: int, crystals_earned: int) -> void:
 	MessageManager.show_message("+%d EXP  +%d 水晶" % [exp_earned, crystals_earned])
 	_refresh_hud_labels() # Ensure labels update immediately when rewards are applied
+
+func _process(_delta: float) -> void:
+	# Check cheat mode visibility continuously
+	_update_cheat_button_visibility()
+
+func _update_cheat_button_visibility() -> void:
+	hud_button.visible = ConfigManager.cheat_mode

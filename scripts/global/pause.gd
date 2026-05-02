@@ -4,6 +4,7 @@ extends Control
 @onready var volume_music_slider: HSlider = $Panel/VBoxContainer/GridContainer/music_slider
 @onready var volume_sfx_slider: HSlider = $Panel/VBoxContainer/GridContainer/sound_effect_slider
 @onready var fullscreen_button: CheckButton = $Panel/VBoxContainer/check_button
+@onready var cheat_mode_button: CheckButton = $Panel/VBoxContainer/cheat_mode_button
 @onready var continue_button: Button = $Panel/VBoxContainer/HBoxContainer/continue_button
 @onready var exit_button: Button = $Panel/VBoxContainer/HBoxContainer/exit_button
 
@@ -21,6 +22,7 @@ func _ready() -> void:
 	volume_music_slider.value_changed.connect(_on_volume_music_changed)
 	volume_sfx_slider.value_changed.connect(_on_volume_sfx_changed)
 	fullscreen_button.toggled.connect(_on_fullscreen_toggled)
+	cheat_mode_button.toggled.connect(_on_cheat_mode_toggled)
 	
 	# Initialize values
 	_initialize_settings()
@@ -39,6 +41,9 @@ func _initialize_settings() -> void:
 	
 	# Set initial fullscreen state
 	fullscreen_button.button_pressed = DisplayServer.window_get_mode() == DisplayServer.WINDOW_MODE_FULLSCREEN
+	
+	# Set initial cheat mode state
+	cheat_mode_button.button_pressed = ConfigManager.cheat_mode
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_cancel"):
@@ -78,3 +83,6 @@ func _on_fullscreen_toggled(toggled_on: bool) -> void:
 func _on_exit_pressed() -> void:
 	get_tree().paused = false
 	get_tree().quit()
+
+func _on_cheat_mode_toggled(toggled_on: bool) -> void:
+	ConfigManager.cheat_mode = toggled_on

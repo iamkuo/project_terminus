@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3 uid="uid://cpog3fskyl4m7"]
+[gd_scene load_steps=26 format=3 uid="uid://cpog3fskyl4m7"]
 
 [ext_resource type="Script" uid="uid://bsa684qtsf8iq" path="res://scripts/global/pause.gd" id="1_pauses"]
 [ext_resource type="FontFile" uid="uid://dxc2pi1bwr1uu" path="res://assets/fonts/Cubic_11.ttf" id="3_cubic"]
@@ -31,16 +31,30 @@ _source = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"32\" height=\"16\">
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_kdq54"]
 atlas = ExtResource("4_cml1b")
-region = Rect2(36, 35, 9, 11)
+region = Rect2(20, 35, 9, 11)
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_liqfm"]
 texture = SubResource("AtlasTexture_kdq54")
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_aicil"]
-texture = SubResource("AtlasTexture_kdq54")
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_acgh5"]
+load_path = "res://.godot/imported/Icons.png-5a790f616526655c175742ee2f1816c6.ctex"
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_jn4bt"]
-texture = SubResource("AtlasTexture_kdq54")
+[sub_resource type="AtlasTexture" id="AtlasTexture_inn2e"]
+atlas = SubResource("CompressedTexture2D_acgh5")
+region = Rect2(20, 35, 9, 11)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_agict"]
+texture = SubResource("AtlasTexture_inn2e")
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_6kxjh"]
+load_path = "res://.godot/imported/Icons.png-5a790f616526655c175742ee2f1816c6.ctex"
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qnpvs"]
+atlas = SubResource("CompressedTexture2D_6kxjh")
+region = Rect2(20, 35, 9, 11)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_xeu3l"]
+texture = SubResource("AtlasTexture_qnpvs")
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_r1fnm"]
 
@@ -103,7 +117,7 @@ theme_override_constants/separation = 25
 layout_mode = 2
 theme_override_fonts/font = ExtResource("3_cubic")
 theme_override_font_sizes/font_size = 24
-text = "遊戲暫停"
+text = "遊戲選單"
 label_settings = SubResource("LabelSettings_aicil")
 horizontal_alignment = 1
 
@@ -183,6 +197,15 @@ theme_override_icons/checked = SubResource("DPITexture_swtu5")
 theme_override_icons/unchecked = SubResource("DPITexture_qudjn")
 text = "全螢幕/視窗"
 
+[node name="cheat_mode_button" type="CheckButton" parent="Panel/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 24
+theme_override_styles/focus = SubResource("StyleBoxEmpty_kkkdg")
+theme_override_icons/checked = SubResource("DPITexture_swtu5")
+theme_override_icons/unchecked = SubResource("DPITexture_qudjn")
+text = "作弊模式"
+
 [node name="HBoxContainer" type="HBoxContainer" parent="Panel/VBoxContainer"]
 layout_mode = 2
 theme_override_constants/separation = 40
@@ -192,8 +215,8 @@ alignment = 1
 custom_minimum_size = Vector2(30, 30)
 layout_mode = 2
 theme_override_styles/normal = SubResource("StyleBoxTexture_liqfm")
-theme_override_styles/pressed = SubResource("StyleBoxTexture_aicil")
-theme_override_styles/hover = SubResource("StyleBoxTexture_jn4bt")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_agict")
+theme_override_styles/hover = SubResource("StyleBoxTexture_xeu3l")
 theme_override_styles/focus = SubResource("StyleBoxEmpty_r1fnm")
 
 [node name="exit_button" type="Button" parent="Panel/VBoxContainer/HBoxContainer"]

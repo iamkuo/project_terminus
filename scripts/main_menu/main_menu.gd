@@ -3,11 +3,13 @@ extends Control
 # Nodes
 @onready var main_buttons: VBoxContainer = $MainButtons
 @onready var about_panel: Panel = $AboutPanel
+@onready var game_mode_selector: Control = $GameModeSelector
 
 @onready var pause_scene = $Pause
 
 func _ready() -> void:
 	about_panel.hide()
+	game_mode_selector.hide()
 	main_buttons.show()
 	
 func _input(event: InputEvent) -> void:
@@ -15,12 +17,15 @@ func _input(event: InputEvent) -> void:
 		if about_panel.visible:
 			_on_back_button_pressed()
 			get_viewport().set_input_as_handled()
+		elif game_mode_selector.visible:
+			_on_back_button_pressed()
+			get_viewport().set_input_as_handled()
 
 # --- Menu Actions ---
 
 func _on_start_button_pressed() -> void:
-	ProgressManager.current_exp += 10
-	SceneSwitcher.switch_scene("main_world", "none")
+	main_buttons.hide()
+	game_mode_selector.show()
 
 func _on_settings_button_pressed() -> void:
 	pause_scene.toggle_pause()
@@ -34,4 +39,8 @@ func _on_quit_button_pressed() -> void:
 
 func _on_back_button_pressed() -> void:
 	about_panel.hide()
+	game_mode_selector.hide()
+	main_buttons.show()
+
+func _on_game_mode_back_pressed() -> void:
 	main_buttons.show()

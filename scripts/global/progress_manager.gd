@@ -35,10 +35,15 @@ var active_cutscenes: Dictionary = {}
 # --- 4. 信號 ---
 signal data_updated
 signal memory_collected(memory_id: String)
+signal gamemode_changed()
 
 # --- 5. 初始化流程 ---
 
 func _ready() -> void:
+	# Clear existing data before reloading
+	active_stages.clear()
+	active_memories.clear()
+	
 	# 初始化基礎資源
 	var stage_map = _load_resources(PATH_STAGES + mode + "/", StageData)
 	active_stages.assign(stage_map.values())
@@ -60,6 +65,9 @@ func _ready() -> void:
 			if mem_id in all_mems: active_memories.append(all_mems[mem_id])
 	
 	_check_stage_progression()
+	
+	# Emit signal to notify UI that gamemode has changed
+	gamemode_changed.emit()
 
 # --- 6. 核心進度邏輯 ---
 

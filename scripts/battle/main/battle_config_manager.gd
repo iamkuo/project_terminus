@@ -31,6 +31,9 @@ var allies_multiplyer: float = 1.0
 
 var unit_stats_registry: Dictionary = {}
 
+# Cheat mode toggle - affects HUD cheat button visibility
+var cheat_mode: bool = false
+
 # ============================================================================
 # SIGNALS
 # ============================================================================

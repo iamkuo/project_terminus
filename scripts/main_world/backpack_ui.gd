@@ -43,6 +43,7 @@ func _ready():
 	# ProgressManager signals
 	ProgressManager.data_updated.connect(_refresh_ui)
 	ProgressManager.memory_collected.connect(_on_memory_collected)
+	ProgressManager.gamemode_changed.connect(_on_gamemode_changed)
 	
 	_refresh_ui()
 
@@ -186,11 +187,9 @@ func setup_backpack():
 		torch.refresh_visuals(is_unlocked)
 		torch.set_memory_name(mem_data.name)
 		
-		# Connect button press to play cutscene
-		torch.pressed.connect(func():
-			var mem_id = mem_data.id
-			var is_collected = ProgressManager.unlocked_memory_ids.has(mem_id)
-			if is_collected:
+		# Connect button press to play cutscene only for unlocked torches
+		if is_unlocked:
+			torch.pressed.connect(func():
 				backpack_root.visible = false
 				CutsceneManager.play(mem_data.cutscene_id)
 		)
@@ -203,6 +202,21 @@ func _on_memory_collected(memory_id: String):
 	var torch = _memory_torches.get(memory_id)
 	if torch:
 		torch.refresh_visuals(true)
+		# Connect the press handler now that the memory is unlocked
+		var mem_data = null
+		for data in ProgressManager.active_memories:
+			if data.id == memory_id:
+				mem_data = data
+				break
+		if mem_data:
+			torch.pressed.connect(func():
+				backpack_root.visible = false
+				CutsceneManager.play(mem_data.cutscene_id)
+			)
+
+func _on_gamemode_changed():
+	# Refresh the entire backpack when gamemode changes to show correct memories
+	setup_backpack()
 
 func perform_upgrade():
 	if current_skill_id == "": return
