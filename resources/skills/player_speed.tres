@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="SkillData" load_steps=2 format=3 uid="uid://c1p6s5vwpqj31"]
+
+[ext_resource type="Script" uid="uid://b20bkn2tup6no" path="res://resources/data_structures/skill_data.gd" id="1_gywnn"]
+
+[resource]
+script = ExtResource("1_gywnn")
+id = "player_speed"
+name = "玩家速度"
+description = "增加玩家在戰鬥中的移動速度。每級提升 10%。"
+base_cost = 100
+metadata/_custom_type_script = "uid://b20bkn2tup6no"

@@ -40,10 +40,10 @@ var is_attacking: bool = false
 
 func _ready():
 	if stats:
-		if team == 1:
-			current_health = int(stats.health * BattleManager.enemy_multiplyer)
+		if team == Team.OPPONENT:
+			current_health = int(stats.health * ConfigManager.enemy_multiplyer)
 		else:
-			current_health = stats.health
+			current_health = int(stats.health * ConfigManager.allies_multiplyer)
 	else:
 		current_health = 100
 		stats = UnitStats.new()
@@ -109,12 +109,16 @@ func _perform_attack(target: Node) -> void:
 	match stats.attack_type:
 		UnitStats.AttackType.DIRECT:
 			if target.has_method("take_damage"):
-				target.take_damage(stats.attack_damage, self )
-				damage_dealt.emit(stats.attack_damage, target)
+				var final_damage = stats.attack_damage
+				if team == Team.PLAYER:
+					final_damage = int(final_damage * ConfigManager.allies_multiplyer)
+				
+				target.take_damage(final_damage, self )
+				damage_dealt.emit(final_damage, target)
 				if team == Team.PLAYER:
 					var bm = _get_battle_manager()
 					if bm:
-						bm.on_unit_damage_dealt(self , stats.attack_damage, target)
+						bm.on_unit_damage_dealt(self , final_damage, target)
 		UnitStats.AttackType.PROJECTILE:
 			ProjectileManager.spawn_projectile(self , target)
 

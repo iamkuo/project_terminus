@@ -20,12 +20,16 @@ func _draw():
 	if not visible or not target_unit:
 		return
 
-	# Account for parent scale to draw correct attack range
+	# Account for parent scale to draw correct ranges
 	var scale_factor = get_parent().scale.x if get_parent() else 1.0
-	var radius = target_unit.stats.attack_distance / scale_factor
+	
+	# Draw detection range circle (view distance)
+	var detect_radius = target_unit.stats.view_distance / scale_factor
+	draw_arc(Vector2.ZERO, detect_radius, 0, TAU, 128, Color(0.3, 0.7, 1.0, 0.4), 1.5, true)
 
 	# Draw attack range circle
-	draw_arc(Vector2.ZERO, radius, 0, TAU, 64, Color.GREEN, 2.0)
+	var attack_radius = target_unit.stats.attack_distance / scale_factor
+	draw_arc(Vector2.ZERO, attack_radius, 0, TAU, 128, Color(0.0, 1.0, 0.0, 0.6), 2.0, true)
 
 func _process(_delta):
 	if visible:

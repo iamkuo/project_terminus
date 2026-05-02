@@ -11,7 +11,7 @@ func _ready() -> void:
 	BattleManager.rewards_applied.connect(_show_reward_toast)
 
 func _on_hud_button_pressed() -> void:
-	ProgressManager.crystal_count += 1
+	ProgressManager.crystal_count += 1000
 	ProgressManager.data_updated.emit()
 
 func _refresh_crystal_label() -> void:

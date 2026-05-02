@@ -1,5 +1,6 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=8 format=3 uid="uid://bll1f8vhj2gcn"]
 
+[ext_resource type="Script" uid="uid://cawsq0hb0qqga" path="res://scripts/battle/ui/elixir_ui.gd" id="1_elixir_ui"]
 [ext_resource type="Texture2D" uid="uid://cjmwhv0846in6" path="res://assets/images/ui/panels/04 Border 03.png" id="2_73l6q"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_2h25i"]
@@ -46,7 +47,7 @@ offset_bottom = -20.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 1
-script = ExtResource("1_c3msa")
+script = ExtResource("1_elixir_ui")
 
 [node name="BackgroundPanel" type="Panel" parent="."]
 layout_mode = 1
@@ -75,23 +76,22 @@ grow_vertical = 2
 theme_override_constants/separation = 15
 alignment = 1
 
-[node name="ElixirLabel" type="Label" parent="HBoxContainer"]
-layout_mode = 2
-theme_override_fonts/font = null
+[node name="HBoxContainer#ElixirLabel" type="Label" parent="."]
+layout_mode = 0
 theme_override_font_sizes/font_size = 24
 text = "魔力: 5"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="ProgressBar" type="ProgressBar" parent="HBoxContainer"]
+[node name="HBoxContainer#ProgressBar" type="ProgressBar" parent="."]
 custom_minimum_size = Vector2(200, 30)
-layout_mode = 2
+layout_mode = 0
 size_flags_horizontal = 3
 theme_override_styles/fill = SubResource("StyleBoxFlat_elixir_bar")
 max_value = 10.0
 value = 5.0
 show_percentage = false
 
-[node name="BarBorder" type="Panel" parent="HBoxContainer"]
-layout_mode = 2
+[node name="HBoxContainer#BarBorder" type="Panel" parent="."]
+layout_mode = 0
 theme_override_styles/panel = SubResource("StyleBoxTexture_d7tge")

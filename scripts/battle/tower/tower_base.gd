@@ -19,6 +19,9 @@ var is_destroyed: bool = false
 @onready var _restriction_area: Area2D = $RestrictionArea if has_node("RestrictionArea") else null
 
 func _ready():
+	if team == Team.PLAYER:
+		max_health = int(max_health * SkillManager.tower_health_mult)
+	
 	current_health = max_health
 	add_to_group("towers")
 	
@@ -39,9 +42,6 @@ func _ready():
 	# Connect health changed signal for both health bar and label
 	health_changed.connect(_on_health_bar_changed)
 	
-	# Debug: Check if health label was found
-	print("[Tower] Health label found: ", _health_label != null, " Health bar found: ", _health_bar != null)
-	
 	# Initialize health display
 	call_deferred("_on_health_bar_changed", current_health, max_health)
 
@@ -56,9 +56,6 @@ func _on_health_bar_changed(cur: int, max_hp: int) -> void:
 	# Update health label
 	if _health_label:
 		_health_label.text = str(cur) + "/" + str(max_hp)
-		print("[Tower] Health label updated: ", _health_label.text)
-	else:
-		print("[Tower] Health label not found!")
 
 func take_damage(amount: int, _target: Node) -> void:
 	if is_destroyed: return
@@ -92,7 +89,6 @@ func _destroy():
 	# This ensures that get_tree().get_nodes_in_group("towers") queries
 	# will NOT include this tower, even before queue_free() takes effect
 	remove_from_group("towers")
-	print("[Tower Destroyed] Tower removed from 'towers' group - Team: ", team)
 	
 	# Remove restriction area if it exists
 	if _restriction_area and is_instance_valid(_restriction_area):

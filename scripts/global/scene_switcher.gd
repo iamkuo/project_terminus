@@ -9,6 +9,7 @@ var current_scene : Node = null
 
 # Signal to be emitted when a scene transition is fully completed
 signal scene_transition_finished(scene_name: String)
+signal scene_added(scene_name: String)
 
 func _ready() -> void: 
 	await get_tree().process_frame
@@ -44,6 +45,7 @@ func _deferred_switch_scene(scene_name: String, transition_type: String):
 		
 	current_scene = new_scene.instantiate()
 	scene_container.add_child(current_scene)  # Add to the fixed container
+	scene_added.emit(scene_name)
 	
 	# Use GUIManager for fade in transition
 	await GuiManager.transition_in(transition_type)
@@ -59,6 +61,7 @@ func _deferred_switch_to_preloaded(preloaded_scene: PackedScene, scene_name: Str
 	
 	current_scene = preloaded_scene.instantiate()
 	scene_container.add_child(current_scene)
+	scene_added.emit(scene_name)
 	
 	# Use GUIManager for fade in transition
 	await GuiManager.transition_in(transition_type)
@@ -74,6 +77,7 @@ func _deferred_switch_to_instance(scene_instance: Node, scene_name: String, tran
 	
 	current_scene = scene_instance
 	scene_container.add_child(current_scene)
+	scene_added.emit(scene_name)
 	
 	# Use GUIManager for fade in transition
 	await GuiManager.transition_in(transition_type)

@@ -9,7 +9,8 @@ func _physics_process(_delta: float) -> void:
 	input_vector.x = Input.get_axis("ui_left", "ui_right")
 	input_vector.y = Input.get_axis("ui_up", "ui_down")
 	input_vector = input_vector.normalized()
-	velocity = input_vector * speed
+	
+	velocity = input_vector * speed * SkillManager.player_speed_mult
 	move_and_slide()
 	
 	if input_vector != Vector2.ZERO:

@@ -40,10 +40,11 @@ func _update_layout() -> void:
 		var tex_size = tex.get_size()
 		# 防止除以零
 		if tex_size.x > 0 and tex_size.y > 0:
-			# 計算縮放比例：讓貼圖填滿 Control 節點的大小
-			# 如果你希望保持比例，取 min(size.x/tex.x, size.y/tex.y)
-			var scale_factor = Vector2(size.x / tex_size.x, size.y / tex_size.y)
-			animated_sprite.scale = scale_factor
+			# Calculate scale factor while keeping aspect ratio
+			var scale_x = size.x / tex_size.x
+			var scale_y = size.y / tex_size.y
+			var uniform_scale = min(scale_x, scale_y)
+			animated_sprite.scale = Vector2(uniform_scale, uniform_scale)
 			
 			# 強制置中：Sprite 的中心點 = 父節點尺寸的一半
 			animated_sprite.position = size / 2
@@ -51,8 +52,6 @@ func _update_layout() -> void:
 			# 如果火把還是太小，檢查你的 Control 節點是否有設定 Custom Minimum Size
 
 func _ready() -> void:
-	# 確保在容器完成排版後才計算
-	await get_tree().process_frame 
 	resized.connect(_update_layout)
 	if _pending_is_unlocked != null:
 		refresh_visuals(_pending_is_unlocked)

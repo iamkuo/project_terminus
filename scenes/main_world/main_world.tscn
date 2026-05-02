@@ -23,7 +23,7 @@ spawn_marker = "SpawnPointUpper"
 [node name="MainWorld" type="Node2D"]
 y_sort_enabled = true
 script = ExtResource("15_trans_mgr")
-transitions = Array[TransitionConfig]([SubResource("Resource_vjrnk"), SubResource("Resource_4lrb5")])
+transitions = Array[ExtResource("2_vjrnk")]([SubResource("Resource_vjrnk"), SubResource("Resource_4lrb5")])
 
 [node name="MapContainer" type="Node2D" parent="."]
 

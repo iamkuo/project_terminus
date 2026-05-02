@@ -21,11 +21,9 @@ func show_result(winning_team: int):
 	print("[EndingScreen] Visible set to true")
 	
 	# Merge battle name and result in title
-	var battle_name = "戰鬥"
-	if BattleManager.current_config.has("battle_name"):
-		battle_name = BattleManager.current_config.battle_name
-	elif BattleManager.current_config.has("stage_data") and BattleManager.current_config.stage_data:
-		battle_name = BattleManager.current_config.stage_data.name
+	var battle_name = ConfigManager.battle_name
+	if not battle_name or battle_name.is_empty():
+		battle_name = "戰鬥"
 	
 	var result_text = "勝利！" if winning_team == player_team else "失敗"
 	title_label.text = battle_name + " - " + result_text

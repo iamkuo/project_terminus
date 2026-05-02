@@ -4,7 +4,6 @@
 [ext_resource type="Texture2D" uid="uid://vgrqy8ta8w65" path="res://assets/images/objects/shard.png" id="3_ua2y8"]
 [ext_resource type="Resource" uid="uid://bq8llogf4qqyr" path="res://resources/memories/mem_test_shard.tres" id="3_xr22o"]
 
-
 [sub_resource type="AtlasTexture" id="AtlasTexture_x0ayr"]
 atlas = ExtResource("3_ua2y8")
 region = Rect2(0, 0, 64, 80)

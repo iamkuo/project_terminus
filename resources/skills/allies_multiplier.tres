@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="SkillData" load_steps=2 format=3 uid="uid://c3p6s5vwpqj33"]
+
+[ext_resource type="Script" uid="uid://b20bkn2tup6no" path="res://resources/data_structures/skill_data.gd" id="1_gywnn"]
+
+[resource]
+script = ExtResource("1_gywnn")
+id = "allies_multiplier"
+name = "盟軍全屬性"
+description = "提升所有盟軍單位的生命值與攻擊力。每級提升 5%。"
+base_cost = 200
+metadata/_custom_type_script = "uid://b20bkn2tup6no"

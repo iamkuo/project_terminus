@@ -808,33 +808,19 @@ func _get_alive_enemy_towers() -> Array:
     return alive_towers
 ```
 
-**Layer 3: Spawn Position Validation**
-Enhanced `get_spawn_point()` to validate the final position:
+**Layer 2: Tower-Driven Lane Selection**
+Instead of picking a random lane number, the AI now picks a random alive tower directly and uses its lane. This ensures the lane is guaranteed to have a tower at the moment of selection:
 ```gdscript
-# Verify spawn position is not zero
-if pos == Vector2.ZERO:
-    return Vector2.ZERO
-
-# Validate position is reasonable
-if pos.is_zero():
-    print("ERROR: Spawn position is zero")
-    return Vector2.ZERO
+# Pick a random alive tower and use its lane
+var lane = alive_enemy_towers.pick_random().lane
 ```
 
-**Layer 4: AI Spawning Early Exit**
-AI spawning now checks for alive towers **before** attempting spawn:
+**Layer 3: Robust Lane Validation**
+Enhanced `get_spawn_point()` to double-check lane validity using the `any()` method. This handles the rare edge case where a tower is destroyed in the same frame after selection:
 ```gdscript
-func _process_ai_spawning(delta: float) -> void:
-    # ... existing checks ...
-    
-    # NEW: Check alive towers before attempting spawn
-    var alive_enemy_towers = _get_alive_enemy_towers()
-    
-    if alive_enemy_towers.is_empty():
-        print("No alive towers - skipping spawn")
-        return
-    
-    # ... proceed with spawn
+# Double-check if the requested lane has an alive tower
+if not alive_enemy_towers.any(func(t): return t.lane == lane):
+    return Vector2.ZERO # Safely cancel spawn
 ```
 
 ### Architecture Improvements
@@ -855,10 +841,12 @@ Result: Confusing failure handling, potential edge cases
 Tower destroyed → immediately remove from "towers" group
 → AI spawning runs same frame
 → Queries group (tower NOT found - removed already)
-→ _get_alive_enemy_towers() returns empty array
-→ _process_ai_spawning() exits early
-→ spawn_enemy() never called
-Result: Clean, predictable flow with no spawn attempts
+→ _get_alive_enemy_towers() returns currently alive towers
+→ AI filters lanes based on alive towers
+→ AI picks valid lane
+→ get_spawn_point() double-checks lane validity
+→ Spawns unit only in active lanes
+Result: Clean, predictable flow with units only spawning where towers still stand
 ```
 
 ### Files Changed

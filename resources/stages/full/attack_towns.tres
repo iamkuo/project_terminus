@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="StageData" load_steps=2 format=3]
+[gd_resource type="Resource" script_class="StageData" load_steps=2 format=3 uid="uid://di28a2j0b6gun"]
 
 [ext_resource type="Script" uid="uid://bfg5kjb0bo8cr" path="res://resources/data_structures/stage_data.gd" id="1_stage_data"]
 
@@ -8,5 +8,4 @@ id = "full_attack_towns"
 name = "進攻城鎮"
 req_exp = 1100
 cutscene_id = "attack_towns"
-unlocks_memory_id = ""
 metadata/_custom_type_script = "uid://bfg5kjb0bo8cr"

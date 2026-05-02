@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=3 uid="uid://d24suq71w264f"]
+[gd_scene load_steps=7 format=3 uid="uid://d24suq71w264f"]
 
 [ext_resource type="Script" uid="uid://b4rdmkvok4hm2" path="res://scripts/main_world/backpack_ui.gd" id="1_460lo"]
 [ext_resource type="Texture2D" uid="uid://cjmwhv0846in6" path="res://assets/images/ui/panels/04 Border 03.png" id="1_q7lps"]
+[ext_resource type="Texture2D" uid="uid://b0oecl585bnd3" path="res://assets/images/characters/player.png" id="3_ut8dg"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_5gcru"]
 texture = ExtResource("1_q7lps")
@@ -10,6 +11,10 @@ texture_margin_top = 45.0
 texture_margin_right = 45.0
 texture_margin_bottom = 45.0
 region_rect = Rect2(387, 387, 186, 186)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3x1ca"]
+atlas = ExtResource("3_ut8dg")
+region = Rect2(1, 1, 20, 24)
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_qcox6"]
 texture = ExtResource("1_q7lps")
@@ -54,19 +59,50 @@ theme_override_constants/margin_bottom = 30
 layout_mode = 2
 current_tab = 0
 
-[node name="SkillsTab" type="VBoxContainer" parent="MarginContainer/TabContainer"]
+[node name="SkillsTab" type="Control" parent="MarginContainer/TabContainer"]
 layout_mode = 2
 metadata/_tab_index = 0
 
-[node name="Portrait" type="TextureRect" parent="MarginContainer/TabContainer/SkillsTab"]
-custom_minimum_size = Vector2(0, 150)
+[node name="SidePanel" type="VBoxContainer" parent="MarginContainer/TabContainer/SkillsTab"]
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.05
+anchor_top = 0.05
+anchor_right = 0.25
+anchor_bottom = 0.95
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 15
+
+[node name="Portrait" type="TextureRect" parent="MarginContainer/TabContainer/SkillsTab/SidePanel"]
+custom_minimum_size = Vector2(200, 250)
 layout_mode = 2
-expand_mode = 2
+texture = SubResource("AtlasTexture_3x1ca")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="BonusTitle" type="Label" parent="MarginContainer/TabContainer/SkillsTab/SidePanel"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.901961, 0.4, 1)
+text = "--- 當前能力加成 ---"
+horizontal_alignment = 1
+
+[node name="BonusSummary" type="VBoxContainer" parent="MarginContainer/TabContainer/SkillsTab/SidePanel"]
+layout_mode = 2
+theme_override_constants/separation = 8
 
 [node name="SkillGrid" type="GridContainer" parent="MarginContainer/TabContainer/SkillsTab"]
-layout_mode = 2
-size_flags_vertical = 2
-columns = 4
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.3
+anchor_top = 0.05
+anchor_right = 0.95
+anchor_bottom = 0.95
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+columns = 3
 
 [node name="MemoriesTab" type="VBoxContainer" parent="MarginContainer/TabContainer"]
 visible = false

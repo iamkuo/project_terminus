@@ -9,6 +9,12 @@ var previous_map_path: String = ""
 func _ready() -> void:
 	_connect_current_map_zones()
 
+## Public API to change maps externally (e.g. from BattleManager)
+func load_map(target_scene_path: String) -> Node:
+	var new_map = _swap_map_scene(target_scene_path)
+	_connect_current_map_zones()
+	return new_map
+
 func _connect_current_map_zones() -> void:
 	if not map_container:
 		push_warning("Map container not found!")

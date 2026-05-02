@@ -130,14 +130,19 @@ func collect_memory(id: String) -> void:
 func upgrade_player_skill(id: String) -> bool:
 	var skill = active_skills.get(id)
 	var lv = player_skill_levels.get(id, 1)
-	if not skill: return false
+	if not skill: 
+		print("[ProgressManager] Upgrade failed: Skill ID not found: ", id)
+		return false
 	
-	var cost = int(skill.base_cost * pow(1.5, lv - 1))
+	var cost = int(skill.base_cost * pow(1.2, lv - 1))
 	if crystal_count >= cost:
 		crystal_count -= cost
 		player_skill_levels[id] = lv + 1
+		print("[ProgressManager] Upgraded %s to level %d. Remaining crystals: %d" % [id, lv + 1, crystal_count])
 		data_updated.emit()
 		return true
+	
+	print("[ProgressManager] Upgrade failed: Not enough crystals. Need %d, have %d" % [cost, crystal_count])
 	return false
 
 func get_skill_data(skill_id: String) -> SkillData:

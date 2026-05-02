@@ -234,37 +234,28 @@ Enemy units were occasionally spawning directly on destroyed towers due to a rac
 6. Finds destroyed tower still in group
 7. Timing issues could cause spawn attempts on invalid towers
 
-### Solution Implemented (Multi-Layer Approach) ✅
+### Solution Implemented (Clean Multi-Step Fix) ✅
 
-**Layer 1: Immediate Group Removal**
-- Tower removed from "towers" group immediately in `_destroy()`
-- Prevents group queries from finding the destroyed tower
-- Happens before `queue_free()` takes effect
+**1. Immediate Group Removal**
+- Tower removes itself from the "towers" group immediately in `_destroy()` before `queue_free()` takes effect.
+- This ensures group queries like `get_nodes_in_group("towers")` are always accurate.
 
-**Layer 2: Enhanced Spawn Validation**
-- Added `_get_alive_enemy_towers()` helper with multiple safety checks:
-  - Validates `is_destroyed` flag
-  - Checks `is_queued_for_deletion()`
-  - Verifies `is_instance_valid()`
-  
-**Layer 3: Spawn Position Validation**
-- Enhanced `spawn_enemy()` with zero-position checks
-- Validates spawn position before instantiation
+**2. Tower-Driven Lane Selection**
+- Instead of picking a random lane number (0-2), the AI now picks a random **alive tower** and uses its lane.
+- This automatically filters out lanes with destroyed towers.
 
-**Layer 4: AI Spawning Early Exit**
-- `_process_ai_spawning()` checks for alive towers before attempting spawn
-- Prevents unnecessary spawn attempts when no towers available
+**3. Robust Spawn Point Validation**
+- `get_spawn_point()` double-checks that the requested lane has an alive tower using `alive_towers.any()`.
+- If a lane's tower was destroyed in the same frame as a spawn attempt, the spawn is cancelled safely.
 
 ### Files Modified
-- `scripts/battle/tower/tower_base.gd` - Immediate group removal on destruction
-- `scripts/battle/main/battle_manager.gd` - Enhanced spawn validation and early exits
-- `docs/BUGS_ARCHIVED.md` - Comprehensive bug documentation and solution
+- `scripts/battle/tower/tower_base.gd` - Added immediate group removal.
+- `scripts/battle/main/battle_manager.gd` - Simplified spawning and validation logic using `pick_random()` and `any()`.
 
 ### Result
-✅ Race condition eliminated through immediate group removal
-✅ Multiple validation layers catch edge cases
-✅ No spawn attempts on destroyed towers
-✅ Cleaner code flow with explicit validation
+✅ Clean, efficient code with no redundant loops.
+✅ Units only spawn in active lanes.
+✅ Race conditions handled by immediate group removal and double-check validation.
 
 **Full details in:** [`BUGS_ARCHIVED.md - Bug 16`](BUGS_ARCHIVED.md#bug-16-enemies-spawning-from-destroyed-towers-race-condition---fixed)
 

@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="StageData" load_steps=2 format=3]
+[gd_resource type="Resource" script_class="StageData" load_steps=2 format=3 uid="uid://du0mbrl2fj76s"]
 
 [ext_resource type="Script" uid="uid://bfg5kjb0bo8cr" path="res://resources/data_structures/stage_data.gd" id="1_stage_data"]
 
@@ -8,5 +8,4 @@ id = "early_milestone"
 name = "早期里程碑"
 req_exp = 10
 cutscene_id = "early_milestone_cutscene"
-unlocks_memory_id = ""
 metadata/_custom_type_script = "uid://bfg5kjb0bo8cr"

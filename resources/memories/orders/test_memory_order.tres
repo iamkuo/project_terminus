@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="MemoryOrder" load_steps=2 format=3]
+[gd_resource type="Resource" script_class="MemoryOrder" load_steps=2 format=3 uid="uid://cpjou801ueyy3"]
 
 [ext_resource type="Script" uid="uid://b6a0wprwmwr0o" path="res://resources/data_structures/memory_order.gd" id="1_script"]
 

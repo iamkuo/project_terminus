@@ -28,6 +28,8 @@ ProgressManager="*res://scripts/global/progress_manager.gd"
 ProjectileManager="*res://scripts/battle/main/projectile_manager.gd"
 MessageManager="*res://scripts/battle/ui/message_manager.gd"
 BattleManager="*res://scripts/battle/main/battle_manager.gd"
+ConfigManager="*res://scripts/battle/main/battle_config_manager.gd"
+SkillManager="*res://scripts/global/skill_manager.gd"
 
 [display]
 
@@ -134,3 +136,5 @@ py={
 [rendering]
 
 textures/canvas_textures/default_texture_filter=0
+2d/snap/snap_2d_transforms_to_pixel=true
+2d/snap/snap_2d_vertices_to_pixel=true

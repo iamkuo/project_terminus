@@ -21,9 +21,10 @@ const DEFAULT_BACKGROUND_PATH: String = "res://scenes/battle/default_background.
 # ============================================================================
 var game_state: GameState = GameState.IDLE
 
-# Battle configuration
-var current_config: Dictionary = {}
+# Battle configuration - managed by ConfigManager singleton
+# Read directly from ConfigManager.enemy_multiplyer etc.
 var enemy_multiplyer: float = 1.0
+var allies_multiplyer: float = 1.0
 
 # Battle statistics
 var enemy_killed: int = 0
@@ -49,7 +50,9 @@ var _return_scene: String = "main_world"
 var _battle_scene: PackedScene
 var _default_background: PackedScene
 var _saved_player_position: Vector2 = Vector2.ZERO
+var _saved_map_path: String = ""
 var unit_stats_registry: Dictionary = {}
+var _triggered_tp_points: Array[String] = []
 
 # Scene references
 var curr: Node
@@ -79,47 +82,39 @@ func _process(delta: float) -> void:
 # BATTLE CONTROL
 # ============================================================================
 
-func start_battle(config: Dictionary, return_scene: String = "main_world") -> void:
+func start_battle(player_node: Node2D = null, return_scene: String = "main_world") -> void:
 	# Save player position before transitioning to battle
-	var player = get_tree().get_first_node_in_group("player")
+	var player = player_node if is_instance_valid(player_node) else _get_player()
+	
 	if player:
 		_saved_player_position = player.global_position
-		print("[BattleManager] Saved player position: ", _saved_player_position)
+		print("[BattleManager] Saved player position: ", _saved_player_position, " from node: ", player.get_path())
+		
+		# Also save which sub-map was active
+		var world = SceneSwitcher.current_scene
+		if world and world.has_node("MapContainer"):
+			var map_container = world.get_node("MapContainer")
+			if map_container.get_child_count() > 0:
+				_saved_map_path = map_container.get_child(0).scene_file_path
+				print("[BattleManager] Saved map path: ", _saved_map_path)
 	else:
-		print("[BattleManager] Warning: No player found to save position")
+		print("[BattleManager] Warning: No player found to save position, using default")
 		_saved_player_position = DEFAULT_PLAYER_POSITION
 	
-	# Configure battle
-	current_config = config.duplicate()
 	_return_scene = return_scene
-	enemy_multiplyer = current_config.get("enemy_multiplyer", 1.0)
+	enemy_multiplyer = ConfigManager.enemy_multiplyer
+	
+	# Apply player skill bonuses via SkillManager
+	allies_multiplyer = SkillManager.allies_mult
+	ConfigManager.allies_multiplyer = allies_multiplyer
+	
+	# Load enemy stats via config manager
+	ConfigManager.load_unit_stats(UNIT_STATS_PATH)
+	unit_stats_registry = ConfigManager.unit_stats_registry
 	
 	# Set default background if none provided
-	if not current_config.has("background_scene") or not current_config.background_scene:
-		current_config.background_scene = _default_background
-	
-	# Load enemy stats
-	unit_stats_registry.clear()
-	var dir = DirAccess.open(UNIT_STATS_PATH)
-	
-	if not dir:
-		push_error("Failed to open unit stats directory: " + UNIT_STATS_PATH)
-		return
-	
-	var files = dir.get_files()
-	for file_name in files:
-		file_name = file_name.trim_suffix(".remap")
-		
-		if not (file_name.ends_with(".tres") or file_name.ends_with(".res")):
-			continue
-		
-		var resource = load(UNIT_STATS_PATH + file_name)
-		if not resource or not "cost" in resource:
-			continue
-		
-		if resource.team == Team.OPPONENT:
-			var stats_id = file_name.replace(".tres", "").replace(".res", "")
-			unit_stats_registry[stats_id] = resource
+	if not ConfigManager.background_scene:
+		ConfigManager.background_scene = _default_background
 	
 	# Connect to scene transition signal only when battle starts
 	if not SceneSwitcher.scene_transition_finished.is_connected(_on_scene_transition_finished):
@@ -130,10 +125,10 @@ func start_battle(config: Dictionary, return_scene: String = "main_world") -> vo
 		var battle_scene_instance = _battle_scene.instantiate()
 		
 		# Add background immediately before scene is added to tree
-		if current_config.has("background_scene") and current_config.background_scene:
+		if ConfigManager.background_scene:
 			var bg_node = battle_scene_instance.get_node_or_null("Background")
 			if bg_node:
-				background_instance = current_config.background_scene.instantiate()
+				background_instance = ConfigManager.background_scene.instantiate()
 				bg_node.add_child(background_instance)
 		
 		SceneSwitcher.switch_to_scene_instance(battle_scene_instance, "battle_scene", "fade")
@@ -174,19 +169,18 @@ func _initialize_battle() -> void:
 			if tower_manager.has_signal("tower_destroyed_notify"):
 				tower_manager.tower_destroyed_notify.connect(on_tower_destroyed)
 	
-	# Apply battle configuration
+	# Apply battle configuration from manager
 	# Apply AI configuration
-	if current_config.has("ai_cooldown_min") and current_config.has("ai_cooldown_max"):
-		ai_cooldown_min = current_config.ai_cooldown_min
-		ai_cooldown_max = current_config.ai_cooldown_max
+	ai_cooldown_min = ConfigManager.ai_cooldown_min
+	ai_cooldown_max = ConfigManager.ai_cooldown_max
 	
 	# Apply elixir configuration
-	if elixir and current_config.has("starting_elixir"):
-		elixir.current = current_config.starting_elixir
+	if elixir:
+		elixir.current = ConfigManager.starting_elixir
 		elixir.emit_signal("elixir_changed", int(floor(elixir.current)))
 	
 	# Update background reference
-	if current_config.has("background_scene") and current_config.background_scene and curr:
+	if ConfigManager.background_scene and curr:
 		var bg_node = curr.get_node_or_null("Background")
 		if bg_node and bg_node.get_child_count() > 0:
 			background_instance = bg_node.get_child(0)
@@ -224,7 +218,7 @@ func _cleanup_battle() -> void:
 	opponents_container = null
 	elixir = null
 	ai_enabled = false
-	current_config.clear()
+	ConfigManager.clear()
 
 # ============================================================================
 # AI SPAWNING SYSTEM
@@ -247,18 +241,20 @@ func _process_ai_spawning(delta: float) -> void:
 	
 	# Check if there are any alive enemy towers to spawn from
 	var alive_enemy_towers = _get_alive_enemy_towers()
-	
 	if alive_enemy_towers.is_empty():
-		print("[AI Spawn] No alive enemy towers - skipping spawn attempt")
 		return
 	
 	ai_cooldown = randf_range(ai_cooldown_min, ai_cooldown_max)
 	
-	var stats_ids = unit_stats_registry.keys()
-	var random_stat = unit_stats_registry[stats_ids[randi() % stats_ids.size()]]
-	var lane = randi() % SPAWN_LANES
+	# Simplify: Pick a random alive tower and use its lane
+	var lane = alive_enemy_towers.pick_random().lane
 	
-	print("[AI Spawn] Attempting to spawn enemy - Lane: ", lane)
+	# Pick a random unit stat from the registry
+	var stats_list = unit_stats_registry.values()
+	if stats_list.is_empty():
+		return
+		
+	var random_stat = stats_list.pick_random()
 	spawn_enemy(random_stat, lane)
 
 # ============================================================================
@@ -279,53 +275,43 @@ func _get_alive_enemy_towers() -> Array:
 		if tower.team != Team.OPPONENT:
 			continue
 		
-		# Skip destroyed towers (multiple checks for safety)
-		if tower.is_destroyed:
-			print("[Alive Towers Check] Skipping destroyed tower")
-			continue
-		
-		# Skip towers queued for deletion
-		if tower.is_queued_for_deletion():
-			print("[Alive Towers Check] Skipping tower queued for deletion")
-			continue
-		
 		# Verify tower is still valid
 		if not is_instance_valid(tower):
-			print("[Alive Towers Check] Tower instance invalid")
 			continue
 		
 		alive_towers.append(tower)
 	
-	print("[Alive Towers Check] Found ", alive_towers.size(), " alive enemy towers out of ", enemy_towers.size(), " total")
 	return alive_towers
 
 func get_spawn_point(team: int, lane: int) -> Vector2:
 	match team:
 		Team.PLAYER:
-			var player = get_tree().get_first_node_in_group("player")
+			var player = _get_player()
 			return player.global_position if is_instance_valid(player) else Vector2.ZERO
 		Team.OPPONENT:
-			print("[Get Spawn Point] Getting enemy spawn point for lane: ", lane)
-			
 			# Check if there are any alive enemy towers to spawn from
 			var alive_enemy_towers = _get_alive_enemy_towers()
 			
 			# If no alive enemy towers, don't spawn enemies
 			if alive_enemy_towers.is_empty():
-				print("[Get Spawn Point] No alive enemy towers - returning ZERO position")
 				return Vector2.ZERO
 			
 			# Use spawn points if available, but only if there are alive towers
 			if not spawn_points:
-				print("[Get Spawn Point] No spawn points available - returning ZERO")
+				return Vector2.ZERO
+			
+			# Verify if the tower for this specific lane is alive
+			if not alive_enemy_towers.any(func(t): return t.lane == lane):
 				return Vector2.ZERO
 			
 			var suffixes = ["Top", "Middle", "Bottom"]
 			var suffix = suffixes[lane] if lane >= 0 and lane < suffixes.size() else "Middle"
 			var spawn_node = spawn_points.get_node_or_null("R_" + suffix)
 			
-			var result = spawn_node.global_position if spawn_node else Vector2.ZERO
-			print("[Get Spawn Point] Spawn node found: ", spawn_node != null, " Position: ", result)
+			if not spawn_node:
+				return Vector2.ZERO
+				
+			var result = spawn_node.global_position
 			
 			# Additional validation: ensure spawn position is reasonable
 			if result == Vector2.ZERO:
@@ -347,25 +333,14 @@ func spawn_ally(stats: UnitStats, lane: int) -> void:
 	allies_container.spawn_unit(stats, pos, lane)
 
 func spawn_enemy(stats: UnitStats, lane: int) -> void:
-	print("[Spawn Enemy] Called - Game ended: ", game_ended, " Stats valid: ", stats != null, " Container valid: ", opponents_container != null)
-	
 	if not stats or not opponents_container:
-		print("[Spawn Enemy] Invalid stats or container - aborting spawn")
 		return
 	
 	var pos = get_spawn_point(Team.OPPONENT, lane)
-	print("[Spawn Enemy] Got spawn position: ", pos)
 	
 	if pos == Vector2.ZERO:
-		print("[Spawn Enemy] Spawn position is ZERO - cancelling spawn (likely no alive towers)")
 		return
 	
-	# Additional safety check: verify position is not at origin
-	if pos.is_zero():
-		print("[Spawn Enemy] ERROR: Spawn position is zero - this should not happen after validation")
-		return
-	
-	print("[Spawn Enemy] Spawning enemy at position: ", pos, " in lane: ", lane)
 	opponents_container.spawn_unit(stats, pos, lane)
 
 func can_spawn(team: int, cost: int) -> bool:
@@ -379,38 +354,22 @@ func can_spawn(team: int, cost: int) -> bool:
 # ============================================================================
 
 func show_ending_screen(winning_team: int) -> void:
-	print("[BattleManager] show_ending_screen called with team: ", winning_team)
-	
 	game_ended = true
-	
 	var root = SceneSwitcher.current_scene
 	
 	if not root:
-		print("[BattleManager] No current scene found")
 		return
 	
 	var ending_screen = root.get_node_or_null("UI/EndingScreen")
 	
 	if ending_screen and ending_screen.has_method("show_result"):
-		print("[BattleManager] Calling show_result on ending screen")
 		ending_screen.call("show_result", winning_team)
-		print("min:" + str(minutes) + "sec:" + str(seconds))
 	else:
-		print("[BattleManager] Ending screen not found, pausing game")
 		get_tree().paused = true
 
-func on_tower_destroyed(tower: Node) -> void:
-	print("[Tower Destroyed] Tower destroyed - Team: ", tower.team, " Game ended: ", game_ended)
-	print("[Tower Destroyed] Tower marked as destroyed: ", tower.is_destroyed)
-	
-	# Don't end the game for single tower destruction
-	# Only the TowerManager should handle game ending when all towers are destroyed
-	# This function is now just for logging/debug purposes
-	if tower.team == Team.OPPONENT:
-		print("[Tower Destroyed] Enemy tower destroyed - AI spawning will check for remaining towers")
-		print("[Tower Destroyed] Tower removed from 'towers' group: ", not tower.is_in_group("towers"))
-	elif tower.team == Team.PLAYER:
-		print("[Tower Destroyed] Player tower destroyed")
+func on_tower_destroyed(_tower: Node) -> void:
+	# This function is now just for potential logic expansion or specific tower death effects
+	pass
 
 func _on_all_towers_destroyed(winning_team: int) -> void:
 	print("[BattleManager] All towers destroyed! Winning team: ", winning_team)
@@ -450,24 +409,69 @@ func end_battle(exp_earned: int, crystals_earned: int) -> void:
 # ============================================================================
 
 func _return_to_main_world() -> void:
-	print("[BattleManager] Returning to main world with position restoration")
-	SceneSwitcher.switch_scene(_return_scene, "fade")
+	print("[BattleManager] Returning to world: ", _return_scene)
 	
-	if not SceneSwitcher.scene_transition_finished.is_connected(_on_return_scene_finished):
-		SceneSwitcher.scene_transition_finished.connect(_on_return_scene_finished)
+	# Connect to scene_added to restore position while the screen is still black
+	if not SceneSwitcher.scene_added.is_connected(_on_return_scene_added):
+		SceneSwitcher.scene_added.connect(_on_return_scene_added)
+	
+	SceneSwitcher.switch_scene(_return_scene, "fade")
 
-func _on_return_scene_finished(scene_name: String) -> void:
+func _on_return_scene_added(scene_name: String) -> void:
 	if scene_name == _return_scene:
-		await get_tree().process_frame
+		var root = SceneSwitcher.current_scene
 		
-		var player = get_tree().get_first_node_in_group("player")
+		# 1. Restore the correct sub-map first
+		if root and root.has_method("load_map") and not _saved_map_path.is_empty():
+			root.load_map(_saved_map_path)
+			print("[BattleManager] Restored active map: ", _saved_map_path)
 		
+		# 2. Then restore the player position
+		var player = _get_player()
 		if player:
 			player.global_position = _saved_player_position
-			print("[BattleManager] Restored player position: ", _saved_player_position)
+			print("[BattleManager] Instant restored player position to: ", _saved_player_position, " on node: ", player.get_path())
 		else:
-			print("[BattleManager] Warning: No player found to restore position")
+			# Fallback: if not found immediately, try again next frame
+			await get_tree().process_frame
+			player = _get_player()
+			if player:
+				player.global_position = _saved_player_position
+				print("[BattleManager] Delayed restored player position to: ", _saved_player_position, " on node: ", player.get_path())
 		
 		# Disconnect to avoid multiple calls
-		if SceneSwitcher.scene_transition_finished.is_connected(_on_return_scene_finished):
-			SceneSwitcher.scene_transition_finished.disconnect(_on_return_scene_finished)
+		if SceneSwitcher.scene_added.is_connected(_on_return_scene_added):
+			SceneSwitcher.scene_added.disconnect(_on_return_scene_added)
+
+func _get_player() -> Node:
+	# 1. Primary: Try to find player in the current active scene (most reliable)
+	var root = SceneSwitcher.current_scene
+	if root:
+		# Use unique name if possible
+		var player = root.get_node_or_null("%Player")
+		if is_instance_valid(player):
+			return player
+			
+		# Search recursively under root
+		player = root.find_child("Player", true, false)
+		if is_instance_valid(player):
+			return player
+			
+	# 2. Secondary: Try group but filter for valid nodes that aren't being deleted
+	var players = get_tree().get_nodes_in_group("player")
+	for p in players:
+		if is_instance_valid(p) and not p.is_queued_for_deletion():
+			# If we have multiple, prioritize one that is not in the battle scene
+			# But for now, returning the first valid one is better than returning a dying one
+			return p
+			
+	return null
+
+func mark_tp_point_triggered(point_id: String) -> void:
+	if not point_id.is_empty() and not point_id in _triggered_tp_points:
+		_triggered_tp_points.append(point_id)
+
+func is_tp_point_triggered(point_id: String) -> bool:
+	if point_id.is_empty():
+		return false
+	return point_id in _triggered_tp_points

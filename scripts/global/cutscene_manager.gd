@@ -34,7 +34,7 @@ func _load_cutscenes(path: String) -> void:
 			var cutscene_script = load(full_path) as CutsceneScript
 			if cutscene_script:
 				scripts.append(cutscene_script)
-				print("Loaded cutscene: ", file_name)
+				# print("Loaded cutscene: ", file_name)
 			else:
 				push_warning("Failed to load cutscene script: " + file_name)
 		file_name = dir.get_next()

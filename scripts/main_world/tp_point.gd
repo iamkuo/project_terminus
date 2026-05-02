@@ -22,9 +22,18 @@ extends AnimatedSprite2D
 ## --- Reward Configuration (Victory only) ---
 @export var exp_reward_victory: int = 100
 @export var crystal_reward_victory: int = 50
-@export var enemy_multiplyer: int = 1.0
+@export var enemy_multiplyer: float = 1
+
+func _ready() -> void:
+	if BattleManager.is_tp_point_triggered(_get_internal_id()):
+		queue_free()
+
 func _on_area_2d_body_entered(_body: Node2D) -> void:
-	BattleManager.start_battle(_build_config())
+	BattleManager.mark_tp_point_triggered(_get_internal_id())
+	
+	ConfigManager.load_config(_build_config())
+	BattleManager.start_battle(_body)
+	queue_free()
 func _build_config() -> Dictionary:
 	return {
 		"battle_id": battle_id,
@@ -41,3 +50,14 @@ func _build_config() -> Dictionary:
 		"crystal_reward_victory": crystal_reward_victory,
 	
 	}
+
+func _get_internal_id() -> String:
+	if not battle_id.is_empty():
+		return battle_id
+	# Fallback: Create a unique ID based on the scene name and global position
+	# This ensures it's robust even if the user forgets to set a unique battle_id
+	var scene_name = "unknown_scene"
+	if get_tree() and get_tree().current_scene:
+		scene_name = get_tree().current_scene.name
+	
+	return "%s_%s" % [scene_name, str(global_position)]

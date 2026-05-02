@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="StageData" load_steps=2 format=3]
+[gd_resource type="Resource" script_class="StageData" load_steps=2 format=3 uid="uid://cs4ed3sm0acgs"]
 
 [ext_resource type="Script" uid="uid://bfg5kjb0bo8cr" path="res://resources/data_structures/stage_data.gd" id="1_stage_data"]
 
@@ -8,5 +8,4 @@ id = "full_level_up_3"
 name = "等級提升 3"
 req_exp = 1000
 cutscene_id = "level_up"
-unlocks_memory_id = ""
 metadata/_custom_type_script = "uid://bfg5kjb0bo8cr"
