@@ -777,6 +777,47 @@ func _return_to_main_world() -> void:
   - Added `_saved_player_position` variable
   - Added `_save_player_position()`, `_restore_player_position()`, `_return_to_main_world()`, `_on_return_scene_finished()` methods
   - Modified `start_battle()` to save position
+
+---
+
+## Bug 16: Enemies Spawning on Destroyed Towers (FIXED)
+**Status:** ✅ FIXED
+
+### Symptoms
+Enemy units were occasionally spawning directly on destroyed towers due to a race condition in the tower destruction and AI spawning systems.
+
+### Root Cause (Detailed Analysis)
+**Race Condition Timeline:**
+1. Tower takes lethal damage: `_destroy()` called
+2. Sets `is_destroyed = true`, then calls `queue_free()`
+3. **Critical Issue**: `queue_free()` defers deletion to next frame
+4. Tower still exists in scene tree and "towers" group during current frame
+5. `_process_ai_spawning()` runs same frame, queries `get_tree().get_nodes_in_group("towers")`
+6. Finds destroyed tower still in group
+7. Timing issues could cause spawn attempts on invalid towers
+
+### Solution Implemented (Clean Multi-Step Fix) ✅
+
+**1. Immediate Group Removal**
+- Tower removes itself from the "towers" group immediately in `_destroy()` before `queue_free()` takes effect.
+- This ensures group queries like `get_nodes_in_group("towers")` are always accurate.
+
+**2. Tower-Driven Lane Selection**
+- Instead of picking a random lane number (0-2), the AI now picks a random **alive tower** and uses its lane.
+- This automatically filters out lanes with destroyed towers.
+
+**3. Robust Spawn Point Validation**
+- `get_spawn_point()` double-checks that the requested lane has an alive tower using `alive_towers.any()`.
+- If a lane's tower was destroyed in the same frame as a spawn attempt, the spawn is cancelled safely.
+
+**Files Modified**
+- `scripts/battle/tower/tower_base.gd` - Added immediate group removal.
+- `scripts/battle/main/battle_manager.gd` - Simplified spawning and validation logic using `pick_random()` and `any()`.
+
+**Result**
+✅ Clean, efficient code with no redundant loops.
+✅ Units only spawn in active lanes.
+✅ Race conditions handled by immediate group removal and double-check validation.
 - `scenes/main_world/player.tscn` - Added `groups = ["player"]` for reliable identification
 
 ### Result

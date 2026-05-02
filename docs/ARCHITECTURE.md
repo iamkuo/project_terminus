@@ -550,49 +550,7 @@ The `ProgressManager` initializes resources in this order:
 
 ---
 
-## 9. Known Bugs & Solutions
-
-### Enemies Spawning on Destroyed Towers - FIXED ✅
-
-**Problem (Now Resolved)**
-Enemy units were occasionally spawning directly on destroyed towers due to a race condition in the tower destruction and AI spawning systems.
-
-**Root Cause (Detailed Analysis)**
-**Race Condition Timeline:**
-1. Tower takes lethal damage: `_destroy()` called
-2. Sets `is_destroyed = true`, then calls `queue_free()`
-3. **Critical Issue**: `queue_free()` defers deletion to next frame
-4. Tower still exists in scene tree and "towers" group during current frame
-5. `_process_ai_spawning()` runs same frame, queries `get_tree().get_nodes_in_group("towers")`
-6. Finds destroyed tower still in group
-7. Timing issues could cause spawn attempts on invalid towers
-
-**Solution Implemented (Clean Multi-Step Fix) ✅**
-
-**1. Immediate Group Removal**
-- Tower removes itself from the "towers" group immediately in `_destroy()` before `queue_free()` takes effect.
-- This ensures group queries like `get_nodes_in_group("towers")` are always accurate.
-
-**2. Tower-Driven Lane Selection**
-- Instead of picking a random lane number (0-2), the AI now picks a random **alive tower** and uses its lane.
-- This automatically filters out lanes with destroyed towers.
-
-**3. Robust Spawn Point Validation**
-- `get_spawn_point()` double-checks that the requested lane has an alive tower using `alive_towers.any()`.
-- If a lane's tower was destroyed in the same frame as a spawn attempt, the spawn is cancelled safely.
-
-**Files Modified**
-- `scripts/battle/tower/tower_base.gd` - Added immediate group removal.
-- `scripts/battle/main/battle_manager.gd` - Simplified spawning and validation logic using `pick_random()` and `any()`.
-
-**Result**
-✅ Clean, efficient code with no redundant loops.
-✅ Units only spawn in active lanes.
-✅ Race conditions handled by immediate group removal and double-check validation.
-
----
-
-## 10. Optimization Opportunities
+## 9. Optimization Opportunities
 
 1. **Object Pooling**: Reuse unit and projectile instances instead of instantiate/free
 2. **Spatial Partitioning**: Optimize target finding with quadtrees instead of scene tree queries
@@ -602,7 +560,7 @@ Enemy units were occasionally spawning directly on destroyed towers due to a rac
 
 ---
 
-## 11. Testing Recommendations
+## 10. Testing Recommendations
 
 1. **Tower Destruction Edge Cases**:
    - Rapid tower destruction (multiple towers same frame)
