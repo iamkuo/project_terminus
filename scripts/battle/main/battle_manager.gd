@@ -231,9 +231,6 @@ func _cleanup_battle() -> void:
 # ============================================================================
 
 func _process_ai_spawning(delta: float) -> void:
-	# DEBUG: Log AI spawning state
-	print("[AI Spawn] AI enabled: ", ai_enabled, " Game ended: ", game_ended, " Cooldown: ", ai_cooldown)
-	
 	if not (ai_enabled and not game_ended):
 		return
 	
@@ -249,18 +246,8 @@ func _process_ai_spawning(delta: float) -> void:
 		return
 	
 	# Check if there are any alive enemy towers to spawn from
-	var enemy_towers = get_tree().get_nodes_in_group("towers")
-	var alive_enemy_towers = []
+	var alive_enemy_towers = _get_alive_enemy_towers()
 	
-	print("[AI Spawn] Total towers found: ", enemy_towers.size())
-	for tower in enemy_towers:
-		print("[AI Spawn] Tower - Team: ", tower.team, " Destroyed: ", tower.is_destroyed if "is_destroyed" in tower else "N/A")
-		if tower.team == Team.OPPONENT and not tower.is_destroyed:
-			alive_enemy_towers.append(tower)
-	
-	print("[AI Spawn] Alive enemy towers: ", alive_enemy_towers.size())
-	
-	# If no alive enemy towers, don't attempt spawning
 	if alive_enemy_towers.is_empty():
 		print("[AI Spawn] No alive enemy towers - skipping spawn attempt")
 		return
@@ -278,6 +265,40 @@ func _process_ai_spawning(delta: float) -> void:
 # UNIT SPAWNING
 # ============================================================================
 
+func _get_alive_enemy_towers() -> Array:
+	"""
+	Get all alive enemy towers from the scene.
+	This method safely checks for destroyed towers and queued-for-deletion nodes.
+	Returns: Array of valid, alive enemy tower nodes
+	"""
+	var enemy_towers = get_tree().get_nodes_in_group("towers")
+	var alive_towers = []
+	
+	for tower in enemy_towers:
+		# Skip towers from other teams
+		if tower.team != Team.OPPONENT:
+			continue
+		
+		# Skip destroyed towers (multiple checks for safety)
+		if tower.is_destroyed:
+			print("[Alive Towers Check] Skipping destroyed tower")
+			continue
+		
+		# Skip towers queued for deletion
+		if tower.is_queued_for_deletion():
+			print("[Alive Towers Check] Skipping tower queued for deletion")
+			continue
+		
+		# Verify tower is still valid
+		if not is_instance_valid(tower):
+			print("[Alive Towers Check] Tower instance invalid")
+			continue
+		
+		alive_towers.append(tower)
+	
+	print("[Alive Towers Check] Found ", alive_towers.size(), " alive enemy towers out of ", enemy_towers.size(), " total")
+	return alive_towers
+
 func get_spawn_point(team: int, lane: int) -> Vector2:
 	match team:
 		Team.PLAYER:
@@ -285,17 +306,9 @@ func get_spawn_point(team: int, lane: int) -> Vector2:
 			return player.global_position if is_instance_valid(player) else Vector2.ZERO
 		Team.OPPONENT:
 			print("[Get Spawn Point] Getting enemy spawn point for lane: ", lane)
+			
 			# Check if there are any alive enemy towers to spawn from
-			var enemy_towers = get_tree().get_nodes_in_group("towers")
-			var alive_enemy_towers = []
-			
-			print("[Get Spawn Point] Checking towers for enemy spawning...")
-			for tower in enemy_towers:
-				print("[Get Spawn Point] Tower - Team: ", tower.team, " Destroyed: ", tower.is_destroyed if "is_destroyed" in tower else "N/A")
-				if tower.team == Team.OPPONENT and not tower.is_destroyed:
-					alive_enemy_towers.append(tower)
-			
-			print("[Get Spawn Point] Alive enemy towers: ", alive_enemy_towers.size())
+			var alive_enemy_towers = _get_alive_enemy_towers()
 			
 			# If no alive enemy towers, don't spawn enemies
 			if alive_enemy_towers.is_empty():
@@ -313,6 +326,11 @@ func get_spawn_point(team: int, lane: int) -> Vector2:
 			
 			var result = spawn_node.global_position if spawn_node else Vector2.ZERO
 			print("[Get Spawn Point] Spawn node found: ", spawn_node != null, " Position: ", result)
+			
+			# Additional validation: ensure spawn position is reasonable
+			if result == Vector2.ZERO:
+				print("[Get Spawn Point] WARNING: Spawn position is ZERO - this may indicate configuration issues")
+			
 			return result
 		_:
 			return Vector2.ZERO
@@ -332,16 +350,22 @@ func spawn_enemy(stats: UnitStats, lane: int) -> void:
 	print("[Spawn Enemy] Called - Game ended: ", game_ended, " Stats valid: ", stats != null, " Container valid: ", opponents_container != null)
 	
 	if not stats or not opponents_container:
+		print("[Spawn Enemy] Invalid stats or container - aborting spawn")
 		return
 	
 	var pos = get_spawn_point(Team.OPPONENT, lane)
 	print("[Spawn Enemy] Got spawn position: ", pos)
 	
 	if pos == Vector2.ZERO:
-		print("[Spawn Enemy] Spawn position is ZERO - cancelling spawn")
+		print("[Spawn Enemy] Spawn position is ZERO - cancelling spawn (likely no alive towers)")
 		return
 	
-	print("[Spawn Enemy] Spawning enemy at position: ", pos)
+	# Additional safety check: verify position is not at origin
+	if pos.is_zero():
+		print("[Spawn Enemy] ERROR: Spawn position is zero - this should not happen after validation")
+		return
+	
+	print("[Spawn Enemy] Spawning enemy at position: ", pos, " in lane: ", lane)
 	opponents_container.spawn_unit(stats, pos, lane)
 
 func can_spawn(team: int, cost: int) -> bool:
@@ -377,12 +401,14 @@ func show_ending_screen(winning_team: int) -> void:
 
 func on_tower_destroyed(tower: Node) -> void:
 	print("[Tower Destroyed] Tower destroyed - Team: ", tower.team, " Game ended: ", game_ended)
+	print("[Tower Destroyed] Tower marked as destroyed: ", tower.is_destroyed)
 	
 	# Don't end the game for single tower destruction
 	# Only the TowerManager should handle game ending when all towers are destroyed
 	# This function is now just for logging/debug purposes
 	if tower.team == Team.OPPONENT:
 		print("[Tower Destroyed] Enemy tower destroyed - AI spawning will check for remaining towers")
+		print("[Tower Destroyed] Tower removed from 'towers' group: ", not tower.is_in_group("towers"))
 	elif tower.team == Team.PLAYER:
 		print("[Tower Destroyed] Player tower destroyed")
 

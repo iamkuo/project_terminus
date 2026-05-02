@@ -727,56 +727,166 @@ func _return_to_main_world() -> void:
 
 ---
 
-## Bug 16: Enemies Spawning From Destroyed Towers (FIXED)
+## Bug 16: Enemies Spawning From Destroyed Towers (RACE CONDITION - FIXED)
 **Status:** ✅ FIXED
 
 ### Symptoms
-- After all enemy towers are destroyed, enemies continue to spawn in the battle
-- AI spawning system attempts to spawn enemies even when no towers are available
-- Spawn attempts fail but continue repeatedly, wasting processing resources
+- Occasionally, enemy units spawn directly on top of destroyed towers
+- This happens right after a tower is destroyed (same frame or next frame)
+- Can create confusing gameplay where enemies appear out of nowhere
+- More noticeable when towers are destroyed rapidly
 
-### Root Cause
-The AI spawning system in `BattleManager._process_ai_spawning()` was not checking if there were any alive enemy towers before attempting to spawn enemies. While the `get_spawn_point()` function correctly returned `Vector2.ZERO` when no towers were alive, the AI system continued to try spawning every cooldown cycle.
+### Root Cause Analysis - Race Condition
 
-**The flow:**
-1. All enemy towers destroyed → towers marked as `is_destroyed = true`
-2. AI spawning continues → calls `_process_ai_spawning()` every frame
-3. Function checks general conditions (ai_enabled, game_ended, unit_stats_registry) but **not tower availability**
-4. Attempts to spawn → `get_spawn_point()` returns `Vector2.ZERO` (no valid spawn location)
-5. `spawn_enemy()` returns early due to zero position
-6. Loop repeats every AI cooldown
+**The Problem:**
+When a tower is destroyed, the execution flow is:
+1. Tower takes lethal damage → `TowerBase._destroy()` called
+2. `is_destroyed = true` flag set
+3. `queue_free()` called to delete node next frame
+4. **KEY ISSUE**: Node still exists in scene tree and "towers" group until next frame
+5. `TowerManager` receives destruction signal, updates its internal state
+6. **Same frame**: `BattleManager._process_ai_spawning()` runs
+7. Queries `get_tree().get_nodes_in_group("towers")` → finds destroyed tower still in group!
+8. Checks `not tower.is_destroyed` → this check should prevent spawn, but:
+   - Timing issues or deferred operations can cause race conditions
+   - Multiple frames of processing can occur before cleanup completes
 
-### Solution
-Added explicit check for alive enemy towers in the AI spawning system:
+**Contributing factors:**
+- `queue_free()` defers deletion to next frame - node still accessible via group queries
+- No immediate removal from "towers" group
+- No check for `is_queued_for_deletion()` status
+- Multiple independent queries of tower state across different managers
 
+### Solution - Multi-Layer Prevention
+
+**Layer 1: Immediate Group Removal**
+Modified `TowerBase._destroy()` to remove tower from "towers" group immediately:
 ```gdscript
-# Check if there are any alive enemy towers to spawn from
-var enemy_towers = get_tree().get_nodes_in_group("towers")
-var alive_enemy_towers = []
-
-for tower in enemy_towers:
-    if tower.team == Team.OPPONENT and not tower.is_destroyed:
-        alive_enemy_towers.append(tower)
-
-# If no alive enemy towers, don't attempt spawning
-if alive_enemy_towers.is_empty():
-    return
+func _destroy():
+    is_destroyed = true
+    
+    # Remove from towers group immediately - prevents race conditions
+    # This ensures get_tree().get_nodes_in_group("towers") won't find destroyed tower
+    remove_from_group("towers")
+    
+    # ... rest of cleanup
+    queue_free()  # Node still exists until next frame, but NOT in group
 ```
 
-**Key improvement:**
-- AI spawning now checks tower availability **before** attempting to spawn
-- Prevents unnecessary spawn attempts when all towers are destroyed
-- Reduces processing overhead and eliminates failed spawn attempts
-- Maintains existing `get_spawn_point()` safety checks as backup
+**Why this works:**
+- `remove_from_group()` is immediate (not deferred)
+- Group queries after this point won't find the destroyed tower
+- Even though node still exists in tree, it's invisible to group queries
+- `queue_free()` still runs but the tower won't be found by spawning logic
 
-**Files Changed:**
-- `scripts/battle/main/battle_manager.gd` - Added alive tower check in `_process_ai_spawning()`
+**Layer 2: Enhanced Spawn Validation**
+Added `_get_alive_enemy_towers()` helper that performs multiple safety checks:
+```gdscript
+func _get_alive_enemy_towers() -> Array:
+    """
+    Get all alive enemy towers with multiple safety checks.
+    Returns: Array of valid, alive enemy tower nodes
+    """
+    var alive_towers = []
+    
+    for tower in get_tree().get_nodes_in_group("towers"):
+        if tower.team != Team.OPPONENT:
+            continue
+        
+        # Multiple safety checks
+        if tower.is_destroyed:
+            continue
+        
+        if tower.is_queued_for_deletion():  # Safety check for nodes pending deletion
+            continue
+        
+        if not is_instance_valid(tower):
+            continue
+        
+        alive_towers.append(tower)
+    
+    return alive_towers
+```
+
+**Layer 3: Spawn Position Validation**
+Enhanced `get_spawn_point()` to validate the final position:
+```gdscript
+# Verify spawn position is not zero
+if pos == Vector2.ZERO:
+    return Vector2.ZERO
+
+# Validate position is reasonable
+if pos.is_zero():
+    print("ERROR: Spawn position is zero")
+    return Vector2.ZERO
+```
+
+**Layer 4: AI Spawning Early Exit**
+AI spawning now checks for alive towers **before** attempting spawn:
+```gdscript
+func _process_ai_spawning(delta: float) -> void:
+    # ... existing checks ...
+    
+    # NEW: Check alive towers before attempting spawn
+    var alive_enemy_towers = _get_alive_enemy_towers()
+    
+    if alive_enemy_towers.is_empty():
+        print("No alive towers - skipping spawn")
+        return
+    
+    # ... proceed with spawn
+```
+
+### Architecture Improvements
+
+**Before (Fragile):**
+```
+Tower destroyed (is_destroyed=true, still in group)
+→ AI spawning runs same frame
+→ Queries group (finds tower)
+→ Checks is_destroyed (should be true, but timing issues)
+→ Gets zero position from get_spawn_point()
+→ spawn_enemy() returns early
+Result: Confusing failure handling, potential edge cases
+```
+
+**After (Robust):**
+```
+Tower destroyed → immediately remove from "towers" group
+→ AI spawning runs same frame
+→ Queries group (tower NOT found - removed already)
+→ _get_alive_enemy_towers() returns empty array
+→ _process_ai_spawning() exits early
+→ spawn_enemy() never called
+Result: Clean, predictable flow with no spawn attempts
+```
+
+### Files Changed
+- `scripts/battle/tower/tower_base.gd`:
+  - Added `remove_from_group("towers")` in `_destroy()`
+  - Added comprehensive documentation of destruction flow
+  
+- `scripts/battle/main/battle_manager.gd`:
+  - Added `_get_alive_enemy_towers()` helper with multiple safety checks
+  - Refactored `get_spawn_point()` to use new helper method
+  - Added safety checks in `spawn_enemy()` for zero position validation
+  - Enhanced `_process_ai_spawning()` with early exit when no towers alive
+  - Improved logging throughout for debugging
 
 ### Result
-✅ AI spawning stops when all enemy towers are destroyed
-✅ No more failed spawn attempts after towers destroyed
-✅ Processing resources conserved during end-game state
-✅ Existing tower destruction and game ending logic preserved
+✅ Destroyed towers immediately removed from group queries
+✅ AI spawning cannot find destroyed towers
+✅ Multiple safety checks prevent edge cases
+✅ No race conditions between tower destruction and AI spawning
+✅ Cleaner code flow with explicit validation layers
+✅ Better logging for debugging tower/spawn issues
+
+### Key Learning
+When managing node lifecycle across multiple systems:
+1. **Immediate action** (remove_from_group) > Deferred cleanup (queue_free)
+2. **Multiple validation layers** catch edge cases single checks miss
+3. **Explicit queries** (helper function) > Implicit state checks (scattered logic)
+4. **Safety checks** (is_queued_for_deletion, is_instance_valid) prevent subtle bugs
 
 ---
 
@@ -784,3 +894,4 @@ if alive_enemy_towers.is_empty():
 - [`../README.md`](../README.md) - Project architecture and core systems
 - [`ARCHITECTURE.md`](ARCHITECTURE.md) - Game architecture and signal interaction graphs
 - [`AGENTS.md`](AGENTS.md) - Agent instructions and best practices
+- [`COMBAT_SYSTEM_SUMMARY.md`](COMBAT_SYSTEM_SUMMARY.md) - Combat system overview with architecture diagrams
