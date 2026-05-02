@@ -35,6 +35,11 @@ func _on_zone_entered(body: Node2D, transition: TransitionConfig) -> void:
 	if not _is_valid_player(body):
 		return
 		
+	if ProgressManager.get_current_level() < transition.required_level:
+		if not transition.lock_cutscene_id.is_empty():
+			CutsceneManager.play(transition.lock_cutscene_id)
+		return
+		
 	_execute_map_transition(body, transition)
 
 func _is_valid_player(body: Node2D) -> bool:

@@ -33,6 +33,8 @@ var battle_time: float = 0.0
 var time: float = 0.0
 var minutes: int = 0
 var seconds: int = 0
+var earned_exp: int = 0
+var earned_crystals: int = 0
 
 # AI configuration
 var ai_enabled: bool = true
@@ -192,6 +194,8 @@ func _initialize_battle() -> void:
 	enemy_killed = 0
 	damage_dealt = 0.0
 	battle_time = 0.0
+	earned_exp = 0
+	earned_crystals = 0
 	ai_enabled = true
 	ai_cooldown = randf_range(ai_cooldown_min, ai_cooldown_max)
 	game_ended = false
@@ -396,12 +400,45 @@ func is_game_ended() -> bool:
 # REWARDS & PROGRESSION
 # ============================================================================
 
-func end_battle(exp_earned: int, crystals_earned: int) -> void:
-	ProgressManager.current_exp += exp_earned
-	ProgressManager.crystal_count += crystals_earned
-	rewards_applied.emit(exp_earned, crystals_earned)
-	print("[BattleManager] Applied: +%d EXP, +%d Crystals" % [exp_earned, crystals_earned])
-	SceneSwitcher.switch_scene(_return_scene, "fade")
+func calculate_rewards(winning_team: int) -> Dictionary:
+	var base_exp = ConfigManager.exp_reward_victory
+	var exp_per_kill = ConfigManager.exp_per_kill
+	var exp_per_damage = ConfigManager.exp_per_damage
+	
+	var base_crystals = ConfigManager.crystal_reward_victory
+	var crystals_per_kill = ConfigManager.crystals_per_kill
+	
+	var multiplier = 1.0 # Base multiplier for victory
+	if winning_team == Team.OPPONENT:
+		multiplier = 0.5 # Penalty for loss
+	
+	earned_exp = int((base_exp + (enemy_killed * exp_per_kill) + (damage_dealt * exp_per_damage)) * multiplier)
+	earned_crystals = int((base_crystals + (enemy_killed * crystals_per_kill)) * multiplier)
+	
+	# Ensure rewards are at least some minimum value
+	earned_exp = max(earned_exp, 10 if winning_team == Team.PLAYER else 5)
+	earned_crystals = max(earned_crystals, 5 if winning_team == Team.PLAYER else 2)
+	
+	return {
+		"exp": earned_exp,
+		"crystals": earned_crystals
+	}
+
+func apply_battle_rewards() -> void:
+	ProgressManager.current_exp += earned_exp
+	ProgressManager.crystal_count += earned_crystals
+	ProgressManager.data_updated.emit()
+	rewards_applied.emit(earned_exp, earned_crystals)
+	print("[BattleManager] Applied rewards: +%d EXP, +%d Crystals" % [earned_exp, earned_crystals])
+
+func end_battle(exp_earned: int = -1, crystals_earned: int = -1) -> void:
+	if exp_earned != -1:
+		earned_exp = exp_earned
+	if crystals_earned != -1:
+		earned_crystals = crystals_earned
+		
+	# Apply rewards AFTER scene transition completes to prevent cutscene blocking
+	_return_to_main_world()
 
 
 # ============================================================================
@@ -438,6 +475,10 @@ func _on_return_scene_added(scene_name: String) -> void:
 			if player:
 				player.global_position = _saved_player_position
 				print("[BattleManager] Delayed restored player position to: ", _saved_player_position, " on node: ", player.get_path())
+		
+		# 3. Apply battle rewards AFTER scene transition and position restoration
+		# This prevents cutscenes from being blocked by the battle return transition
+		apply_battle_rewards()
 		
 		# Disconnect to avoid multiple calls
 		if SceneSwitcher.scene_added.is_connected(_on_return_scene_added):

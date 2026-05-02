@@ -417,6 +417,66 @@ Additionally, refactored `backpack_ui.gd` to use **Dictionary-based node mapping
 
 ---
 
+## Bug 17: Character Direction Not Always Correct (FIXED)
+**Status:** ✅ FIXED
+
+### Symptoms
+- Character always faces down when stopping movement, regardless of last movement direction
+- After walking left or right, character would reset to facing down when idle
+- Character facing direction doesn't match actual movement direction when stopped
+
+### Root Cause
+The player script in `player.gd` hardcoded the idle animation to always play `"idle_down"` when no input was detected:
+```gdscript
+else:
+	anim_sprite.flip_h = false
+	anim_sprite.play("idle_down")  # 這裡假設角色停止時面向下
+```
+
+This meant the character would always face down when stopping, regardless of which direction they were moving before.
+
+### Solution
+Added direction tracking and proper idle animation handling:
+
+1. **Added direction tracking**: `var last_direction: Vector2 = Vector2.DOWN`
+2. **Update direction when moving**: Store current input vector when character moves
+3. **Use last direction for idle**: Check `last_direction` to determine proper idle state
+
+```gdscript
+if input_vector != Vector2.ZERO:
+    # Update last direction when moving
+    last_direction = input_vector
+    # ... movement animations
+else:
+    # Use last direction to determine idle animation
+    if abs(last_direction.x) > abs(last_direction.y):
+        # Last movement was horizontal - use idle_down but flip based on direction
+        anim_sprite.flip_h = last_direction.x < 0  # Face left if moving left
+        anim_sprite.play("idle_down")  # Only idle_down animation available
+    else:
+        # Last movement was vertical
+        anim_sprite.flip_h = false
+        anim_sprite.play("idle_down")
+```
+
+**Note:** The sprite only has `idle_down` animation available, so horizontal facing is handled via `flip_h` property.
+
+**Additional Fix - Diagonal Movement:**
+Initially, the fix had a bug where diagonal movement (holding W + A/D) would prioritize vertical animation over horizontal facing. Updated the logic to prioritize horizontal direction when both X and Y input are present:
+
+```gdscript
+# Prioritize horizontal direction when both X and Y are present (diagonal movement)
+if input_vector.x != 0:
+    # Handle horizontal direction (left/right)
+else:
+    # Pure vertical movement (up/down only)
+```
+
+**Files Changed:**
+- `scripts/main_world/player.gd` - Added last_direction tracking and proper idle animation logic, fixed diagonal movement facing
+
+---
+
 ## Key Learnings
 1. **Ownership matters:** Managers should own and control their own UI. Don't have multiple systems manage the same node.
 2. **Default values matter:** Ensure scene defaults match the initial state (torches should default to unlit, not lit).
@@ -875,6 +935,70 @@ When managing node lifecycle across multiple systems:
 2. **Multiple validation layers** catch edge cases single checks miss
 3. **Explicit queries** (helper function) > Implicit state checks (scattered logic)
 4. **Safety checks** (is_queued_for_deletion, is_instance_valid) prevent subtle bugs
+
+---
+
+## Bug 17: EXP Update Stage Cutscene Blocked by Battle Return Transition (FIXED)
+**Status:** ✅ FIXED
+
+### Symptoms
+- After winning a battle, EXP rewards are applied but stage progression cutscenes don't play
+- Cutscenes that should trigger from EXP increases are blocked or queued indefinitely
+- Players don't see story progression after battles even when they should
+
+### Root Cause
+The battle reward application timing caused a conflict with scene transitions:
+
+**Problem Flow:**
+1. Battle ends → `end_battle()` called
+2. `apply_battle_rewards()` called immediately → updates `ProgressManager.current_exp`
+3. EXP update triggers `_check_stage_progression()` → tries to play stage cutscenes
+4. `CutsceneManager.play()` checks `GuiManager.is_transitioning` → it's false at this moment
+5. `_return_to_main_world()` called immediately after → starts scene transition
+6. Scene transition sets `GuiManager.is_transitioning = true`
+7. Cutscene attempts to play during transition → gets queued instead of playing
+8. Scene transition completes → cutscene queue processing happens but context may be lost
+
+**The Issue:** Reward application happened BEFORE the scene transition, causing cutscenes to be queued during the transition and potentially lost or blocked.
+
+### Solution
+Reordered the battle ending sequence to apply rewards AFTER the scene transition completes:
+
+**Before (Problematic):**
+```gdscript
+func end_battle():
+    apply_battle_rewards()  # Triggers cutscenes immediately
+    _return_to_main_world()  # Starts transition, blocking cutscenes
+```
+
+**After (Fixed):**
+```gdscript
+func end_battle():
+    _return_to_main_world()  # Start transition first
+    
+# In _on_return_scene_added():
+# 1. Restore scene
+# 2. Restore player position  
+# 3. apply_battle_rewards()  # Apply rewards AFTER transition completes
+```
+
+**Why this works:**
+- Scene transition completes fully before any rewards are applied
+- `GuiManager.is_transitioning` is false when cutscenes try to play
+- Cutscenes play normally without being queued
+- Player position is restored before rewards, ensuring proper context
+
+**Files Changed:**
+- `scripts/battle/main/battle_manager.gd`:
+  - Modified `end_battle()` to remove immediate `apply_battle_rewards()` call
+  - Added `apply_battle_rewards()` call in `_on_return_scene_added()` after position restoration
+  - Added comments explaining the timing fix
+
+### Result
+✅ Battle rewards applied after scene transition completes
+✅ Stage progression cutscenes play normally after battles
+✅ No more cutscene blocking or queue conflicts
+✅ Player position restored before reward application for proper context
 
 ---
 

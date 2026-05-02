@@ -17,6 +17,7 @@ var current_exp: int = 0:
 	set(value):
 		if value != _current_exp:
 			_current_exp = value
+			data_updated.emit()
 			# Defer progression check to prevent multiple calls in one frame
 			call_deferred("_check_stage_progression")
 	get:
@@ -79,19 +80,11 @@ func _check_stage_progression() -> void:
 			collect_memory(stage.unlocks_memory_id)
 		
 		# 處理劇情觸發 (原本的 _handle_stage_unlock 與 _handle_cutscene_fallback 已合併)
-		if stage.cutscene_id.is_empty():
-			data_updated.emit()
-		elif stage.cutscene_id in active_cutscenes:
+		if not stage.cutscene_id.is_empty() and stage.cutscene_id in active_cutscenes:
 			CutsceneManager.play(stage.cutscene_id)
-		else:
-			push_error("[PlayerDataManager] 資源遺失: %s" % stage.cutscene_id)
-			if FALLBACK_ID in active_cutscenes:
-				CutsceneManager.play(FALLBACK_ID)
-			else:
-				for mem in active_memories:
-					if mem.cutscene_id == FALLBACK_ID:
-						collect_memory(mem.id)
-						break
+		
+		# Always emit data updated when a stage milestone is reached
+		data_updated.emit()
 
 # --- 7. 通用工具與對外接口 ---
 
@@ -150,3 +143,13 @@ func get_skill_data(skill_id: String) -> SkillData:
 
 func get_player_skill_level(skill_id: String) -> int:
 	return player_skill_levels.get(skill_id, 1)
+
+func get_current_level() -> int:
+	# Assuming level starts at 1, and stage 0 is the first milestone
+	return current_stage_index + 1
+
+func get_next_level_exp() -> int:
+	var next_idx = current_stage_index + 1
+	if next_idx >= 0 and next_idx < active_stages.size():
+		return active_stages[next_idx].req_exp
+	return 0

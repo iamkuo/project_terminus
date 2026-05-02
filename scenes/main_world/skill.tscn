@@ -1,4 +1,10 @@
-[gd_scene format=3 uid="uid://c8rsua6anwa2u"]
+[gd_scene load_steps=3 format=3 uid="uid://c8rsua6anwa2u"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_x75vq"]
+font_size = 24
+
+[sub_resource type="LabelSettings" id="LabelSettings_il6lv"]
+font_size = 12
 
 [node name="SkillCard" type="PanelContainer"]
 custom_minimum_size = Vector2(120, 150)
@@ -15,13 +21,16 @@ expand_mode = 2
 [node name="Name" type="Label" parent="VBoxContainer"]
 layout_mode = 2
 text = "技能名稱"
+label_settings = SubResource("LabelSettings_x75vq")
 horizontal_alignment = 1
 
 [node name="Level" type="Label" parent="VBoxContainer"]
 layout_mode = 2
 text = "等級 1"
+label_settings = SubResource("LabelSettings_il6lv")
 horizontal_alignment = 1
 
 [node name="UpgradeBtn" type="Button" parent="VBoxContainer"]
 layout_mode = 2
+theme_override_font_sizes/font_size = 24
 text = "升級"

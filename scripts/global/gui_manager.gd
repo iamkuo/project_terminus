@@ -3,7 +3,7 @@ extends Node
 # =============================
 # Constants and Exports
 # =============================
-@export var show_speed: float = 0.05  # 每個字元顯示的秒數
+@export var show_speed: float = 0.08  # 每個字元顯示的秒數
 
 # =============================
 # UI References
@@ -25,6 +25,7 @@ var transition_rect : ColorRect
 var main_queue: Array[Dictionary] = []
 var dialog_tween: Tween = null
 var fullscreen_tween: Tween = null
+var is_transitioning: bool = false
 var current_state = gui_state.READY
 enum gui_state {
 	READY,
@@ -198,6 +199,7 @@ func _show_fullscreen_logic(data: Dictionary) -> void:
 
 # 統一處理「退場動畫」（畫面被遮住）
 func transition_out(type: String = "none") -> void:
+	is_transitioning = true
 	transition_rect.mouse_filter = Control.MOUSE_FILTER_STOP
 	if fullscreen_ui:
 		fullscreen_ui.show()
@@ -221,3 +223,4 @@ func transition_in(type: String = "none") -> void:
 	
 	transition_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	transition_rect.hide()
+	is_transitioning = false

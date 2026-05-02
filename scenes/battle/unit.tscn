@@ -1,8 +1,9 @@
-[gd_scene load_steps=52 format=3 uid="uid://bs71l34xeqxed"]
+[gd_scene load_steps=53 format=3 uid="uid://bs71l34xeqxed"]
 
 [ext_resource type="Script" uid="uid://coyj5pgpo364x" path="res://scripts/battle/unit/unit.gd" id="1_k673f"]
 [ext_resource type="Texture2D" uid="uid://bg8ovc14n13vq" path="res://assets/images/characters/goblin_summon.png" id="2_k673f"]
 [ext_resource type="Script" uid="uid://c0ncr1jav0yc7" path="res://scripts/battle/ui/unit_selection_circle.gd" id="3_selection_circle"]
+[ext_resource type="Texture2D" uid="uid://bnexb4v2r3ceg" path="res://assets/images/objects/rickroll.png" id="3_wvcvb"]
 [ext_resource type="PackedScene" uid="uid://bdw7ku2f5uedd" path="res://scenes/battle/ui/properties_ui.tscn" id="4_properties_ui"]
 [ext_resource type="FontFile" uid="uid://dxc2pi1bwr1uu" path="res://assets/fonts/Cubic_11.ttf" id="5_ruro2"]
 [ext_resource type="Script" uid="uid://du72fit35e2ys" path="res://scripts/battle/label.gd" id="6_e8hdl"]
@@ -335,6 +336,14 @@ animations = [{
 "loop": true,
 "name": &"ally_warrior_walk",
 "speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_wvcvb")
+}],
+"loop": true,
+"name": &"fallback",
+"speed": 5.0
 }]
 
 [sub_resource type="Theme" id="Theme_oee7j"]
@@ -367,7 +376,7 @@ shape = SubResource("CircleShape2D_03owx")
 position = Vector2(-4.7683716e-07, 4.7683716e-07)
 scale = Vector2(1.5, 1.5)
 sprite_frames = SubResource("SpriteFrames_warrior_player")
-animation = &"ally_mage_idle"
+animation = &"fallback"
 
 [node name="SelectionCircle" type="Node2D" parent="."]
 script = ExtResource("3_selection_circle")

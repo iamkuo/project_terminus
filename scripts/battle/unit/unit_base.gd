@@ -48,6 +48,13 @@ func _ready():
 		current_health = 100
 		stats = UnitStats.new()
 	
+	# Hide sprite initially to prevent fallback animation flash
+	if sprite:
+		sprite.visible = false
+	
+	# Initialize with correct idle animation for this unit type
+	call_deferred("_play_action", "idle")
+	
 	# Emit health changed signal to initialize UI display
 	health_changed.emit(current_health, stats.health)
 
@@ -88,11 +95,29 @@ func _play_action(action: String):
 		return
 	var base_name = stats.unit_id if stats else ""
 	var anim_name = base_name + "_" + action
+	
+	# Try to play specific animation for this unit type
 	if anim_name in sprite.sprite_frames.get_animation_names():
 		sprite.play(anim_name)
-	else:
-		if action in sprite.sprite_frames.get_animation_names():
-			sprite.play(action)
+		sprite.visible = true
+		return
+	
+	# Fallback: try to find any animation with this action for any unit type
+	var available_anims = sprite.sprite_frames.get_animation_names()
+	for anim in available_anims:
+		if anim.ends_with("_" + action):
+			sprite.play(anim)
+			sprite.visible = true
+			return
+	
+	# Final fallback: try generic action name (only if it exists and is not fallback)
+	if action in available_anims and action != "fallback":
+		sprite.play(action)
+		sprite.visible = true
+		return
+	
+	# If we reach here, animation system failed - keep fallback animation as visual indicator
+	# Don't show sprite for fallback animation
 
 func _get_battle_manager() -> Node:
 	return BattleManager

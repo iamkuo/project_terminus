@@ -8,7 +8,7 @@ This document outlines the remaining tasks and features required to bring **Proj
 A complete RPG requires a deep well of content to keep players engaged throughout a full narrative arc.
 
 - **[ ] Expand the Skill Tree**
-  - Current skills: `dash`, `fireball`, `heal`.
+  - Current skills: `allies_multiplier`, `player_speed`, `tower_health`.
   - Goal: 10-15 unique skills including passive buffs, debuffs, and area-of-effect (AoE) abilities.
 - **[ ] Complete the Narrative Arc**
   - Ensure all 17+ cutscenes and 13+ memories form a cohesive story from the intro to the finale.
@@ -60,12 +60,12 @@ This category focuses on the player experience and visual fidelity.
 ## 4. Technical Debt & Optimization
 - **[ ] Manager Decoupling**: Reduce tight coupling between `ProgressManager` and other systems.
 - **[ ] Resource Validation**: Implement a system to check for missing cutscene or memory IDs during load.
-- [ ] **Refactor `tp_point.gd` & Battle Config**:
-  - **Cleanup**: Remove unused variables (`battle_id`, `battle_name`, `background_color`, `music_track`) and fix "ghost" properties in `.tscn`.
-  - **Data Structure**: Replace manual dictionary mapping in `_build_config()` with a dedicated `BattleResource` to unify battle parameters and reduce redundancy.
-  - **Inheritance**: Review `AnimatedSprite2D` base class; switch to a simpler node (e.g., `Area2D`) if native animation remains unused.
+- [x] **Refactor `tp_point.gd` & Battle Config**:
+  - **✅ COMPLETED**: Implemented ConfigManager singleton to centralize battle configuration
+  - **✅ COMPLETED**: Stage system refined with `unlocks_memory_id` field for direct memory unlocking
+  - **Remaining**: Cleanup unused variables in tp_point.gd and fix "ghost" properties in `.tscn`.
 - **[ ] Performance Tuning**: Optimize the `main_world.tscn` (currently ~6.5MB) for smoother loading.
 
 ---
 
-*Last Updated: 2026-04-25*
+*Last Updated: May 2, 2026*

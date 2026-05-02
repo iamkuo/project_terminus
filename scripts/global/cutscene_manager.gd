@@ -50,9 +50,13 @@ func play(id: String) -> void:
 		push_error("Cutscene ID not found: " + id)
 		return
 	
-	# If already playing, queue this cutscene for later
-	if _is_playing:
+	# If already playing or transitioning, queue this cutscene for later
+	if _is_playing or GuiManager.is_transitioning:
 		_queue.append(id)
+		
+		# If we are transitioning, ensure we listen for the end of it
+		if GuiManager.is_transitioning and not SceneSwitcher.scene_transition_finished.is_connected(_on_scene_transition_finished):
+			SceneSwitcher.scene_transition_finished.connect(_on_scene_transition_finished, CONNECT_ONE_SHOT)
 		return
 	
 	_is_playing = true
@@ -61,6 +65,14 @@ func play(id: String) -> void:
 	cutscene_finished.emit(id)
 	
 	# Play next queued cutscene if any
+	_play_next_queued()
+
+func _on_scene_transition_finished(_scene_name: String) -> void:
+	# Wait a frame to ensure GUI is fully settled
+	await get_tree().process_frame
+	_play_next_queued()
+
+func _play_next_queued() -> void:
 	if _queue.size() > 0:
 		var next_id = _queue.pop_front()
 		play(next_id)

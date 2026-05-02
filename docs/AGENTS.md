@@ -6,79 +6,43 @@ applyTo: ["**/*.gd", "**/*.tscn", "**/*.tres", "*.md"]
 
 # Godot Project Assistant Agent
 
-## Prerequisites
-Before assisting with any task in this workspace, you can read and understand if needed:
-- `README.md` - Complete project architecture, resource management system, and core design patterns
-- `docs/ARCHITECTURE.md` - Mermaid graphs of signal interactions between different scenes and scripts
-- `docs/BUGS_ARCHIVED.md` - Historical bugs and their solutions (prevents regression)
+## Quick Reference
+- **Architecture Details:** `README.md`, `docs/ARCHITECTURE.md`
+- **Bug History:** `docs/BUGS_ARCHIVED.md` 
+- **Resource System:** `docs/RESOURCES.md`
+- **Development Plan:** `docs/ROADMAP.md`
 
 ## Core Responsibilities
 
 ### Documentation Maintenance
-**Always update markdown files when making changes:**
-1. **docs/BUGS_ARCHIVED.md** - Add any bugs you fix with problem, root cause, and solution
-2. **docs/ARCHITECTURE.md** - Update if you add new cross-script signal interactions
-3. **README.md** - Update architecture notes if you change core systems
-4. **docs/AGENTS.md** - Update this file if you discover new patterns or best practices to document
+Update these files when making changes:
+1. **docs/BUGS_ARCHIVED.md** - Bug fixes with problem, root cause, solution
+2. **docs/ARCHITECTURE.md** - Cross-script signal interactions
+3. **README.md** - Core system architecture changes
 
-Format for bug documentation:
-- Clear problem statement with symptoms
-- Root cause with code examples
-- Solution with files changed
-- Key learnings to prevent regression
+### Key Patterns
+1. **Signal-based updates** - Use ProgressManager signals for state changes
+2. **Direct global access** - Read manager variables directly (avoid single-line wrappers)
+3. **UI ownership** - Each manager owns its UI (no cross-manager control)
+4. **Resource ID matching** - Code IDs must match resource file IDs
+5. **Async operations** - Use `await` for cutscenes, transitions
 
-### Architecture Understanding
-Read `README.md` to understand:
-- **Singletons (Autoloads):** SceneSwitcher, GuiManager, CutsceneManager, ProgressManager
-- **Resource System:** Custom `.tres` files with recursive folder loading patterns
-- **Data Structures:** CutsceneScript, MemoryData, SkillData, StageData, MemoryOrder
-- **Component Interactions:** How managers communicate and emit signals
-- **Physics Layers:** Player (1), Enemy (2), Environment (3), Interactables (4)
-
-### Common Patterns
-When writing code:
-1. **Signal-based updates:** Use ProgressManager signals for state changes
-2. **Resource IDs:** Always match IDs in code with resource file IDs
-3. **UI management ownership:** Each manager owns its UI (no cross-manager UI control)
-4. **Recursive resource loading:** Resources load from folders + subfolders automatically
-5. **Async patterns:** Use `await` for cutscenes, transitions, and long operations
+### Critical Singleton Managers
+SceneSwitcher, GuiManager, CutsceneManager, ProgressManager, ConfigManager, BattleManager, ProjectileManager, MessageManager, SkillManager
 
 ### Bug Prevention
-Reference `docs/BUGS_ARCHIVED.md` to avoid:
-- SceneSwitcher managing GuiManager's UI nodes
-- Duplicate function calls in property setters
-- Incorrect default scene animation states
-- Non-matching memory IDs across systems
+Check `docs/BUGS_ARCHIVED.md` for common issues:
+- SceneSwitcher UI management conflicts
+- Property setter duplicate calls
+- Default animation states
+- Memory ID mismatches
 
-## When To Ask Questions
-If unclear about:
-- Project initialization flow → Read `_ready()` in important_scripts
-- How resources are loaded → Check `_load_resources()` in progress_manager.gd
-- Signal flow between managers → Trace calls in important_scripts
-- Scene structure → Check scenes/ folder and attached scenes in main_world.tscn
-
-## Tools & Commands
-- **Forward Plus rendering:** Default in project.godot
-- **Nearest Neighbor filtering:** For pixel art (default_texture_filter=0)
-- **Input map:** ui_left/right/up/down for movement, E for interact, Esc for pause
-- **Export:** Use Project > Export in editor for builds
-
-## File Organization
-```
-/important_scripts/    - Singletons and core managers (DO NOT MODIFY lightly)
-  /battle/             - Battle system managers and scripts
-/other_scripts/        - Game-specific logic (safer to modify)
-/resources/            - Data-driven content and definitions
-  /cutscenes/          - CutsceneScript resources
-  /memories/           - MemoryData resources  
-  /skills/             - SkillData resources
-  /stages/             - StageData resources
-  /data_structures/    - GDScript class definitions
-/scenes/               - Godot .tscn files
-/assets/               - Sprites, fonts, audio
-```
+### When To Reference Documentation
+- **Project flow:** `README.md` initialization sections
+- **Resource loading:** `progress_manager.gd` `_load_resources()`
+- **Signal flow:** `important_scripts` call traces
+- **Scene structure:** `scenes/` folder and main_world.tscn
 
 ---
 
-**Last Updated:** April 1, 2026
-**Project:** godot_test (2D RPG/Adventure, Godot 4.5)
+**Last Updated:** May 2, 2026

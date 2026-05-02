@@ -225,6 +225,8 @@ font_size = 36
 
 [node name="GUI" type="CanvasLayer"]
 
+[node name="MessageUI" parent="." instance=ExtResource("3_ynd5l")]
+
 [node name="Dialog" type="Panel" parent="."]
 visible = false
 anchors_preset = -1
@@ -324,5 +326,3 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 mouse_filter = 2
 color = Color(0, 0, 0, 0)
-
-[node name="MessageUI" parent="." instance=ExtResource("3_ynd5l")]

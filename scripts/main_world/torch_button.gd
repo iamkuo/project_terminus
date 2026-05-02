@@ -5,6 +5,7 @@ extends Control
 @onready var memory_label: Label = $MemoryLabel
 var _last_unlocked_state: Variant = null 
 var _pending_is_unlocked: Variant = null
+var _memory_name: String = ""
 
 func refresh_visuals(is_unlocked = null) -> void:
 	if is_unlocked != null:
@@ -24,6 +25,8 @@ func refresh_visuals(is_unlocked = null) -> void:
 			else:
 				animated_sprite.play("unlit")
 				self.modulate = Color(0.6, 0.6, 0.6)
+	
+	_update_label()
 
 	# 2. 修正縮放與置中邏輯
 	_update_layout()
@@ -60,5 +63,12 @@ func _ready() -> void:
 
 func set_memory_name(memory_name: String) -> void:
 	"""Set the memory name displayed on the label."""
+	_memory_name = memory_name
+	_update_label()
+
+func _update_label() -> void:
 	if memory_label:
-		memory_label.text = memory_name
+		if _last_unlocked_state:
+			memory_label.text = _memory_name
+		else:
+			memory_label.text = "???"

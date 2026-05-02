@@ -23,6 +23,9 @@ var enemy_tower_hp: int = 1000
 
 var exp_reward_victory: int = 100
 var crystal_reward_victory: int = 50
+var exp_per_kill: int = 10
+var exp_per_damage: float = 0.05
+var crystals_per_kill: int = 2
 var enemy_multiplyer: float = 1.0
 var allies_multiplyer: float = 1.0
 
@@ -62,6 +65,9 @@ func load_config(config: Dictionary) -> void:
 	
 	exp_reward_victory = config.get("exp_reward_victory", 100)
 	crystal_reward_victory = config.get("crystal_reward_victory", 50)
+	exp_per_kill = config.get("exp_per_kill", 10)
+	exp_per_damage = config.get("exp_per_damage", 0.05)
+	crystals_per_kill = config.get("crystals_per_kill", 2)
 	enemy_multiplyer = config.get("enemy_multiplyer", 1.0)
 	allies_multiplyer = config.get("allies_multiplyer", 1.0)
 	
@@ -84,6 +90,9 @@ func clear() -> void:
 	
 	exp_reward_victory = 100
 	crystal_reward_victory = 50
+	exp_per_kill = 10
+	exp_per_damage = 0.05
+	crystals_per_kill = 2
 	enemy_multiplyer = 1.0
 	allies_multiplyer = 1.0
 	

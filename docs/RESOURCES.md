@@ -14,6 +14,7 @@ All game data is stored as Godot `.tres` resource files in the `resources/` dire
 - **`resources/skills/`** - Player abilities and skills
 - **`resources/cutscenes/`** - Dialogue and narrative sequences
 - **`resources/data_structures/`** - GDScript class definitions
+- **`resources/unit_stats/`** - Unit statistics and battle configurations
 
 Resource loading is handled by `ProgressManager._load_resources()` which recursively loads all `.tres` files from a given directory.
 
@@ -170,18 +171,17 @@ Memory shards appear in the Backpack UI in a specific order defined by `MemoryOr
 
 ## Skills
 
-Currently minimal skill system (single test skill):
+Current skill system with upgradeable abilities:
 
-| Skill ID | Name       | Description          | Base Cost |
-|----------|------------|----------------------|-----------|
-| `test`   | Test Skill | A skill for testing. | 100       |
-| `skill_fireball` | Fireball | Unleash a compact sphere of intense heat. | 150 |
-| `skill_heal` | Healing Wind | A soothing breeze that restores vitality. | 200 |
-| `skill_dash` | Swift Dash | Quickly propel yourself forward. | 120 |
+| Skill ID | Name | Description | Base Cost |
+|----------|------|-------------|-----------|
+| `allies_multiplier` | 盟軍全屬性 | 提升所有盟軍單位的生命值與攻擊力。每級提升 5%。 | 200 |
+| `player_speed` | 玩家速度 | 提升玩家在戰鬥中的移動速度。每級提升 10%。 | 150 |
+| `tower_health` | 塔防生命 | 提升友方塔的生命值。每級提升 15%。 | 180 |
 
-Located in: `resources/skills/test.tres`
+Located in: `resources/skills/`
 
-**Note:** Skill system is under development. Skill data integration and UI presentation planned for future updates.
+**Note:** Skill system is implemented with SkillManager handling upgrades and bonuses applied to battle units.
 
 ---
 
@@ -222,7 +222,8 @@ The `ProgressManager` initializes resources in this order:
 6. **Load Memories**: Load all memories from `resources/memories/`
 7. **Load Memory Order**: Load mode-specific order from `resources/memories/orders/{mode}_memory_order.tres`
 8. **Arrange Memories**: Order memories according to MemoryOrder resource
-9. **Check Progression**: Trigger any stages that current exp qualifies for
+9. **Load Unit Stats**: Unit stats are loaded by ConfigManager during battle initialization from `resources/unit_stats/`
+10. **Check Progression**: Trigger any stages that current exp qualifies for
 
 See [`README.md`](README.md#resource-management) for detailed resource architecture information.
 
@@ -287,5 +288,5 @@ See [`README.md`](README.md#resource-management) for detailed resource architect
 
 ---
 
-**Last Updated:** April 2, 2026  
+**Last Updated:** May 2, 2026  
 **Related Documentation:** [`README.md`](README.md) | [`BUGS_ARCHIVED.md`](BUGS_ARCHIVED.md) | [`AGENTS.md`](AGENTS.md)

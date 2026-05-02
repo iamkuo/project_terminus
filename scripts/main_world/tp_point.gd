@@ -22,6 +22,9 @@ extends AnimatedSprite2D
 ## --- Reward Configuration (Victory only) ---
 @export var exp_reward_victory: int = 100
 @export var crystal_reward_victory: int = 50
+@export var exp_per_kill: int = 10
+@export var exp_per_damage: float = 0.05
+@export var crystals_per_kill: int = 2
 @export var enemy_multiplyer: float = 1
 
 func _ready() -> void:
@@ -48,7 +51,9 @@ func _build_config() -> Dictionary:
 		"enemy_tower_hp": enemy_tower_hp,
 		"exp_reward_victory": exp_reward_victory,
 		"crystal_reward_victory": crystal_reward_victory,
-	
+		"exp_per_kill": exp_per_kill,
+		"exp_per_damage": exp_per_damage,
+		"crystals_per_kill": crystals_per_kill,
 	}
 
 func _get_internal_id() -> String:

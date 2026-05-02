@@ -14,11 +14,11 @@ var current_skill_id: String = ""
 @onready var popup_description = detail_popup.get_node("Description")
 @onready var popup_upgradebtn = detail_popup.get_node("UpgradeBtn")
 @onready var popup_closebtn = detail_popup.get_node("CloseButton")
-@onready var tab_container = $MarginContainer/TabContainer
-@onready var bonus_summary = $MarginContainer/TabContainer/SkillsTab/SidePanel/BonusSummary
-@onready var portrait = $MarginContainer/TabContainer/SkillsTab/SidePanel/Portrait
-@onready var skill_grid = $MarginContainer/TabContainer/SkillsTab/SkillGrid
-@onready var memories_container = $MarginContainer/TabContainer/MemoriesTab/ScrollContainer/HBoxContainer
+@onready var tab_container = $TabContainer
+@onready var bonus_summary = $TabContainer/SkillsTab/SidePanel/BonusSummary
+@onready var portrait = $TabContainer/SkillsTab/SidePanel/Portrait
+@onready var skill_grid = $TabContainer/SkillsTab/SkillGrid
+@onready var memories_container = $TabContainer/MemoriesTab/ScrollContainer/HBoxContainer
 @onready var backpack_root = $"."
 
 var _skill_nodes: Dictionary = {} # skill_id -> skill_node

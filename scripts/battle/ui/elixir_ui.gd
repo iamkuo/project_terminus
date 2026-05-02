@@ -28,14 +28,14 @@ func _update_ui(current_amount: int):
 	if elixir_bar:
 		elixir_bar.value = current_amount
 	if elixir_label:
-		elixir_label.text = "魔力: %d/%d" % [current_amount, max_elixir]
+		elixir_label.text = "聖水: %d/%d" % [current_amount, max_elixir]
 
 func try_consume(amount: int) -> bool:
 	if int(floor(current)) >= amount:
 		current -= amount
 		emit_signal("elixir_changed", int(floor(current)))
 		if elixir_label:
-			elixir_label.text = "魔力: %d/%d" % [int(floor(current)), max_elixir]
+			elixir_label.text = "聖水: %d/%d" % [int(floor(current)), max_elixir]
 		return true
 	return false
 
