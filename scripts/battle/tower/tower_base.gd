@@ -28,6 +28,8 @@ func _ready():
 	# Set up restriction area for enemy towers
 	if team == Team.OPPONENT and _restriction_area:
 		_restriction_area.add_to_group("tower_restrictions")
+		# Store reference to this tower so restriction knows if tower is destroyed
+		_restriction_area.tower = self
 		# Make it detect player units (player units are on layer 1)
 		# Override the scene file settings with proper collision setup
 		_restriction_area.collision_layer = 4  # Restriction layer

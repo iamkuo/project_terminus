@@ -341,9 +341,11 @@ func _is_path_blocked_by_restriction() -> bool:
 	var restrictions = get_tree().get_nodes_in_group("tower_restrictions")
 	for restriction in restrictions:
 		if is_instance_valid(restriction):
-			# Try to find the unit's Area2D node
-			var unit_area = get_node_or_null("Area2D")
-			if unit_area and restriction.overlaps_area(unit_area):
+			# Verify tower exists and is not destroyed
+			if not is_instance_valid(restriction.tower) or restriction.tower.is_destroyed:
+				continue
+			# Check if this unit (CharacterBody2D) is overlapping with the restriction area
+			if self in restriction.get_overlapping_bodies():
 				return true
 	return false
 	

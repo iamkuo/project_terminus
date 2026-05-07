@@ -40,6 +40,9 @@ signal gamemode_changed()
 # --- 5. 初始化流程 ---
 
 func _ready() -> void:
+	# Validate game mode
+	_validate_mode()
+	
 	# Clear existing data before reloading
 	active_stages.clear()
 	active_memories.clear()
@@ -63,6 +66,9 @@ func _ready() -> void:
 	if order_res:
 		for mem_id in order_res.ordered_memory_ids:
 			if mem_id in all_mems: active_memories.append(all_mems[mem_id])
+	
+	# Validate all resources are consistent
+	_validate_resources()
 	
 	_check_stage_progression()
 	
@@ -161,3 +167,44 @@ func get_next_level_exp() -> int:
 	if next_idx >= 0 and next_idx < active_stages.size():
 		return active_stages[next_idx].req_exp
 	return 0
+
+# --- 8. Validation Functions ---
+
+func _validate_mode() -> void:
+	var valid_modes = ["test", "trial", "full"]
+	if mode not in valid_modes:
+		push_error("[ProgressManager] Invalid game mode: '%s'. Valid modes: %s" % [mode, valid_modes])
+		push_error("[ProgressManager] Falling back to 'test' mode")
+		mode = "test"
+
+func _validate_resources() -> void:
+	var errors = []
+	var warnings = []
+	
+	# Validate stages
+	for stage in active_stages:
+		# Check req_exp is valid
+		if stage.req_exp < 0:
+			errors.append("Stage '%s' has negative req_exp: %d" % [stage.id, stage.req_exp])
+		
+		# Check memory reference exists
+		if stage.unlocks_memory_id and stage.unlocks_memory_id not in active_memories:
+			var memory_ids = []
+			for mem in active_memories:
+				memory_ids.append(mem.id)
+			errors.append("Stage '%s' references missing memory: '%s' (available: %s)" % [stage.id, stage.unlocks_memory_id, memory_ids])
+		
+		# Check cutscene reference exists
+		if not stage.cutscene_id.is_empty() and stage.cutscene_id not in active_cutscenes:
+			warnings.append("Stage '%s' references missing cutscene: '%s'" % [stage.id, stage.cutscene_id])
+	
+	# Report all warnings
+	for warning in warnings:
+		push_warning("[ProgressManager] " + warning)
+	
+	# Report all errors and fail if any exist
+	for error in errors:
+		push_error("[ProgressManager] " + error)
+	
+	if not errors.is_empty():
+		push_error("[ProgressManager] Resource validation FAILED - %d critical error(s) found" % errors.size())

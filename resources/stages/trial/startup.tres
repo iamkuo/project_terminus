@@ -6,6 +6,7 @@
 script = ExtResource("1_stage_data")
 id = "universal_startup"
 name = "通用啟動"
+req_exp = 0
 cutscene_id = "startup_intro"
 unlocks_memory_id = "mem_startup"
 metadata/_custom_type_script = "uid://bfg5kjb0bo8cr"
