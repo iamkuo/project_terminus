@@ -129,11 +129,11 @@ func _perform_attack(target: Node) -> void:
 	is_attacking = true
 	attack_cooldown = 1.0 / stats.attack_speed
 	#attack anime
-	var base_name = stats.unit_id 
-	var anim_name = base_name  
+	var base_name = stats.unit_id
+	var anim_name = base_name
 	
 	# Try to play specific animation for this unit type
-	if base_name=="ally_warrior":
+	if base_name == "ally_warrior":
 		a_sprite.play(anim_name)
 		a_sprite.visible = true
 	else:
@@ -173,7 +173,7 @@ func take_damage(amount: int, attacker: Node) -> void:
 	if current_health <= 0 and lifecycle_state == LifecycleState.ALIVE:
 		# Notify the attacker so it can emit enemy_killed and update BattleManager
 		if attacker and attacker.has_method("_on_killed_target"):
-			attacker._on_killed_target(self)
+			attacker._on_killed_target(self )
 		lifecycle_state = LifecycleState.DYING
 		_play_action("die")
 		await get_tree().create_timer(DEATH_ANIMATION_DELAY).timeout
@@ -355,8 +355,4 @@ func _is_path_blocked_by_restriction() -> bool:
 			if "tower" in restriction and is_instance_valid(restriction.tower) and restriction.tower.is_destroyed:
 				continue
 			# Try to find the unit's Area2D node
-			var unit_area = get_node_or_null("Area2D")
-			if unit_area and restriction.overlaps_area(unit_area):
-				return true
 	return false
-	

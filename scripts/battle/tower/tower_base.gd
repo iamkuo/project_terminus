@@ -1,7 +1,7 @@
 class_name TowerBase
 extends Node2D
 
-enum Team { PLAYER = 0, OPPONENT = 1 }
+enum Team {PLAYER = 0, OPPONENT = 1}
 signal tower_destroyed(tower)
 signal health_changed(current: int, max: int)
 
@@ -20,33 +20,23 @@ var is_destroyed: bool = false
 
 func _ready():
 	if team == Team.PLAYER:
+		_restriction_area.get_node("CollisionShape2D").set_deferred("disabled", true)
 		max_health = int(max_health * SkillManager.tower_health_mult)
+		
 	
 	current_health = max_health
 	add_to_group("towers")
 	
-	# Set up restriction area for enemy towers
-	if team == Team.OPPONENT and _restriction_area:
+	# Set up restriction area for this tower (applies to all towers)
+	if _restriction_area:
 		_restriction_area.add_to_group("tower_restrictions")
-		_restriction_area.call_deferred("set_tower", self)
-
-		# Override the scene file settings with proper collision setup
-		_restriction_area.collision_layer = 4  # Restriction layer
-		_restriction_area.collision_mask = 1   # Detect player layer
-		
-		# Make restriction area visible in editor for debugging
-		if Engine.is_editor_hint():
-			_restriction_area.visible = true
-		else:
-			_restriction_area.visible = false
+		# Enable monitoring to allow overlaps_area checks
 	
 	# Connect health changed signal for both health bar and label
 	health_changed.connect(_on_health_bar_changed)
 	
 	# Initialize health display
 	call_deferred("_on_health_bar_changed", current_health, max_health)
-
-
 
 
 func _on_health_bar_changed(cur: int, max_hp: int) -> void:
@@ -99,7 +89,7 @@ func _destroy():
 	if _restriction_area and is_instance_valid(_restriction_area):
 		pass
 	
-	tower_destroyed.emit(self)
+	tower_destroyed.emit(self )
 	_play_destruction_effect()
 	
 	# Queue for deletion - this happens next frame

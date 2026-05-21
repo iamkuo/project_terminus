@@ -1,6 +1,6 @@
 extends Node2D
 
-enum Team { PLAYER = 0, OPPONENT = 1 }
+enum Team {PLAYER = 0, OPPONENT = 1}
 
 signal unit_spawned(unit: Node, spawn_info: Dictionary)
 signal spawn_failed(reason: String)

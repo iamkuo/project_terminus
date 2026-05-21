@@ -2,7 +2,6 @@
 
 [ext_resource type="Script" uid="uid://diye52n646koe" path="res://scripts/battle/tower/tower_base.gd" id="1_tower"]
 [ext_resource type="Texture2D" uid="uid://dlayypi5c8aj3" path="res://assets/images/environment/house.png" id="2_kl3vk"]
-[ext_resource type="Script" uid="uid://abc123restr" path="res://scripts/battle/tower/restriction_area.gd" id="4_restriction"]
 [ext_resource type="FontFile" uid="uid://dxc2pi1bwr1uu" path="res://assets/fonts/Cubic_11.ttf" id="3_abwh7"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_tower"]
@@ -13,7 +12,7 @@ font = ExtResource("3_abwh7")
 font_size = 12
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_abwh7"]
-size = Vector2(500, 200)
+size = Vector2(684, 230)
 
 [node name="Tower" type="Node2D"]
 script = ExtResource("1_tower")
@@ -21,9 +20,9 @@ script = ExtResource("1_tower")
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("2_kl3vk")
 
-[node name="Area2D" type="Area2D" parent="."]
-collision_layer = 2
-collision_mask = 0
+[node name="Area2D" type="StaticBody2D" parent="."]
+collision_layer = 4
+collision_mask = 15
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
 position = Vector2(0, -10)
@@ -67,10 +66,9 @@ label_settings = SubResource("LabelSettings_bthrv")
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="RestrictionArea" type="Area2D" parent="." script = ExtResource("4_restriction")]
-collision_layer = 0
-collision_mask = 0
+[node name="RestrictionArea" type="StaticBody2D" parent="."]
+collision_layer = 4
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="RestrictionArea"]
-position = Vector2(-250, 0)
+position = Vector2(-158, 0)
 shape = SubResource("RectangleShape2D_abwh7")

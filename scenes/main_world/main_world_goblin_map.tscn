@@ -733,7 +733,7 @@ memory_resource = ExtResource("10_eaj2c")
 
 [node name="Test" parent="Map/TpPoints" instance=ExtResource("11_nui7k")]
 position = Vector2(2424, 3928)
-battle_id = "Test_Battle"
+battle_name = "Test_Battle"
 
 [node name="hill" type="TileMapLayer" parent="Map"]
 y_sort_enabled = true
