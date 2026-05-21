@@ -93,8 +93,8 @@ func _physics_process(delta: float):
 func _play_action(action: String):
 	if not sprite or not sprite.sprite_frames:
 		return
-	var base_name = stats.unit_id if stats else ""
-	var anim_name = base_name + "_" + action
+	#var base_name = stats.unit_id if stats else ""
+	var anim_name = stats.unit_id if stats else "" + "_" + action
 	
 	# Try to play specific animation for this unit type
 	if anim_name in sprite.sprite_frames.get_animation_names():
@@ -129,15 +129,11 @@ func _perform_attack(target: Node) -> void:
 	is_attacking = true
 	attack_cooldown = 1.0 / stats.attack_speed
 	#attack anime
-	var base_name = stats.unit_id
-	var anim_name = base_name
+	var anim_name = stats.unit_id
 	
 	# Try to play specific animation for this unit type
-	if base_name == "ally_warrior":
-		a_sprite.play(anim_name)
-		a_sprite.visible = true
-	else:
-		a_sprite.visible = false
+	a_sprite.visible = true
+	a_sprite.play(anim_name)
 	
 	_play_action("attack")
 

@@ -427,7 +427,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_ir7cm")
 }],
-"loop": true,
+"loop": false,
 "name": &"ally_warrior",
 "speed": 9.0
 }]
