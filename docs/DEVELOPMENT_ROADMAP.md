@@ -11,55 +11,78 @@
 - Added resource validation (checks for broken references)
 - Created comprehensive test suite
 
-### 🔄 In Progress (Phase 2 - Memory System Unification)
-**Goal:** Simplify memory ordering by auto-deriving from stage completion sequence
-**Estimated Time:** 4-6 hours
+### ✅ In Progress (Phase 2 - Enhanced Memory Order System)
+**Goal:** Fix memory order sync issues while supporting special event insertion
+**Estimated Time:** 6-8 hours
+
+**Recent Bug Fixes:**
+- Fixed TypedArray find() error in validation function
+- Corrected memory ID mismatch in test_memory_order.tres
+- Validation now properly checks memory references
 
 ---
 
-## Phase 2: Memory System Unification
+## Phase 2: Enhanced Memory Order System
 
-### Problem
-- Memory Order (backpack display) is disconnected from stage progression
-- Separate `MemoryOrder.tres` files can get out of sync with stages
-- Manual triggers unnecessarily coupled to progression system
+### Current Problems
+- **Sync Risk**: Stage memories and MemoryOrder.tres can get out of sync
+- **Limited Special Events**: Special memories can't insert at specific narrative points
+- **Missing Validation**: No checks for memory order consistency
 
-### Solution
-Auto-derive memory order from stage completion sequence using existing `cutscene.tscn` for special events.
+### Solution: Enhanced MemoryOrder System
+Keep MemoryOrder system but add validation and better sync with stages. Special events are supported by adding memories directly to MemoryOrder files.
 
 ### Implementation Steps
 
 #### 1. Update StageData Structure
 ```gdscript
-# RENAME: unlocks_memory_id → memory_id
+# RENAME: unlocks_memory_id → memory_id (for clarity)
 @export var memory_id: String = ""
 ```
 
-#### 2. Add Auto-Build Function
+#### 2. Add Memory Order Validation
 ```gdscript
-# In ProgressManager._ready():
-func _build_memory_order() -> void:
-    memory_display_order = []
+# In ProgressManager:
+func _validate_memory_order() -> void:
+    var order_res = load(PATH_ORDERS + mode + "_memory_order.tres") as MemoryOrder
+    if not order_res:
+        push_error("Missing MemoryOrder file for mode: " + mode)
+        return
+    
+    # Check all memories in order exist
+    for mem_id in order_res.ordered_memory_ids:
+        if mem_id not in active_memories:
+            push_warning("MemoryOrder references missing memory: " + mem_id)
+    
+    # Check all stage memories are included
     for stage in active_stages:
-        if stage.memory_id and stage.memory_id not in memory_display_order:
-            memory_display_order.append(stage.memory_id)
+        if stage.memory_id and stage.memory_id not in order_res.ordered_memory_ids:
+            push_warning("Stage memory not in MemoryOrder: " + stage.memory_id)
 ```
 
-#### 3. Update Backpack Display
-- Use `memory_display_order` instead of reading `MemoryOrder.tres` files
-- Torches auto-sort by completion order
-- No separate ordering files needed
+#### 3. Enhanced Special Event Support
+- Special events via `cutscene.tscn` unlock memories normally
+- **MemoryOrder controls WHERE special memories appear** - just add them to the ordered list
+- Designers have full control over narrative sequence
 
-#### 4. Handle Special Events (Already Working)
-- Use `cutscene.tscn` nodes in world for special triggers
-- Independent of progression system
-- No changes needed - already functional
+#### 4. Example MemoryOrder Usage
+```gdscript
+# In trial_memory_order.tres:
+ordered_memory_ids = [
+    "mem_startup",           # Stage 0 memory
+    "mem_boss_secret",       # Special event memory (inserted here)
+    "mem_mini_level",        # Stage 1 memory
+    "mem_open_world",        # Stage 2 memory
+    "mem_mystery_event",     # Special event memory (inserted here)
+    "mem_first_village"      # Stage 3 memory
+]
+```
 
-### Files to Change (~32 total)
+### Files to Change (~30 total)
 - `resources/data_structures/stage_data.gd` - 1 line rename
-- `scripts/global/progress_manager.gd` - New function + one call
+- `scripts/global/progress_manager.gd` - Add validation function
 - All `resources/stages/*/*.tres` - Find/replace `unlocks_memory_id` → `memory_id` (~29 files)
-- Backpack/torch display script - Reference `memory_display_order` instead of MemoryOrder file
+- No changes needed to backpack - it already uses MemoryOrder correctly
 
 ---
 

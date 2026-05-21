@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://di0ai45q4yy2n"
-path="res://.godot/imported/alley_bow.png-0bfae622c7d1307b2bb5e64af35764f4.ctex"
+uid="uid://m46gskrgvj7b"
+path="res://.godot/imported/alley_arrow.png-692d24ea568494f73811024c52656a87.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/images/objects/ally/alley_bow.png"
-dest_files=["res://.godot/imported/alley_bow.png-0bfae622c7d1307b2bb5e64af35764f4.ctex"]
+source_file="res://assets/images/objects/ally/alley_arrow.png"
+dest_files=["res://.godot/imported/alley_arrow.png-692d24ea568494f73811024c52656a87.ctex"]
 
 [params]
 

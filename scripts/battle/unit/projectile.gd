@@ -14,7 +14,8 @@ var unit_id: String = ""
 var _traveled: float = 0.0
 var _velocity: Vector2 = Vector2.ZERO
 var _shooter: WeakRef = null
-
+var dir : Vector2 = Vector2.ZERO
+var tilt : Vector2 = Vector2.from_angle(+45.0)
 @onready var anim_sprite: AnimatedSprite2D = $AnimatedSprite2D
 
 func set_shooter(unit: Node) -> void:
@@ -31,7 +32,7 @@ func _ready() -> void:
 	
 	# Capture initial direction and decouple from target
 	if is_instance_valid(target):
-		var dir = (target.global_position - global_position).normalized()
+		dir = (target.global_position - global_position).normalized()
 		_velocity = dir * speed
 		
 		if face_target:
@@ -44,17 +45,28 @@ func _ready() -> void:
 	body_entered.connect(_on_hit)
 
 func _physics_process(delta: float) -> void:
-	if _velocity == Vector2.ZERO:
-		queue_free()
-		return
-
-	var step = _velocity * delta
-	global_position += step
+	if unit_id == "ally_archer"and team == Team.PLAYER:
+		if _velocity == Vector2.ZERO:
+			queue_free()
+			return
+		await get_tree().create_timer(1.6).timeout
+		var step = _velocity * delta
+		global_position += step
 	
-	_traveled += step.length()
-	if _traveled >= max_travel_distance:
-		queue_free()
-
+		_traveled += step.length()
+		if _traveled >= max_travel_distance:
+			queue_free()
+	else:
+		if _velocity == Vector2.ZERO:
+			queue_free()
+			return
+	
+		var step = _velocity * delta
+		global_position += step
+	
+		_traveled += step.length()
+		if _traveled >= max_travel_distance:
+			queue_free()
 func _on_hit(hit_obj: Node) -> void:
 	# Avoid hitting the shooter
 	var shooter = _shooter.get_ref() if _shooter else null

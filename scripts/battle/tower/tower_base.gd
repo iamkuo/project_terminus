@@ -2,7 +2,7 @@ class_name TowerBase
 extends Node2D
 
 enum Team { PLAYER = 0, OPPONENT = 1 }
-signal tower_destroyed(tower: TowerBase)
+signal tower_destroyed(tower)
 signal health_changed(current: int, max: int)
 
 @export var max_health: int = 1000
@@ -16,7 +16,7 @@ var is_destroyed: bool = false
 
 @onready var _health_bar: ProgressBar = $BarRoot/ProgressBar
 @onready var _health_label: Label = $BarRoot/HealthLabel if has_node("BarRoot/HealthLabel") else null
-@onready var _restriction_area: Area2D = $RestrictionArea if has_node("RestrictionArea") else null
+@onready var _restriction_area = $RestrictionArea if has_node("RestrictionArea") else null
 
 func _ready():
 	if team == Team.PLAYER:
@@ -28,9 +28,8 @@ func _ready():
 	# Set up restriction area for enemy towers
 	if team == Team.OPPONENT and _restriction_area:
 		_restriction_area.add_to_group("tower_restrictions")
-		# Store reference to this tower so restriction knows if tower is destroyed
-		_restriction_area.tower = self
-		# Make it detect player units (player units are on layer 1)
+		_restriction_area.call_deferred("set_tower", self)
+
 		# Override the scene file settings with proper collision setup
 		_restriction_area.collision_layer = 4  # Restriction layer
 		_restriction_area.collision_mask = 1   # Detect player layer
@@ -47,6 +46,9 @@ func _ready():
 	# Initialize health display
 	call_deferred("_on_health_bar_changed", current_health, max_health)
 
+
+
+
 func _on_health_bar_changed(cur: int, max_hp: int) -> void:
 	# Update health bar
 	if _health_bar:
@@ -58,6 +60,7 @@ func _on_health_bar_changed(cur: int, max_hp: int) -> void:
 	# Update health label
 	if _health_label:
 		_health_label.text = str(cur) + "/" + str(max_hp)
+
 
 func take_damage(amount: int, _target: Node) -> void:
 	if is_destroyed: return
@@ -94,7 +97,7 @@ func _destroy():
 	
 	# Remove restriction area if it exists
 	if _restriction_area and is_instance_valid(_restriction_area):
-		_restriction_area.queue_free()
+		pass
 	
 	tower_destroyed.emit(self)
 	_play_destruction_effect()

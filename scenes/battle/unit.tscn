@@ -1,4 +1,4 @@
-[gd_scene load_steps=53 format=3 uid="uid://bs71l34xeqxed"]
+[gd_scene load_steps=64 format=3 uid="uid://bs71l34xeqxed"]
 
 [ext_resource type="Script" uid="uid://coyj5pgpo364x" path="res://scripts/battle/unit/unit.gd" id="1_k673f"]
 [ext_resource type="Texture2D" uid="uid://bg8ovc14n13vq" path="res://assets/images/characters/goblin_summon.png" id="2_k673f"]
@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://bdw7ku2f5uedd" path="res://scenes/battle/ui/properties_ui.tscn" id="4_properties_ui"]
 [ext_resource type="FontFile" uid="uid://dxc2pi1bwr1uu" path="res://assets/fonts/Cubic_11.ttf" id="5_ruro2"]
 [ext_resource type="Script" uid="uid://du72fit35e2ys" path="res://scripts/battle/label.gd" id="6_e8hdl"]
+[ext_resource type="Texture2D" uid="uid://cwl3mgq7r0p42" path="res://assets/images/objects/ally/alley_swords (2).png" id="8_eiuiw"]
 
 [sub_resource type="Resource" id="UnitStats_warrior"]
 resource_name = "UnitStats"
@@ -229,6 +230,11 @@ animations = [{
 "name": &"ally_archer_walk",
 "speed": 5.0
 }, {
+"frames": [],
+"loop": true,
+"name": &"ally_mage",
+"speed": 5.0
+}, {
 "frames": [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_6epuo")
@@ -355,6 +361,77 @@ font = ExtResource("5_ruro2")
 font_size = 10
 font_color = Color(0.02745098, 0, 0, 1)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_5edy5"]
+atlas = ExtResource("8_eiuiw")
+region = Rect2(162, 194, 81, 97)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ddh6w"]
+atlas = ExtResource("8_eiuiw")
+region = Rect2(0, 0, 81, 97)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hyjuj"]
+atlas = ExtResource("8_eiuiw")
+region = Rect2(81, 0, 81, 97)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xax8n"]
+atlas = ExtResource("8_eiuiw")
+region = Rect2(162, 0, 81, 97)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5kjma"]
+atlas = ExtResource("8_eiuiw")
+region = Rect2(0, 97, 81, 97)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_w1x4b"]
+atlas = ExtResource("8_eiuiw")
+region = Rect2(81, 97, 81, 97)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tndoc"]
+atlas = ExtResource("8_eiuiw")
+region = Rect2(162, 97, 81, 97)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wrbus"]
+atlas = ExtResource("8_eiuiw")
+region = Rect2(0, 194, 81, 97)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ir7cm"]
+atlas = ExtResource("8_eiuiw")
+region = Rect2(81, 194, 81, 97)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_ppcdi"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5edy5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ddh6w")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hyjuj")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xax8n")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5kjma")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_w1x4b")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tndoc")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wrbus")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ir7cm")
+}],
+"loop": true,
+"name": &"ally_warrior",
+"speed": 9.0
+}]
+
 [node name="unit" type="CharacterBody2D"]
 scale = Vector2(1.5, 1.5)
 collision_layer = 2
@@ -366,7 +443,8 @@ stats = SubResource("UnitStats_warrior")
 shape = SubResource("CircleShape2D_r0du0")
 
 [node name="Area2D" type="Area2D" parent="."]
-collision_layer = 4
+collision_layer = 2
+collision_mask = 2
 monitoring = false
 
 [node name="DetectionCollision" type="CollisionShape2D" parent="Area2D"]
@@ -376,7 +454,7 @@ shape = SubResource("CircleShape2D_03owx")
 position = Vector2(-4.7683716e-07, 4.7683716e-07)
 scale = Vector2(1.5, 1.5)
 sprite_frames = SubResource("SpriteFrames_warrior_player")
-animation = &"fallback"
+animation = &"ally_mage"
 
 [node name="SelectionCircle" type="Node2D" parent="."]
 script = ExtResource("3_selection_circle")
@@ -418,3 +496,7 @@ offset_right = 15.333334
 offset_bottom = -7.0
 label_settings = SubResource("LabelSettings_ruro2")
 horizontal_alignment = 1
+
+[node name="AnimatedSpriteattack" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_ppcdi")
+animation = &"ally_warrior"

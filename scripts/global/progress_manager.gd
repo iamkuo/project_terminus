@@ -181,6 +181,11 @@ func _validate_resources() -> void:
 	var errors = []
 	var warnings = []
 	
+	# Build memory ID lookup for validation
+	var memory_ids = []
+	for mem in active_memories:
+		memory_ids.append(mem.id)
+	
 	# Validate stages
 	for stage in active_stages:
 		# Check req_exp is valid
@@ -188,10 +193,7 @@ func _validate_resources() -> void:
 			errors.append("Stage '%s' has negative req_exp: %d" % [stage.id, stage.req_exp])
 		
 		# Check memory reference exists
-		if stage.unlocks_memory_id and stage.unlocks_memory_id not in active_memories:
-			var memory_ids = []
-			for mem in active_memories:
-				memory_ids.append(mem.id)
+		if stage.unlocks_memory_id and stage.unlocks_memory_id not in memory_ids:
 			errors.append("Stage '%s' references missing memory: '%s' (available: %s)" % [stage.id, stage.unlocks_memory_id, memory_ids])
 		
 		# Check cutscene reference exists

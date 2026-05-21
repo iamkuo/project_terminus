@@ -33,7 +33,7 @@ var current_target: Node = null
 var attack_cooldown: float = 0.0
 var is_attacking: bool = false
 
-
+@onready var a_sprite: AnimatedSprite2D = $AnimatedSpriteattack if has_node("AnimatedSpriteattack") else null
 @onready var sprite: AnimatedSprite2D = $AnimatedSprite2D if has_node("AnimatedSprite2D") else null
 @onready var selection_circle: Node2D = $SelectionCircle if has_node("SelectionCircle") else null
 @onready var properties_ui: Control = $PropertiesUI if has_node("PropertiesUI") else null
@@ -125,10 +125,20 @@ func _get_battle_manager() -> Node:
 func _perform_attack(target: Node) -> void:
 	if is_attacking or not target or not is_instance_valid(target):
 		return
-
+	
 	is_attacking = true
 	attack_cooldown = 1.0 / stats.attack_speed
-
+	#attack anime
+	var base_name = stats.unit_id 
+	var anim_name = base_name  
+	
+	# Try to play specific animation for this unit type
+	if base_name=="ally_warrior":
+		a_sprite.play(anim_name)
+		a_sprite.visible = true
+	else:
+		a_sprite.visible = false
+	
 	_play_action("attack")
 
 	match stats.attack_type:
@@ -342,10 +352,11 @@ func _is_path_blocked_by_restriction() -> bool:
 	for restriction in restrictions:
 		if is_instance_valid(restriction):
 			# Verify tower exists and is not destroyed
-			if not is_instance_valid(restriction.tower) or restriction.tower.is_destroyed:
+			if "tower" in restriction and is_instance_valid(restriction.tower) and restriction.tower.is_destroyed:
 				continue
-			# Check if this unit (CharacterBody2D) is overlapping with the restriction area
-			if self in restriction.get_overlapping_bodies():
+			# Try to find the unit's Area2D node
+			var unit_area = get_node_or_null("Area2D")
+			if unit_area and restriction.overlaps_area(unit_area):
 				return true
 	return false
 	
