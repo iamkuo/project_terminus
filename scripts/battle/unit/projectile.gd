@@ -4,7 +4,6 @@ enum Team {PLAYER = 0, OPPONENT = 1}
 
 @export var speed: float = 700.0
 @export var max_travel_distance: float = 3200.0
-@export var face_target: bool = true
 
 var damage: int = 20
 var target: Node = null
@@ -14,8 +13,8 @@ var unit_id: String = ""
 var _traveled: float = 0.0
 var _velocity: Vector2 = Vector2.ZERO
 var _shooter: WeakRef = null
-var dir : Vector2 = Vector2.ZERO
-var tilt : Vector2 = Vector2.from_angle(+45.0)
+var dir: Vector2 = Vector2.ZERO
+var _draw_delay: float = 0.0  # For archer bow draw animation
 @onready var anim_sprite: AnimatedSprite2D = $AnimatedSprite2D
 
 func set_shooter(unit: Node) -> void:
@@ -34,68 +33,51 @@ func _ready() -> void:
 	if is_instance_valid(target):
 		dir = (target.global_position - global_position).normalized()
 		_velocity = dir * speed
-		
-		if face_target:
-			look_at(global_position + dir)
+		look_at(global_position + dir)
 	
 	target = null # Decouple immediately
 	
-	# Connect collision signals
-	area_entered.connect(_on_hit)
+	# Set draw delay for archer bow animation
+	if unit_id == "ally_archer" and team == Team.PLAYER:
+		_draw_delay = 1.6
+	
+	# Connect collision signal
 	body_entered.connect(_on_hit)
 
 func _physics_process(delta: float) -> void:
-	if unit_id == "ally_archer"and team == Team.PLAYER:
-		if _velocity == Vector2.ZERO:
-			queue_free()
-			return
-		await get_tree().create_timer(1.6).timeout
-		var step = _velocity * delta
-		global_position += step
+	# Handle archer draw delay
+	if _draw_delay > 0.0:
+		_draw_delay -= delta
+		return
 	
-		_traveled += step.length()
-		if _traveled >= max_travel_distance:
-			queue_free()
-	else:
-		if _velocity == Vector2.ZERO:
-			queue_free()
-			return
+	if _velocity == Vector2.ZERO:
+		queue_free()
+		return
 	
-		var step = _velocity * delta
-		global_position += step
+	var step = _velocity * delta
+	global_position += step
 	
-		_traveled += step.length()
-		if _traveled >= max_travel_distance:
-			queue_free()
+	_traveled += step.length()
+	if _traveled >= max_travel_distance:
+		queue_free()
 func _on_hit(hit_obj: Node) -> void:
 	# Avoid hitting the shooter
 	var shooter = _shooter.get_ref() if _shooter else null
 	if hit_obj == shooter:
 		return
 
-	# Try to find the actual entity (Unit or Tower)
+	# Find the actual entity (Unit or Tower) - might be a collision shape
 	var target_entity = hit_obj
 	if not target_entity.has_method("take_damage"):
 		target_entity = hit_obj.get_parent()
 	
 	if not target_entity or not target_entity.has_method("take_damage"):
 		return
-		
-	# Team check
-	var target_team = -1
-	if target_entity.has_method("get_team"):
-		target_team = target_entity.get_team()
-	elif "team" in target_entity:
-		target_team = target_entity.team
-		
-	if target_team == -1 or target_team == team:
-		return # Friendly fire or invalid team
-		
-	# Apply damage
-	target_entity.take_damage(damage, shooter)
 	
-	# Signal shooter
-	if shooter and shooter.has_signal("dealt_damage"):
-		shooter.emit_signal("dealt_damage", damage, target_entity)
-		
+	# Friendly fire check
+	if "team" in target_entity and target_entity.team == team:
+		return
+	
+	# Apply damage and destroy projectile
+	target_entity.take_damage(damage, shooter)
 	queue_free()

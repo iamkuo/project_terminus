@@ -1,0 +1,59 @@
+[gd_resource type="Resource" script_class="CutsceneScript" load_steps=11 format=3 uid="uid://dshcyxo1vhuvo"]
+
+[ext_resource type="Script" uid="uid://c7505rjkk6rpg" path="res://resources/data_structures/cutscene_script.gd" id="1_jc8h0"]
+[ext_resource type="Script" uid="uid://b2sxig6otw26p" path="res://resources/data_structures/cutscene_step.gd" id="2_gte0w"]
+
+[sub_resource type="Resource" id="Resource_mvxh0"]
+script = ExtResource("2_gte0w")
+speaker = "維利夫"
+text = "好熱...太陽好像變得更大了。"
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_msa03"]
+script = ExtResource("2_gte0w")
+speaker = "維利夫"
+text = "看來在永恆之火中所見是真的。"
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_x5wyu"]
+script = ExtResource("2_gte0w")
+speaker = "維利夫"
+text = "終於...抵達阿爾夫海姆了"
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_0ly3r"]
+script = ExtResource("2_gte0w")
+speaker = "維利夫"
+text = "先去吸收這裡的永恆之火吧。"
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_6ly1j"]
+script = ExtResource("2_gte0w")
+speaker = "伊果"
+text = "呵，自己送上門來了啊。"
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_tqd7t"]
+script = ExtResource("2_gte0w")
+speaker = "伊果"
+text = "下等的生物，我要取下你的頭顱，帶回米德加爾特，送給尼多大人。"
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_foav2"]
+script = ExtResource("2_gte0w")
+speaker = "維利夫"
+text = "我要殺了你。"
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_thgqn"]
+script = ExtResource("2_gte0w")
+speaker = "伊果"
+text = "哈!
+"
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[resource]
+script = ExtResource("1_jc8h0")
+id = "boss_2"
+steps = Array[ExtResource("2_gte0w")]([SubResource("Resource_mvxh0"), SubResource("Resource_msa03"), SubResource("Resource_x5wyu"), SubResource("Resource_0ly3r"), SubResource("Resource_6ly1j"), SubResource("Resource_tqd7t"), SubResource("Resource_foav2"), SubResource("Resource_thgqn")])
+metadata/_custom_type_script = "uid://c7505rjkk6rpg"

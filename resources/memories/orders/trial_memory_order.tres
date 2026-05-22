@@ -4,5 +4,5 @@
 
 [resource]
 script = ExtResource("1_script")
-ordered_memory_ids = Array[String](["mem_startup", "mem_mini_level", "mem_open_world", "mem_first_village", "mem_get_map", "mem_goblin_capital", "mem_human_territory", "mem_human_capital", "mem_ending_trial"])
+ordered_memory_ids = Array[String](["first_mem", "second_mem", "third_mem"])
 metadata/_custom_type_script = "uid://b6a0wprwmwr0o"

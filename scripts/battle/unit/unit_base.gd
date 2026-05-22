@@ -7,7 +7,6 @@ const unit_selection_circle = preload("res://scripts/battle/ui/unit_selection_ci
 
 const ARRIVAL_DISTANCE: float = 5.0
 const MOVING_SPEED_THRESHOLD: float = 5.0
-const MAX_SEARCH_DISTANCE: float = 1e9
 const CLICK_COLLISION_RADIUS: float = 20.0
 const PLAYER_GOAL_X: float = 1100.0
 const OPPONENT_GOAL_X: float = 200.0
@@ -33,10 +32,10 @@ var current_target: Node = null
 var attack_cooldown: float = 0.0
 var is_attacking: bool = false
 
-@onready var a_sprite: AnimatedSprite2D = $AnimatedSpriteattack if has_node("AnimatedSpriteattack") else null
-@onready var sprite: AnimatedSprite2D = $AnimatedSprite2D if has_node("AnimatedSprite2D") else null
-@onready var selection_circle: Node2D = $SelectionCircle if has_node("SelectionCircle") else null
-@onready var properties_ui: Control = $PropertiesUI if has_node("PropertiesUI") else null
+@onready var a_sprite: AnimatedSprite2D = $AnimatedSpriteattack
+@onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
+@onready var selection_circle: Node2D = $SelectionCircle
+@onready var properties_ui: Control = $PropertiesUI
 
 func _ready():
 	if stats:
@@ -47,14 +46,8 @@ func _ready():
 	else:
 		current_health = 100
 		stats = UnitStats.new()
-	
-	# Hide sprite initially to prevent fallback animation flash
-	if sprite:
-		sprite.visible = false
-	
 	# Initialize with correct idle animation for this unit type
-	call_deferred("_play_action", "idle")
-	
+	_play_action("idle")
 	# Emit health changed signal to initialize UI display
 	health_changed.emit(current_health, stats.health)
 
@@ -63,8 +56,7 @@ func _physics_process(delta: float):
 		return
 	
 	# Check if game has ended - stop movement for non-player units
-	var battle_manager = _get_battle_manager()
-	if battle_manager and battle_manager.has_method("is_game_ended") and battle_manager.is_game_ended():
+	if BattleManager.is_game_ended():
 		# Only allow player movement when game has ended
 		if team != Team.PLAYER:
 			velocity = Vector2.ZERO
@@ -80,9 +72,16 @@ func _physics_process(delta: float):
 	
 	# Handle combat if we have a valid target
 	if current_target and is_instance_valid(current_target):
-		_handle_combat(current_target, move_target)
-	else:
-		_move_towards(move_target)
+		var dist = global_position.distance_to(current_target.global_position)
+		
+		if dist <= stats.attack_distance:
+			# Target in range - attack and face target
+			sprite.flip_h = (current_target.global_position.x < global_position.x)
+			if attack_cooldown <= 0.0:
+				_perform_attack(current_target)
+		
+	# Move toward movement target (different from attack target in FOLLOW_PLAYER mode)
+	_move_towards(move_target)
 
 	# Animation sync
 	var now_moving = velocity.length() > MOVING_SPEED_THRESHOLD
@@ -93,8 +92,7 @@ func _physics_process(delta: float):
 func _play_action(action: String):
 	if not sprite or not sprite.sprite_frames:
 		return
-	#var base_name = stats.unit_id if stats else ""
-	var anim_name = stats.unit_id if stats else "" + "_" + action
+	var anim_name = (stats.unit_id if stats else "") + "_" + action
 	
 	# Try to play specific animation for this unit type
 	if anim_name in sprite.sprite_frames.get_animation_names():
@@ -119,16 +117,12 @@ func _play_action(action: String):
 	# If we reach here, animation system failed - keep fallback animation as visual indicator
 	# Don't show sprite for fallback animation
 
-func _get_battle_manager() -> Node:
-	return BattleManager
-
 func _perform_attack(target: Node) -> void:
 	if is_attacking or not target or not is_instance_valid(target):
 		return
 	
 	is_attacking = true
 	attack_cooldown = 1.0 / stats.attack_speed
-	#attack anime
 	var anim_name = stats.unit_id
 	
 	# Try to play specific animation for this unit type
@@ -143,13 +137,13 @@ func _perform_attack(target: Node) -> void:
 				var final_damage = stats.attack_damage
 				if team == Team.PLAYER:
 					final_damage = int(final_damage * ConfigManager.allies_multiplyer)
+				else:
+					final_damage = int(final_damage * ConfigManager.enemy_multiplyer)
 				
-				target.take_damage(final_damage, self )
+				target.take_damage(final_damage, self)
 				damage_dealt.emit(final_damage, target)
 				if team == Team.PLAYER:
-					var bm = _get_battle_manager()
-					if bm:
-						bm.on_unit_damage_dealt(self , final_damage, target)
+					BattleManager.on_unit_damage_dealt(self, final_damage, target)
 		UnitStats.AttackType.PROJECTILE:
 			ProjectileManager.spawn_projectile(self , target)
 
@@ -159,7 +153,7 @@ func _perform_attack(target: Node) -> void:
 
 
 func take_damage(amount: int, attacker: Node) -> void:
-	var actual_damage = max(0, amount - stats.defense)
+	var actual_damage = max(0, amount - int(stats.defense * _get_multiplier()))
 	current_health -= actual_damage
 	
 	# Only emit health_changed if unit is still alive (not dying or dead)
@@ -169,7 +163,7 @@ func take_damage(amount: int, attacker: Node) -> void:
 	if current_health <= 0 and lifecycle_state == LifecycleState.ALIVE:
 		# Notify the attacker so it can emit enemy_killed and update BattleManager
 		if attacker and attacker.has_method("_on_killed_target"):
-			attacker._on_killed_target(self )
+			attacker._on_killed_target(self)
 		lifecycle_state = LifecycleState.DYING
 		_play_action("die")
 		await get_tree().create_timer(DEATH_ANIMATION_DELAY).timeout
@@ -182,12 +176,13 @@ func take_damage(amount: int, attacker: Node) -> void:
 ## Allows the attacker to emit enemy_killed and update BattleManager.
 func _on_killed_target(target: Node) -> void:
 	enemy_killed.emit(target)
-	var bm = _get_battle_manager()
-	if bm:
-		bm.on_unit_enemy_killed(self , target)
+	BattleManager.on_unit_enemy_killed(self, target)
 
 func set_behavior_pattern(pattern: BehaviorPattern):
 	behavior_pattern = pattern
+
+func _get_multiplier() -> float:
+	return ConfigManager.allies_multiplyer if team == Team.PLAYER else ConfigManager.enemy_multiplyer
 
 func select_unit():
 	if team != Team.PLAYER:
@@ -200,19 +195,6 @@ func deselect_unit():
 	selected = false
 	if selection_circle and selection_circle is unit_selection_circle:
 		selection_circle.hide_circle()
-
-func _handle_combat(target: Node, move_target: Vector2):
-	var dist = global_position.distance_to(target.global_position)
-	
-	if dist <= stats.attack_distance:
-		# Target in range - attack and face target
-		if sprite:
-			sprite.flip_h = (target.global_position.x < global_position.x)
-		if attack_cooldown <= 0.0:
-			_perform_attack(target)
-	
-	# Move toward movement target (different from attack target in FOLLOW_PLAYER mode)
-	_move_towards(move_target)
 
 # Returns where the unit should move based on behavior pattern
 func _get_movement_target(attack_target: Node = null) -> Vector2:
@@ -232,11 +214,6 @@ func _move_towards(target_pos: Vector2):
 		velocity = dir.normalized() * stats.move_speed
 		if sprite:
 			sprite.flip_h = dir.x < 0
-	
-	# Check for tower restriction areas before moving
-	if team == Team.PLAYER and _is_path_blocked_by_restriction():
-		velocity = Vector2.ZERO
-	
 	move_and_slide()
 
 
@@ -262,93 +239,43 @@ func _find_target() -> Node:
 		return behavior_pattern.get_target_for(self )
 	
 	# Fallback: find any enemy in view distance, then tower
-	var enemy = _find_nearest_enemy_fallback()
+	var enemy = _find_nearest_node("units", _is_valid_enemy, stats.view_distance)
 	if enemy:
 		return enemy
-	return _find_nearest_tower_fallback()
+	return _find_nearest_node("towers", _is_valid_tower, 1e9)
 
-# Fallback target search when no behavior pattern is set (simple nearest enemy, then tower)
-func _find_nearest_enemy_fallback() -> Node:
-	var all_units = get_tree().get_nodes_in_group("units")
+## Generic method to find the nearest node in a group that passes the filter function
+func _find_nearest_node(group: String, filter: Callable, max_distance: float) -> Node:
+	var nodes = get_tree().get_nodes_in_group(group)
 	var nearest: Node = null
-	var nearest_dist: float = stats.view_distance
+	var nearest_dist: float = max_distance
 	
-	for u in all_units:
-		if u == self or u.team == team:
-			continue
-		var dist = global_position.distance_to(u.global_position)
-		if dist < nearest_dist:
-			nearest_dist = dist
-			nearest = u
+	for node in nodes:
+		if filter.call(node):
+			var dist = global_position.distance_to(node.global_position)
+			if dist < nearest_dist:
+				nearest_dist = dist
+				nearest = node
 	
 	return nearest
 
-func _find_nearest_tower_fallback() -> Node:
-	var towers = get_tree().get_nodes_in_group("towers")
-	var nearest: Node = null
-	var nearest_dist: float = 1e9
-	
-	for tower in towers:
-		if tower.team == team:
-			continue
-		if tower is TowerBase and tower.is_destroyed:
-			continue
-		var dist = global_position.distance_to(tower.global_position)
-		if dist < nearest_dist:
-			nearest_dist = dist
-			nearest = tower
-	
-	return nearest
+## Filter function for valid enemy units
+func _is_valid_enemy(unit: Node) -> bool:
+	return unit != self and unit.team != team
+
+## Filter function for valid enemy towers
+func _is_valid_tower(tower: Node) -> bool:
+	return tower.team != team and not (tower is TowerBase and tower.is_destroyed)
 
 func _get_lane_goal_pos() -> Vector2:
-	# For player units, use actual enemy tower positions as goal
-	if team == Team.PLAYER:
-		var enemy_towers = get_tree().get_nodes_in_group("towers")
-		var nearest_tower: Node2D = null
-		var nearest_dist: float = 1e9
-		
-		for tower in enemy_towers:
-			if tower.team == Team.PLAYER or tower.is_destroyed:
-				continue
-			var dist = global_position.distance_to(tower.global_position)
-			if dist < nearest_dist:
-				nearest_dist = dist
-				nearest_tower = tower
-		
-		if nearest_tower:
-			# Move to a position slightly before the tower (for attack range)
-			var direction = (nearest_tower.global_position - global_position).normalized()
-			return nearest_tower.global_position - direction * 50.0
-		else:
-			# Fallback to hardcoded position if no towers found
-			return Vector2(PLAYER_GOAL_X, global_position.y)
-	else:
-		# For enemy units, use hardcoded position or find player towers
-		var player_towers = get_tree().get_nodes_in_group("towers")
-		var nearest_tower: Node2D = null
-		var nearest_dist: float = 1e9
-		
-		for tower in player_towers:
-			if tower.team == Team.OPPONENT or tower.is_destroyed:
-				continue
-			var dist = global_position.distance_to(tower.global_position)
-			if dist < nearest_dist:
-				nearest_dist = dist
-				nearest_tower = tower
-		
-		if nearest_tower:
-			var direction = (nearest_tower.global_position - global_position).normalized()
-			return nearest_tower.global_position - direction * 50.0
-		else:
-			return Vector2(OPPONENT_GOAL_X, global_position.y)
+	var fallback_x = PLAYER_GOAL_X if team == Team.PLAYER else OPPONENT_GOAL_X
+	
+	# Find the nearest enemy tower that is not destroyed
+	var nearest_tower = _find_nearest_node("towers", _is_valid_tower, 1e9) as Node2D
 
-func _is_path_blocked_by_restriction() -> bool:
-	# Check if unit is inside any tower restriction area
-	var restrictions = get_tree().get_nodes_in_group("tower_restrictions")
-	for restriction in restrictions:
-		if is_instance_valid(restriction):
-			# Verify tower exists and is not destroyed
-			if "tower" in restriction and is_instance_valid(restriction.tower) and restriction.tower.is_destroyed:
-				continue
-			# Try to find the unit's Area2D node
-	return false
+	# Return a position just before the tower for attack range, or fallback position if none found
+	if nearest_tower:
+		var direction = (nearest_tower.global_position - global_position).normalized()
+		return nearest_tower.global_position - direction * 50.0
+	else:
+		return Vector2(fallback_x, global_position.y)

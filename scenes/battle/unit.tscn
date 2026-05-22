@@ -1,4 +1,4 @@
-[gd_scene load_steps=64 format=3 uid="uid://bs71l34xeqxed"]
+[gd_scene load_steps=63 format=3 uid="uid://bs71l34xeqxed"]
 
 [ext_resource type="Script" uid="uid://coyj5pgpo364x" path="res://scripts/battle/unit/unit.gd" id="1_k673f"]
 [ext_resource type="Texture2D" uid="uid://bg8ovc14n13vq" path="res://assets/images/characters/goblin_summon.png" id="2_k673f"]
@@ -14,9 +14,6 @@ resource_name = "UnitStats"
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_r0du0"]
 radius = 20.0
-
-[sub_resource type="CircleShape2D" id="CircleShape2D_03owx"]
-radius = 100.0
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_k673f"]
 atlas = ExtResource("2_k673f")
@@ -230,11 +227,6 @@ animations = [{
 "name": &"ally_archer_walk",
 "speed": 5.0
 }, {
-"frames": [],
-"loop": true,
-"name": &"ally_mage",
-"speed": 5.0
-}, {
 "frames": [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_6epuo")
@@ -350,6 +342,11 @@ animations = [{
 "loop": true,
 "name": &"fallback",
 "speed": 5.0
+}, {
+"frames": [],
+"loop": true,
+"name": &"init",
+"speed": 5.0
 }]
 
 [sub_resource type="Theme" id="Theme_oee7j"]
@@ -430,6 +427,11 @@ animations = [{
 "loop": false,
 "name": &"ally_warrior",
 "speed": 9.0
+}, {
+"frames": [],
+"loop": true,
+"name": &"init",
+"speed": 5.0
 }]
 
 [node name="unit" type="CharacterBody2D"]
@@ -441,19 +443,11 @@ stats = SubResource("UnitStats_warrior")
 [node name="BodyCollision" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_r0du0")
 
-[node name="Area2D" type="Area2D" parent="."]
-collision_layer = 2
-collision_mask = 2
-monitoring = false
-
-[node name="DetectionCollision" type="CollisionShape2D" parent="Area2D"]
-shape = SubResource("CircleShape2D_03owx")
-
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(-4.7683716e-07, 4.7683716e-07)
 scale = Vector2(1.5, 1.5)
 sprite_frames = SubResource("SpriteFrames_warrior_player")
-animation = &"ally_mage"
+animation = &"ally_mage_die"
 
 [node name="SelectionCircle" type="Node2D" parent="."]
 script = ExtResource("3_selection_circle")
