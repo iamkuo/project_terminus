@@ -71,7 +71,7 @@ func _process(_delta: float) -> void:
 				var cmd = main_queue.pop_front()
 				match cmd.type:
 					"dialog":
-						_show_dialog_logic(cmd.content)
+						_show_dialog_logic(cmd.content, cmd.get("background_image"))
 					"fullscreen":
 						_show_fullscreen_logic(cmd.content)
 		
@@ -97,6 +97,9 @@ func _process(_delta: float) -> void:
 
 func queue_text(text: String) -> void:
 	main_queue.push_back({"type" : "dialog","content" : text})
+	
+func queue_dialog(text: String, background_image: Texture2D = null) -> void:
+	main_queue.push_back({"type" : "dialog", "content" : text, "background_image": background_image})
 	
 func queue_texts(texts: Array[String]) -> void:
 	for t in texts:
@@ -141,6 +144,9 @@ func _reset_all_ui() -> void:
 	texture_rect.hide()
 	dialog_color_rect.hide()
 	
+	# Reset dialog overlay opacity to full
+	dialog_color_rect.modulate.a = 1.0
+	
 	# Clean up texture to free memory
 	texture_rect.texture = null
 
@@ -154,10 +160,19 @@ func _skip_typing(tween: Tween, label: Label) -> void:
 		elif current_state == gui_state.FULLSCREEN_READING:
 			_change_state(gui_state.FULLSCREEN_FINISHED)
 
-func _show_dialog_logic(text: String) -> void:
+func _show_dialog_logic(text: String, background_image: Texture2D = null) -> void:
 	#_reset_all_ui()
 	# Ensure dialog and its overlay are visible and reset properties.
 	dialog.show()
+	
+	# Show background image if provided
+	if background_image:
+		fullscreen_ui.show()
+		texture_rect.show()
+		texture_rect.texture = background_image
+		dialog_color_rect.show()
+		# Reduce opacity for dialog overlay when showing background image
+		dialog_color_rect.modulate.a = 0.4
 	
 	_change_state(gui_state.DIALOG_READING)
 	

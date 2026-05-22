@@ -7,7 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://bdw7ku2f5uedd" path="res://scenes/battle/ui/properties_ui.tscn" id="4_properties_ui"]
 [ext_resource type="FontFile" uid="uid://dxc2pi1bwr1uu" path="res://assets/fonts/Cubic_11.ttf" id="5_ruro2"]
 [ext_resource type="Script" uid="uid://du72fit35e2ys" path="res://scripts/battle/label.gd" id="6_e8hdl"]
-[ext_resource type="Texture2D" uid="uid://cwl3mgq7r0p42" path="res://assets/images/objects/ally/alley_swords (2).png" id="8_eiuiw"]
+[ext_resource type="Texture2D" uid="uid://oul7rxblswls" path="res://assets/images/objects/ally/sword.png" id="8_eiuiw"]
 
 [sub_resource type="Resource" id="UnitStats_warrior"]
 resource_name = "UnitStats"
@@ -360,39 +360,39 @@ font_color = Color(0.02745098, 0, 0, 1)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_5edy5"]
 atlas = ExtResource("8_eiuiw")
-region = Rect2(162, 194, 81, 97)
+region = Rect2(0, 0, 40, 48)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ddh6w"]
 atlas = ExtResource("8_eiuiw")
-region = Rect2(0, 0, 81, 97)
+region = Rect2(40, 0, 40, 48)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_hyjuj"]
 atlas = ExtResource("8_eiuiw")
-region = Rect2(81, 0, 81, 97)
+region = Rect2(80, 0, 40, 48)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_xax8n"]
 atlas = ExtResource("8_eiuiw")
-region = Rect2(162, 0, 81, 97)
+region = Rect2(0, 49, 40, 48)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_5kjma"]
 atlas = ExtResource("8_eiuiw")
-region = Rect2(0, 97, 81, 97)
+region = Rect2(40, 49, 40, 48)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_w1x4b"]
 atlas = ExtResource("8_eiuiw")
-region = Rect2(81, 97, 81, 97)
+region = Rect2(80, 49, 40, 48)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_tndoc"]
 atlas = ExtResource("8_eiuiw")
-region = Rect2(162, 97, 81, 97)
+region = Rect2(0, 98, 40, 48)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_wrbus"]
 atlas = ExtResource("8_eiuiw")
-region = Rect2(0, 194, 81, 97)
+region = Rect2(40, 98, 40, 48)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ir7cm"]
 atlas = ExtResource("8_eiuiw")
-region = Rect2(81, 194, 81, 97)
+region = Rect2(80, 98, 40, 48)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_ppcdi"]
 animations = [{
@@ -491,5 +491,8 @@ label_settings = SubResource("LabelSettings_ruro2")
 horizontal_alignment = 1
 
 [node name="AnimatedSpriteattack" type="AnimatedSprite2D" parent="."]
+scale = Vector2(1.5, 1.5)
 sprite_frames = SubResource("SpriteFrames_ppcdi")
 animation = &"ally_warrior"
+frame = 8
+frame_progress = 1.0

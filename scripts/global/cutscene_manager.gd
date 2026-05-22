@@ -84,7 +84,7 @@ func _play_impl(id: String) -> void:
 		# Run each step based on type
 		match step.type:
 			CutsceneStep.StepType.DIALOG:
-				GuiManager.queue_text("%s: %s" % [step.speaker, step.text])
+				GuiManager.queue_dialog("%s: %s" % [step.speaker, step.text], step.texture)
 				await GuiManager.dialog_finished # 等待 GUI 宣告播放完畢
 
 			CutsceneStep.StepType.FULLSCREEN_TEXT:
