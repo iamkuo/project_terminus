@@ -2,9 +2,9 @@ extends Node
 
 @export var scripts: Array[CutsceneScript]
 
-var _script_map := {}
-var _is_playing := false  # Track if a cutscene is currently playing
-var _queue: Array[String] = []  # Queue of cutscene IDs waiting to play
+var _script_map = {}
+var is_playing = false # Track if a cutscene is currently playing
+var _queue: Array[String] = [] # Queue of cutscene IDs waiting to play
 
 signal cutscene_finished(cutscene_id: String)
 
@@ -45,13 +45,14 @@ func _load_cutscenes(path: String) -> void:
 # 對外 API（你只需要這一行）
 # =============================
 func play(id: String) -> void:
+	print("playing cutscene " + id)
 	# Validate cutscene exists
 	if not _script_map.has(id):
 		push_error("Cutscene ID not found: " + id)
 		return
 	
 	# If already playing or transitioning, queue this cutscene for later
-	if _is_playing or GuiManager.is_transitioning:
+	if is_playing or GuiManager.is_transitioning:
 		_queue.append(id)
 		
 		# If we are transitioning, ensure we listen for the end of it
@@ -59,9 +60,9 @@ func play(id: String) -> void:
 			SceneSwitcher.scene_transition_finished.connect(_on_scene_transition_finished, CONNECT_ONE_SHOT)
 		return
 	
-	_is_playing = true
+	is_playing = true
 	await _play_impl(id)
-	_is_playing = false
+	is_playing = false
 	cutscene_finished.emit(id)
 	
 	# Play next queued cutscene if any
@@ -88,9 +89,9 @@ func _play_impl(id: String) -> void:
 				await GuiManager.dialog_finished # 等待 GUI 宣告播放完畢
 
 			CutsceneStep.StepType.FULLSCREEN_TEXT:
-				GuiManager.queue_fullscreen({ "type": "text", "text": step.text })
+				GuiManager.queue_fullscreen({"type": "text", "text": step.text})
 				await GuiManager.fullscreen_finished
 
 			CutsceneStep.StepType.FULLSCREEN_IMAGE:
-				GuiManager.queue_fullscreen({ "type": "image", "texture": step.texture })
+				GuiManager.queue_fullscreen({"type": "image", "texture": step.texture})
 				await GuiManager.fullscreen_finished

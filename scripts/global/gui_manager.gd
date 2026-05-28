@@ -3,7 +3,7 @@ extends Node
 # =============================
 # Constants and Exports
 # =============================
-@export var show_speed: float = 0.08  # 每個字元顯示的秒數
+@export var show_speed: float = 0.08 # 每個字元顯示的秒數
 
 # =============================
 # UI References
@@ -12,12 +12,10 @@ var dialog: Control
 var text_label: Label
 var text_end: Label
 @onready var fullscreen_ui: Control
-# Removed: @onready var color_rect: ColorRect  # This was the shared ColorRect
-@onready var dialog_color_rect: ColorRect # New reference for dialog overlay
 @onready var fullscreen_label: Label
 @onready var texture_rect: TextureRect
-var animation_player : AnimationPlayer
-var transition_rect : ColorRect	
+var animation_player: AnimationPlayer
+var transition_rect: ColorRect
 
 # =============================
 # State Variables
@@ -51,9 +49,7 @@ func _ready() -> void:
 	dialog = get_node("/root/Game/GUI/Dialog") as Control
 	text_label = dialog.get_node("HBoxContainer/Label") as Label
 	text_end = dialog.get_node("HBoxContainer/End") as Label
-	
 	fullscreen_ui = get_node("/root/Game/GUI/FullscreenUI") as Control
-	dialog_color_rect = fullscreen_ui.get_node("DialogOverlay") as ColorRect 
 	fullscreen_label = fullscreen_ui.get_node("Label") as Label
 	texture_rect = fullscreen_ui.get_node("TextureRect") as TextureRect
 	animation_player = fullscreen_ui.get_node("AnimationPlayer") as AnimationPlayer
@@ -96,14 +92,14 @@ func _process(_delta: float) -> void:
 # =============================
 
 func queue_text(text: String) -> void:
-	main_queue.push_back({"type" : "dialog","content" : text})
+	main_queue.push_back({"type": "dialog", "content": text})
 	
 func queue_dialog(text: String, background_image: Texture2D = null) -> void:
-	main_queue.push_back({"type" : "dialog", "content" : text, "background_image": background_image})
+	main_queue.push_back({"type": "dialog", "content": text, "background_image": background_image})
 	
 func queue_texts(texts: Array[String]) -> void:
 	for t in texts:
-		main_queue.push_back({"type" : "dialog","content" : t})
+		main_queue.push_back({"type": "dialog", "content": t})
 
 func queue_fullscreen(item_data: Dictionary) -> void:
 		main_queue.push_back({"type": "fullscreen", "content": item_data})
@@ -142,10 +138,10 @@ func _reset_all_ui() -> void:
 	fullscreen_ui.hide()
 	fullscreen_label.hide()
 	texture_rect.hide()
-	dialog_color_rect.hide()
-	
-	# Reset dialog overlay opacity to full
-	dialog_color_rect.modulate.a = 1.0
+
+	# Reset transition rect visibility and clear color/opacity
+	transition_rect.hide()
+	transition_rect.color = Color(0, 0, 0, 0)
 	
 	# Clean up texture to free memory
 	texture_rect.texture = null
@@ -161,39 +157,36 @@ func _skip_typing(tween: Tween, label: Label) -> void:
 			_change_state(gui_state.FULLSCREEN_FINISHED)
 
 func _show_dialog_logic(text: String, background_image: Texture2D = null) -> void:
-	#_reset_all_ui()
-	# Ensure dialog and its overlay are visible and reset properties.
+	# 1. Reset UI
+	_reset_all_ui()
+	# 2. Show Dialog Panel
 	dialog.show()
+	print("dialog been shown")
 	
-	# Show background image if provided
+	# 3. Handle Portrait / Background Image
 	if background_image:
 		fullscreen_ui.show()
 		texture_rect.show()
 		texture_rect.texture = background_image
-		dialog_color_rect.show()
-		# Reduce opacity for dialog overlay when showing background image
-		dialog_color_rect.modulate.a = 0.4
-	
+		texture_rect.modulate.a = 0.75
+		
+	# 4. Setup State & Tween
 	_change_state(gui_state.DIALOG_READING)
-	
 	text_label.visible_ratio = 0
 	text_label.text = text
+	text_end.show()
+	text_end.visible = true
 	dialog_tween = create_tween()
 	dialog_tween.tween_property(text_label, "visible_ratio", 1.0, len(text) * show_speed)
-	
 	dialog_tween.finished.connect(func(): _change_state(gui_state.DIALOG_FINISHED))
 
 func _show_fullscreen_logic(data: Dictionary) -> void:
-	#_reset_all_ui()
+	_reset_all_ui()
 	_change_state(gui_state.FULLSCREEN_READING)
-	if not fullscreen_ui.is_visible():
-		fullscreen_ui.show()
-	if not dialog_color_rect.is_visible():
-		dialog_color_rect.show()
-		# Reset properties in case they were modified or not set correctly before.
-		dialog_color_rect.modulate.a = 1.0
-		dialog_color_rect.color = Color(0, 0, 0, 1)
-		dialog_color_rect.scale = Vector2(1, 1)
+	fullscreen_ui.show()
+	transition_rect.show()
+	# Set semi‑transparent black overlay for fullscreen text
+	transition_rect.color = Color(0, 0, 0, 1)
 	
 	match data.type:
 		"text":

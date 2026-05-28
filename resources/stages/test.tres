@@ -1,0 +1,39 @@
+[gd_resource type="Resource" script_class="StageCollection" load_steps=7 format=3 uid="uid://s7qyawfxlhcw"]
+
+[ext_resource type="Script" uid="uid://bfg5kjb0bo8cr" path="res://resources/data_structures/stage_data.gd" id="1_stage_data"]
+[ext_resource type="Script" uid="uid://cc6q1015stjfs" path="res://resources/data_structures/stage_collection.gd" id="2_stage_collection"]
+
+[sub_resource type="Resource" id="Resource_startup"]
+script = ExtResource("1_stage_data")
+id = "universal_startup"
+name = "通用啟動"
+cutscene_id = "startup_intro_cutscene"
+unlocks_memory_id = "mem_test_shard"
+
+[sub_resource type="Resource" id="Resource_early"]
+script = ExtResource("1_stage_data")
+id = "early_milestone"
+name = "早期里程碑"
+req_exp = 10
+cutscene_id = "mini_level"
+unlocks_memory_id = "mem_mini_level"
+
+[sub_resource type="Resource" id="Resource_tutorial"]
+script = ExtResource("1_stage_data")
+id = "test_tutorial"
+name = "測試教學"
+req_exp = 20
+cutscene_id = "tutorial_stage_2"
+unlocks_memory_id = "mem_tutorial_guidance"
+
+[sub_resource type="Resource" id="Resource_end"]
+script = ExtResource("1_stage_data")
+id = "test_end"
+name = "測試結束"
+req_exp = 30
+cutscene_id = "ending_trial"
+unlocks_memory_id = "mem_ending_trial"
+
+[resource]
+script = ExtResource("2_stage_collection")
+stages = Array[ExtResource("1_stage_data")]([SubResource("Resource_startup"), SubResource("Resource_early"), SubResource("Resource_tutorial"), SubResource("Resource_end")])

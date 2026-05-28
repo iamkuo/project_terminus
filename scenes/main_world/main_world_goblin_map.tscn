@@ -8,7 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://3m0i8x4jbjf8" path="res://scenes/main_world/cutscene.tscn" id="7_meqou"]
 [ext_resource type="PackedScene" uid="uid://bhq1tnsq2yocq" path="res://scenes/main_world/sign.tscn" id="8_5h3hb"]
 [ext_resource type="PackedScene" uid="uid://wlq4biqy0aoq" path="res://scenes/main_world/shard.tscn" id="9_jy6de"]
-[ext_resource type="Resource" uid="uid://cf1sqltdfklyf" path="res://resources/memories/memory_tutorial_guidance.tres" id="10_eaj2c"]
+[ext_resource type="Resource" path="res://resources/memories/test/memory_tutorial_guidance.tres" id="10_eaj2c"]
 [ext_resource type="PackedScene" uid="uid://hjwobmyip8lh" path="res://scenes/main_world/tp_point.tscn" id="11_nui7k"]
 [ext_resource type="PackedScene" uid="uid://bmq6fpmu037ux" path="res://scenes/main_world/hud.tscn" id="12_q5swf"]
 [ext_resource type="PackedScene" uid="uid://d24suq71w264f" path="res://scenes/main_world/backpack.tscn" id="13_fbhmp"]
@@ -720,7 +720,7 @@ script_id = "test"
 [node name="Signs" type="Node2D" parent="Map"]
 
 [node name="Test" parent="Map/Signs" instance=ExtResource("8_5h3hb")]
-position = Vector2(8, 104)
+position = Vector2(2568, 3912)
 sign_texts = Array[String](["測試 傳送點"])
 
 [node name="Shards" type="Node2D" parent="Map"]

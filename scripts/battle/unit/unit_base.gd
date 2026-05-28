@@ -129,6 +129,9 @@ func _perform_attack(target: Node) -> void:
 	a_sprite.visible = true
 	a_sprite.play(anim_name)
 	
+	if stats.unit_id != "ally_warrior":
+		a_sprite.visible = false
+	
 	_play_action("attack")
 
 	match stats.attack_type:

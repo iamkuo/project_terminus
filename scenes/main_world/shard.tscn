@@ -1,8 +1,7 @@
-[gd_scene load_steps=14 format=3 uid="uid://wlq4biqy0aoq"]
+[gd_scene load_steps=13 format=3 uid="uid://wlq4biqy0aoq"]
 
 [ext_resource type="Script" uid="uid://bx8xhlw76s85h" path="res://scripts/main_world/memory_shard.gd" id="1_x0ayr"]
 [ext_resource type="Texture2D" uid="uid://vgrqy8ta8w65" path="res://assets/images/objects/shard.png" id="3_ua2y8"]
-[ext_resource type="Resource" uid="uid://bq8llogf4qqyr" path="res://resources/memories/mem_test_shard.tres" id="3_xr22o"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_x0ayr"]
 atlas = ExtResource("3_ua2y8")
@@ -78,7 +77,6 @@ size = Vector2(16, 16)
 
 [node name="shard" type="Node2D"]
 script = ExtResource("1_x0ayr")
-memory_resource = ExtResource("3_xr22o")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_xr22o")

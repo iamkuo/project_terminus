@@ -1,29 +1,10 @@
-[gd_scene load_steps=18 format=3 uid="uid://dm625ksy5738w"]
+[gd_scene load_steps=19 format=3 uid="uid://dm625ksy5738w"]
 
 [ext_resource type="Texture2D" uid="uid://cjmwhv0846in6" path="res://assets/images/ui/panels/04 Border 03.png" id="1_mfius"]
+[ext_resource type="Texture2D" uid="uid://cy6peac0akac7" path="res://icon.svg" id="2_7lpba"]
 [ext_resource type="FontFile" uid="uid://dxc2pi1bwr1uu" path="res://assets/fonts/Cubic_11.ttf" id="2_ynd5l"]
 [ext_resource type="PackedScene" uid="uid://bv8xk2m4n5p6q" path="res://scenes/global/message_ui.tscn" id="3_ynd5l"]
 [ext_resource type="PackedScene" uid="uid://cpog3fskyl4m7" path="res://scenes/global/pause.tscn" id="4_gnobw"]
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_s0nni"]
-texture = ExtResource("1_mfius")
-texture_margin_left = 45.0
-texture_margin_top = 18.0
-texture_margin_right = 45.0
-texture_margin_bottom = 18.0
-region_rect = Rect2(771, 579, 186, 186)
-
-[sub_resource type="LabelSettings" id="LabelSettings_aug50"]
-font = ExtResource("2_ynd5l")
-font_size = 36
-
-[sub_resource type="LabelSettings" id="LabelSettings_kiw3p"]
-font = ExtResource("2_ynd5l")
-font_size = 48
-
-[sub_resource type="LabelSettings" id="LabelSettings_400sg"]
-font = ExtResource("2_ynd5l")
-font_size = 48
 
 [sub_resource type="Animation" id="Animation_qbsmt"]
 length = 0.001
@@ -224,10 +205,82 @@ _data = {
 [sub_resource type="LabelSettings" id="LabelSettings_mfius"]
 font_size = 36
 
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_s0nni"]
+texture = ExtResource("1_mfius")
+texture_margin_left = 45.0
+texture_margin_top = 18.0
+texture_margin_right = 45.0
+texture_margin_bottom = 18.0
+region_rect = Rect2(771, 579, 186, 186)
+
+[sub_resource type="LabelSettings" id="LabelSettings_aug50"]
+font = ExtResource("2_ynd5l")
+font_size = 36
+
+[sub_resource type="LabelSettings" id="LabelSettings_kiw3p"]
+font = ExtResource("2_ynd5l")
+font_size = 48
+
+[sub_resource type="LabelSettings" id="LabelSettings_400sg"]
+font = ExtResource("2_ynd5l")
+font_size = 48
+
 [node name="GUI" type="CanvasLayer"]
 
 [node name="MessageUI" parent="." instance=ExtResource("3_ynd5l")]
 z_index = -1
+
+[node name="FullscreenUI" type="Control" parent="."]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="FullscreenUI"]
+root_node = NodePath("../..")
+libraries = {
+&"": SubResource("AnimationLibrary_cpr0p")
+}
+
+[node name="TextureRect" type="TextureRect" parent="FullscreenUI"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_7lpba")
+
+[node name="TransitionColorRect" type="ColorRect" parent="FullscreenUI"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 2
+color = Color(0, 0, 0, 0)
+
+[node name="Label" type="Label" parent="FullscreenUI"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+rotation = 0.0015550554
+label_settings = SubResource("LabelSettings_mfius")
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="Dialog" type="Panel" parent="."]
 visible = false
@@ -270,64 +323,6 @@ size_flags_horizontal = 8
 size_flags_vertical = 8
 text = "▼"
 label_settings = SubResource("LabelSettings_400sg")
-
-[node name="FullscreenUI" type="Control" parent="."]
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="FullscreenUI"]
-root_node = NodePath("../..")
-libraries = {
-&"": SubResource("AnimationLibrary_cpr0p")
-}
-
-[node name="DialogOverlay" type="ColorRect" parent="FullscreenUI"]
-visible = false
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(0, 0, 0, 1)
-
-[node name="TextureRect" type="TextureRect" parent="FullscreenUI"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="Label" type="Label" parent="FullscreenUI"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-rotation = 0.0015550554
-label_settings = SubResource("LabelSettings_mfius")
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="TransitionColorRect" type="ColorRect" parent="FullscreenUI"]
-visible = false
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-mouse_filter = 2
-color = Color(0, 0, 0, 0)
 
 [node name="Pause" parent="." instance=ExtResource("4_gnobw")]
 visible = false

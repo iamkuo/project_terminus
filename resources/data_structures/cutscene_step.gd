@@ -8,7 +8,7 @@ enum StepType {
 	FULLSCREEN_IMAGE
 }
 
-@export var type: StepType
+@export var type: StepType = StepType.DIALOG
 
 # ---- Dialog ----
 @export var speaker: String

@@ -12,6 +12,7 @@ const FALLBACK_ID = "default_failure_cutscene"
 var mode: String = "test"
 var crystal_count: int = 1000
 var _current_exp: int = 0
+var _allow_cutscene_triggers: bool = false  # Only trigger cutscenes after game mode is selected
 
 var current_exp: int = 0:
 	set(value):
@@ -47,10 +48,14 @@ func _ready() -> void:
 	active_stages.clear()
 	active_memories.clear()
 	
-	# 初始化基礎資源
-	var stage_map = _load_resources(PATH_STAGES + mode + "/", StageData)
-	active_stages.assign(stage_map.values())
-	active_stages.sort_custom(func(a, b): return a.req_exp < b.req_exp)
+	# 初始化基礎資源 - 從單一合併檔案載入關卡
+	var stages_path = PATH_STAGES + mode + ".tres"
+	var stages_res = load(stages_path) as StageCollection
+	if stages_res:
+		active_stages.assign(stages_res.stages)
+		active_stages.sort_custom(func(a, b): return a.req_exp < b.req_exp)
+	else:
+		push_error("[ProgressManager] Failed to load stages for mode: " + mode)
 	
 	active_skills = _load_resources(PATH_SKILLS, SkillData)
 	# Initialize player skill levels for all active skills
@@ -59,8 +64,8 @@ func _ready() -> void:
 			player_skill_levels[skill_id] = 1
 	active_cutscenes = _load_resources(PATH_CUTSCENES, CutsceneScript)
 	
-	# 初始化記憶系統 (因涉及排序邏輯，保留獨立提取)
-	var all_mems = _load_resources(PATH_MEMORIES, MemoryData)
+	# 初始化記憶系統 (按遊戲模式資料夾分組載入)
+	var all_mems = _load_resources(PATH_MEMORIES + mode + "/", MemoryData)
 	var order_path = PATH_ORDERS + mode + "_memory_order.tres"
 	var order_res = load(order_path) as MemoryOrder
 	if order_res:
@@ -70,7 +75,9 @@ func _ready() -> void:
 	# Validate all resources are consistent
 	_validate_resources()
 	
-	_check_stage_progression()
+	# Only check progression if cutscene triggers are enabled (i.e., after game mode selection)
+	if _allow_cutscene_triggers:
+		_check_stage_progression()
 	
 	# Emit signal to notify UI that gamemode has changed
 	gamemode_changed.emit()
@@ -89,12 +96,13 @@ func _check_stage_progression() -> void:
 		# 符合條件：更新進度
 		current_stage_index = next_idx
 		
-		# Unlock the memory shard associated with this stage (if any)
+			# Unlock the memory shard associated with this stage (if any)
 		if stage.unlocks_memory_id:
 			collect_memory(stage.unlocks_memory_id)
 		
 		# 處理劇情觸發 (原本的 _handle_stage_unlock 與 _handle_cutscene_fallback 已合併)
-		if not stage.cutscene_id.is_empty() and stage.cutscene_id in active_cutscenes:
+		# Only trigger cutscenes if they have been explicitly enabled (i.e., after game mode selection)
+		if _allow_cutscene_triggers and not stage.cutscene_id.is_empty() and stage.cutscene_id in active_cutscenes:
 			CutsceneManager.play(stage.cutscene_id)
 		
 		# Always emit data updated when a stage milestone is reached

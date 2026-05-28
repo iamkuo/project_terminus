@@ -1,0 +1,128 @@
+[gd_resource type="Resource" script_class="StageCollection" load_steps=19 format=3 uid="uid://dhbpnygumtmbu"]
+
+[ext_resource type="Script" uid="uid://bfg5kjb0bo8cr" path="res://resources/data_structures/stage_data.gd" id="1_stage_data"]
+[ext_resource type="Script" uid="uid://cc6q1015stjfs" path="res://resources/data_structures/stage_collection.gd" id="2_stage_collection"]
+
+[sub_resource type="Resource" id="Resource_startup"]
+script = ExtResource("1_stage_data")
+id = "universal_startup"
+name = "通用開頭"
+cutscene_id = "startup_intro"
+unlocks_memory_id = "mem_startup"
+
+[sub_resource type="Resource" id="Resource_early"]
+script = ExtResource("1_stage_data")
+id = "early_milestone"
+name = "早期里程碑"
+req_exp = 10
+cutscene_id = "early_milestone_cutscene"
+
+[sub_resource type="Resource" id="Resource_mini_level"]
+script = ExtResource("1_stage_data")
+id = "full_mini_level"
+name = "微型關卡"
+req_exp = 100
+cutscene_id = "mini_level"
+unlocks_memory_id = "mem_mini_level"
+
+[sub_resource type="Resource" id="Resource_open_world"]
+script = ExtResource("1_stage_data")
+id = "full_open_world"
+name = "開放世界"
+req_exp = 200
+cutscene_id = "open_world"
+unlocks_memory_id = "mem_open_world"
+
+[sub_resource type="Resource" id="Resource_first_village"]
+script = ExtResource("1_stage_data")
+id = "full_first_village"
+name = "第一個村莊"
+req_exp = 300
+cutscene_id = "first_village"
+unlocks_memory_id = "mem_first_village"
+
+[sub_resource type="Resource" id="Resource_get_map"]
+script = ExtResource("1_stage_data")
+id = "full_get_map"
+name = "獲得地圖"
+req_exp = 400
+cutscene_id = "get_map"
+unlocks_memory_id = "mem_get_map"
+
+[sub_resource type="Resource" id="Resource_level_up_1"]
+script = ExtResource("1_stage_data")
+id = "full_level_up_1"
+name = "等級提升 1"
+req_exp = 500
+cutscene_id = "level_up"
+
+[sub_resource type="Resource" id="Resource_defeat_villages"]
+script = ExtResource("1_stage_data")
+id = "full_defeat_villages"
+name = "擊敗村莊"
+req_exp = 600
+cutscene_id = "defeat_villages"
+
+[sub_resource type="Resource" id="Resource_level_up_2"]
+script = ExtResource("1_stage_data")
+id = "full_level_up_2"
+name = "等級提升 2"
+req_exp = 700
+cutscene_id = "level_up"
+
+[sub_resource type="Resource" id="Resource_goblin_capital"]
+script = ExtResource("1_stage_data")
+id = "full_goblin_capital"
+name = "哥布林主城"
+req_exp = 800
+cutscene_id = "goblin_capital"
+unlocks_memory_id = "mem_goblin_capital"
+
+[sub_resource type="Resource" id="Resource_human_territory"]
+script = ExtResource("1_stage_data")
+id = "full_human_territory"
+name = "人類領地"
+req_exp = 900
+cutscene_id = "human_territory"
+unlocks_memory_id = "mem_human_territory"
+
+[sub_resource type="Resource" id="Resource_level_up_3"]
+script = ExtResource("1_stage_data")
+id = "full_level_up_3"
+name = "等級提升 3"
+req_exp = 1000
+cutscene_id = "level_up"
+
+[sub_resource type="Resource" id="Resource_attack_towns"]
+script = ExtResource("1_stage_data")
+id = "full_attack_towns"
+name = "進攻城鎮"
+req_exp = 1100
+cutscene_id = "attack_towns"
+
+[sub_resource type="Resource" id="Resource_level_up_4"]
+script = ExtResource("1_stage_data")
+id = "full_level_up_4"
+name = "等級提升 4"
+req_exp = 1200
+cutscene_id = "level_up"
+
+[sub_resource type="Resource" id="Resource_human_capital"]
+script = ExtResource("1_stage_data")
+id = "full_human_capital"
+name = "人類主城"
+req_exp = 1300
+cutscene_id = "human_capital"
+unlocks_memory_id = "mem_human_capital"
+
+[sub_resource type="Resource" id="Resource_ending"]
+script = ExtResource("1_stage_data")
+id = "full_ending"
+name = "完整版結局"
+req_exp = 1400
+cutscene_id = "ending_full"
+unlocks_memory_id = "mem_ending_full"
+
+[resource]
+script = ExtResource("2_stage_collection")
+stages = Array[ExtResource("1_stage_data")]([SubResource("Resource_startup"), SubResource("Resource_early"), SubResource("Resource_mini_level"), SubResource("Resource_open_world"), SubResource("Resource_first_village"), SubResource("Resource_get_map"), SubResource("Resource_level_up_1"), SubResource("Resource_defeat_villages"), SubResource("Resource_level_up_2"), SubResource("Resource_goblin_capital"), SubResource("Resource_human_territory"), SubResource("Resource_level_up_3"), SubResource("Resource_attack_towns"), SubResource("Resource_level_up_4"), SubResource("Resource_human_capital"), SubResource("Resource_ending")])

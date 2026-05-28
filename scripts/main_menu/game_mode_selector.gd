@@ -82,6 +82,9 @@ func _on_mode_button_pressed(mode: String) -> void:
 	# Initialize ProgressManager with the selected mode
 	ProgressManager.mode = mode
 	
+	# Enable cutscene triggers now that game mode has been explicitly selected
+	ProgressManager._allow_cutscene_triggers = true
+	
 	# Reload ProgressManager to apply the new mode
 	ProgressManager._ready()
 	
