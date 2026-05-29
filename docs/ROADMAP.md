@@ -1,6 +1,23 @@
 # Project Terminus - Development Roadmap
+**Consolidated from planning documents | Updated: May 29, 2026**
 
-This document outlines the remaining tasks and features required to bring **Project Terminus** to a "complete" state.
+This document outlines the current status, remaining tasks, and features required to bring **Project Terminus** to a "complete" state.
+
+---
+
+## Current Status
+
+### ✅ Completed (Phase 1 & Recent Updates)
+- Implemented ConfigManager singleton to centralize battle configuration.
+- Stage system refined with `unlocks_memory_id` field for direct memory unlocking.
+- Reorganized Game Resource Folders into `resources/mode_data/` for easier mode management.
+- Added mode validation and resource validation to `ProgressManager`.
+- Merged cutscene loading functions to simplify directory traversal.
+- Renamed StageCollection Resource Script to `stage_order.gd` for clarity.
+
+### 🔄 In Progress
+- **Manager Decoupling**: Reduce tight coupling between systems.
+- **Save/Load System Persistence**.
 
 ---
 
@@ -59,13 +76,6 @@ This category focuses on the player experience and visual fidelity.
 
 ## 4. Technical Debt & Optimization
 - **[ ] Manager Decoupling**: Reduce tight coupling between `ProgressManager` and other systems.
-- **[ ] Resource Validation**: Implement a system to check for missing cutscene or memory IDs during load.
-- [x] **Refactor `tp_point.gd` & Battle Config**:
-  - **✅ COMPLETED**: Implemented ConfigManager singleton to centralize battle configuration
-  - **✅ COMPLETED**: Stage system refined with `unlocks_memory_id` field for direct memory unlocking
-  - **Remaining**: Cleanup unused variables in tp_point.gd and fix "ghost" properties in `.tscn`.
 - **[ ] Performance Tuning**: Optimize the `main_world.tscn` (currently ~6.5MB) for smoother loading.
-
----
-
-*Last Updated: May 2, 2026*
+- **[ ] Refactor `tp_point.gd` & Battle Config**:
+  - Cleanup unused variables in `tp_point.gd` and fix "ghost" properties in `.tscn`.

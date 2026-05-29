@@ -22,6 +22,8 @@ The project is structured around several key singletons that manage different as
 - **`GuiManager`**: Manages the user interface, updating it based on game state changes.
 - **`CutsceneManager`**: Executes sequence-based cutscenes and dialogue.
 - **`ProgressManager`**: Central hub for game state, including player experience, crystals, and unlocked "memories." It emits signals to notify other components of changes.
+- **`BattleManager`**: Orchestrates battle initialization, AI spawning, combat state, and rewards calculations.
+- **`ConfigManager`**: Centralizes battle configurations loaded from teleport points, ensuring decoupled unit stats and battle parameters.
 
 ### Component Interactions
 - `ProgressManager` interacts with `SceneSwitcher` and `CutsceneManager` to progress the game state and trigger scene changes or cutscenes.

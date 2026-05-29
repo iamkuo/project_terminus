@@ -6,17 +6,15 @@ This document provides a complete inventory of all game resources including stag
 
 ## Resource Overview
 
-All game data is stored as Godot `.tres` resource files in the `resources/` directory, organized by type:
+All game data is stored as Godot `.tres` resource files in the `resources/` directory, organized primarily by game mode under `mode_data/`:
 
-- **`resources/stages/`** - Game progression stages (by mode: `test/`, `trial/`, `full/`)
-- **`resources/memories/`** - Memory shards (collectible lore items)
-- **`resources/memories/orders/`** - Memory display order per mode
+- **`resources/mode_data/{mode}/`** - Mode-specific data (stages, memories, cutscenes)
+- **`resources/mode_data/global/`** - Global data shared across modes (memories, cutscenes)
 - **`resources/skills/`** - Player abilities and skills
-- **`resources/cutscenes/`** - Dialogue and narrative sequences
 - **`resources/data_structures/`** - GDScript class definitions
 - **`resources/unit_stats/`** - Unit statistics and battle configurations
 
-Resource loading is handled by `ProgressManager._load_resources()` which recursively loads all `.tres` files from a given directory.
+Resource loading is handled by `ProgressManager` which loads resources from the selected mode directory and the global directory.
 
 ---
 
@@ -26,9 +24,9 @@ The project supports three distinct game modes, each with its own progression pi
 
 | Mode | Path | Description | Default Mode |
 |------|------|-------------|:-:|
-| **test** | `resources/stages/test/` | Quick testing and prototyping | ✓ Yes |
-| **trial** | `resources/stages/trial/` | Balanced gameplay experience | - |
-| **full** | `resources/stages/full/` | Complete narrative experience | - |
+| **test** | `resources/mode_data/test/` | Quick testing and prototyping | ✓ Yes |
+| **trial** | `resources/mode_data/trial/` | Balanced gameplay experience | - |
+| **full** | `resources/mode_data/full/` | Complete narrative experience | - |
 
 The active mode is set in `ProgressManager.gd`:
 ```gdscript
@@ -39,10 +37,9 @@ var mode: String = "test"  # Change to "trial" or "full" to switch modes
 
 ## Stages by Mode
 
-### Test Mode (`resources/stages/test/`)
+Each mode has a single `stages.tres` (`StageOrder` resource) that defines the sequence of stages. Stages are automatically triggered when `current_exp >= req_exp`. Listed in progression order:
 
-Stages are automatically triggered when `current_exp >= req_exp`. Listed in progression order:
-I plugged some random memory just to test it.
+### Test Mode (`resources/mode_data/test/stages.tres`)
 
 | Index | ID                  | req_exp | Name              | Unlocks Memory             | Triggers Cutscene       |
 |-------|---------------------|---------|-------------------|----------------------------|-------------------------|
@@ -59,7 +56,7 @@ I plugged some random memory just to test it.
 
 ---
 
-### Trial Mode (`resources/stages/trial/`)
+### Trial Mode (`resources/mode_data/trial/stages.tres`)
 
 Balanced progression with more stages:
 
@@ -77,7 +74,7 @@ Balanced progression with more stages:
 
 ---
 
-### Full Mode (`resources/stages/full/`)
+### Full Mode (`resources/mode_data/full/stages.tres`)
 
 Complete narrative with extensive progression:
 
@@ -131,9 +128,9 @@ Memory shards appear as lit torch buttons in the Backpack UI once unlocked. Each
 
 ## Memory Display Order
 
-Memory shards appear in the Backpack UI in a specific order defined by `MemoryOrder` resources. Each game mode has its own order file:
+Memory shards appear in the Backpack UI in a specific order defined by `MemoryOrder` resources. Each game mode has its own `memory_order.tres` file located in `resources/mode_data/{mode}/`:
 
-### Test Mode Order (`test_memory_order.tres`)
+### Test Mode Order
 ```
 1. mem_test_shard
 2. mem_mini_level
@@ -141,7 +138,7 @@ Memory shards appear in the Backpack UI in a specific order defined by `MemoryOr
 4. mem_ending_trial
 ```
 
-### Trial Mode Order (`trial_memory_order.tres`)
+### Trial Mode Order
 ```
 1. mem_test_shard
 2. mem_mini_level
@@ -154,7 +151,7 @@ Memory shards appear in the Backpack UI in a specific order defined by `MemoryOr
 9. mem_ending_trial
 ```
 
-### Full Mode Order (`full_memory_order.tres`)
+### Full Mode Order
 ```
 1. mem_test_shard
 2. mem_mini_level
@@ -187,7 +184,7 @@ Located in: `resources/skills/`
 
 ## Cutscenes
 
-Cutscenes are triggered by stages and memories. Each cutscene contains a sequence of steps (dialog, animations, media). All cutscenes are located in `resources/cutscenes/`:
+Cutscenes are triggered by stages and memories. Each cutscene contains a sequence of steps (dialog, animations, media). All cutscenes are located in `resources/mode_data/global/cutscenes/` or `resources/mode_data/{mode}/cutscenes/`:
 
 | Cutscene ID            | Triggered By                              | Purpose                       |
 |------------------------|-------------------------------------------|-------------------------------|
@@ -214,16 +211,16 @@ Cutscenes are triggered by stages and memories. Each cutscene contains a sequenc
 
 The `ProgressManager` initializes resources in this order:
 
-1. **Load Stages**: Load all stages for current mode from `resources/stages/{mode}/`
-2. **Sort Stages**: Sort by `req_exp` (ascending)
-3. **Load Skills**: Load all skills from `resources/skills/`
-4. **Initialize Skill Levels**: Set all skills to level 1
-5. **Load Cutscenes**: Load all cutscenes from `resources/cutscenes/`
-6. **Load Memories**: Load all memories from `resources/memories/`
-7. **Load Memory Order**: Load mode-specific order from `resources/memories/orders/{mode}_memory_order.tres`
-8. **Arrange Memories**: Order memories according to MemoryOrder resource
-9. **Load Unit Stats**: Unit stats are loaded by ConfigManager during battle initialization from `resources/unit_stats/`
-10. **Check Progression**: Trigger any stages that current exp qualifies for
+1. **Load Stages**: Load `StageOrder` from `resources/mode_data/{mode}/stages.tres` and parse stages.
+2. **Sort Stages**: Stages are automatically sorted by `req_exp` (ascending).
+3. **Load Skills**: Load all skills from `resources/skills/`.
+4. **Initialize Skill Levels**: Set all skills to level 1.
+5. **Load Cutscenes**: Load global cutscenes from `resources/mode_data/global/cutscenes/` and mode-specific cutscenes from `resources/mode_data/{mode}/cutscenes/`.
+6. **Load Memories**: Load global memories from `resources/mode_data/global/memories/` and mode-specific memories from `resources/mode_data/{mode}/memories/`.
+7. **Load Memory Order**: Load `MemoryOrder` from `resources/mode_data/{mode}/memory_order.tres`.
+8. **Arrange Memories**: Order memories according to the `MemoryOrder` resource.
+9. **Load Unit Stats**: Unit stats are loaded by ConfigManager during battle initialization from `resources/unit_stats/`.
+10. **Check Progression**: Trigger any stages that current exp qualifies for.
 
 See [`README.md`](README.md#resource-management) for detailed resource architecture information.
 
@@ -233,33 +230,34 @@ See [`README.md`](README.md#resource-management) for detailed resource architect
 
 ### To Add a New Stage
 
-1. Create a new `.tres` file in `resources/stages/{mode}/`
+1. Create a new `StageData` resource (e.g. within the inspector).
 2. Set `StageData` class with:
    - `id` - Unique identifier
    - `name` - Display name
    - `req_exp` - Experience requirement (must be >= previous stage)
    - `cutscene_id` - Cutscene to play (empty string for none)
    - `unlocks_memory_id` - Memory to collect (empty string for none)
+3. Open `resources/mode_data/{mode}/stages.tres` (`StageOrder` resource) and append your new `StageData` to the `stages` array.
 
 ### To Add a New Memory
 
-1. Create a new `.tres` file in `resources/memories/`
+1. Create a new `.tres` file in `resources/mode_data/global/memories/` (or the mode-specific folder).
 2. Set `MemoryData` class with:
    - `id` - Unique identifier
    - `name` - Display name
    - `description` - Lore text
    - `cutscene_id` - Cutscene to play when viewed
-3. Update all mode-specific order files in `resources/memories/orders/` to include the new ID in desired position
+3. Update all relevant mode-specific order files (`memory_order.tres`) to include the new ID in the desired position.
 
 ### To Add a New Cutscene
 
-1. Create a new `.tres` file in `resources/cutscenes/`
+1. Create a new `.tres` file in `resources/mode_data/global/cutscenes/` (or the mode-specific folder).
 2. Set `CutsceneScript` class with steps (dialog, movement, media, etc.)
-3. Reference the cutscene ID in stages or memories via their `cutscene_id` field
+3. Reference the cutscene ID in stages or memories via their `cutscene_id` field.
 
 ### To Add a New Skill
 
-1. Create a new `.tres` file in `resources/skills/`
+1. Create a new `.tres` file in `resources/skills/`.
 2. Set `SkillData` class with:
    - `id` - Unique identifier
    - `name` - Display name
@@ -272,21 +270,21 @@ See [`README.md`](README.md#resource-management) for detailed resource architect
 ## Common Issues & Troubleshooting
 
 ### Memory doesn't unlock at expected stage
-- Check stage's `unlocks_memory_id` field matches memory `id`
-- Verify stage `req_exp` is achievable in current game mode
-- Confirm memory ID is in the mode's MemoryOrder file
+- Check stage's `unlocks_memory_id` field matches memory `id`.
+- Verify stage `req_exp` is achievable in current game mode.
+- Confirm memory ID is in the mode's `memory_order.tres` file.
 
 ### Wrong cutscene plays
-- Check stage `cutscene_id` matches actual cutscene file ID
-- Verify cutscene exists in `resources/cutscenes/`
-- See [`BUGS_ARCHIVED.md`](BUGS_ARCHIVED.md) Bug #3 for concurrent cutscene issues
+- Check stage `cutscene_id` matches actual cutscene file ID.
+- Verify cutscene exists in the `cutscenes` folder.
+- See [`BUGS_ARCHIVED.md`](BUGS_ARCHIVED.md) Bug #3 for concurrent cutscene issues.
 
 ### Torch appears lit incorrectly
-- Default torch animation is now `"unlit"` (fixed in past update, see [`BUGS_ARCHIVED.md`](BUGS_ARCHIVED.md) Bug #2)
-- Check `BackpackUI` is calling `torch.refresh_visuals()` with correct unlock status
-- Verify memory ID is in `ProgressManager.unlocked_memory_ids`
+- Default torch animation is now `"unlit"` (fixed in past update, see [`BUGS_ARCHIVED.md`](BUGS_ARCHIVED.md) Bug #2).
+- Check `BackpackUI` is calling `torch.refresh_visuals()` with correct unlock status.
+- Verify memory ID is in `ProgressManager.unlocked_memory_ids`.
 
 ---
 
-**Last Updated:** May 2, 2026  
+**Last Updated:** May 29, 2026  
 **Related Documentation:** [`README.md`](README.md) | [`BUGS_ARCHIVED.md`](BUGS_ARCHIVED.md) | [`AGENTS.md`](AGENTS.md)

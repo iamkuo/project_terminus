@@ -45,4 +45,4 @@ Check `docs/BUGS_ARCHIVED.md` for common issues:
 
 ---
 
-**Last Updated:** May 2, 2026
+**Last Updated:** May 29, 2026

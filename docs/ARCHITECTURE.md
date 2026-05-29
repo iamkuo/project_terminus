@@ -15,7 +15,8 @@ graph TD
     SS["SceneSwitcher"]
     GM["GuiManager"]
     CM["CutsceneManager"]
-    BTM["BattleTransitionManager"]
+    BM["BattleManager"]
+    Cfg["ConfigManager"]
 
     %% Interactions
     PM -->|data_updated| HUD["HUD / UI"]
@@ -28,8 +29,8 @@ graph TD
     
     CM -->|cutscene_finished| Flow
     
-    BTM -->|battle_started| Battle["Battle Scene"]
-    BTM -->|rewards_applied| HUD
+    BM -->|battle_started| Battle["Battle Scene"]
+    BM -->|rewards_applied| HUD
 ```
 
 ---
@@ -49,12 +50,14 @@ graph TD
     
     %% Managers
     PM["ProgressManager"]
-    BTM["BattleTransitionManager"]
+    BM["BattleManager"]
+    Cfg["ConfigManager"]
 
     %% Interactions
     Player -->|Enters Area| TP
     TP -->|Internal: _build_config| TP
-    TP -->|start_battle| BTM
+    TP -->|load_config| Cfg
+    TP -->|start_battle| BM
     
     Player -->|Interacts| Shard
     Shard -->|collect_memory| PM
@@ -62,7 +65,7 @@ graph TD
     
     %% Signal Listeners
     PM -->|data_updated| HUD
-    BTM -->|rewards_applied| HUD
+    BM -->|rewards_applied| HUD
     
     Pause -->|volume changes| AS["AudioServer"]
     Pause -->|toggles fullscreen| DS["DisplayServer"]
@@ -79,24 +82,27 @@ This details the specific bidirectional transition between the RPG World and the
 ```mermaid
 sequenceDiagram
     participant World as Main World
-    participant BTM as BattleTransitionManager
+    participant Cfg as ConfigManager
+    participant BM as BattleManager
     participant SS as SceneSwitcher
     participant Battle as Battle Scene
     participant PM as ProgressManager
     
     Note over World, Battle: Entering Battle
-    World->>BTM: start_battle(config_dict)
-    BTM->>BTM: Store config
-    BTM-->>Battle: emit battle_started(config)
-    BTM->>SS: switch_scene("battle_scene")
+    World->>Cfg: load_config(config_dict)
+    World->>BM: start_battle(player_node)
+    BM->>BM: Save player position & map
+    BM->>SS: switch_to_scene_instance(battle_scene)
     SS->>Battle: Scene Loaded
-    Battle->>BTM: Read current_config
+    Battle->>BM: _initialize_battle() (Reads Cfg)
     
     Note over World, Battle: Leaving Battle
-    Battle->>BTM: end_battle(exp, crystals)
-    BTM->>PM: Update EXP and Crystals
-    BTM-->>World: emit rewards_applied(exp, crystals)
-    BTM->>SS: switch_scene("main_world")
+    Battle->>BM: end_battle()
+    BM->>SS: switch_scene("main_world")
+    SS->>World: Scene Loaded
+    BM->>BM: Restore player position & map
+    BM->>PM: Update EXP and Crystals
+    BM-->>World: emit rewards_applied(exp, crystals)
 ```
 
 ### 3.2 Battle Scene Internal Flow
@@ -150,7 +156,7 @@ graph TD
     TM -->|all_towers_destroyed| BM
     BM -->|game_state_changed| BM
     BM -->|show_result_with_rewards| ES
-    ES -->|end_battle| BTM
+    ES -->|end_battle| BM
 ```
 
 ---
@@ -405,7 +411,7 @@ graph LR
     end
 
     subgraph Time2 ["2. Battle Initialization"]
-        BTM["BattleTransitionManager"]
+        Cfg["ConfigManager"]
         SS["SceneSwitcher"]
         BM_Setup["BattleManager Init"]
     end
@@ -449,10 +455,11 @@ graph LR
     %% --- Transition Flow ---
     Player -->|Enters Area| TP
     TP -->|Internal: _build_config| TP
-    TP -->|start_battle| BTM
-    BTM -->|request_switch| SS
+    TP -->|load_config| Cfg
+    TP -->|start_battle| BM_Setup
+    BM_Setup -->|request_switch| SS
     SS -->|load_battle_scene| BM_Setup
-    BM_Setup -->|reads_config| BTM
+    BM_Setup -->|reads_config| Cfg
     
     %% --- Battle Flow ---
     BM_Setup -->|Configures| SUI
@@ -475,9 +482,9 @@ graph LR
     TM -->|all_towers_destroyed| BM
     BM -->|game_state_changed| BM
     BM -->|show_result_with_rewards| ES
-    ES -->|end_battle| BTM
-    BTM -->|Update EXP & Crystals| PM
-    BTM -->|rewards_applied| HUD
+    ES -->|end_battle| BM
+    BM -->|Update EXP & Crystals| PM
+    BM -->|rewards_applied| HUD
 ```
 
 ---
@@ -538,14 +545,14 @@ SpawnUI
 
 The `ProgressManager` initializes resources in this order:
 
-1. **Load Stages**: Load all stages for current mode from `resources/stages/{mode}/`
-2. **Sort Stages**: Sort by `req_exp` (ascending)
+1. **Load Stages**: Load `StageOrder` from `resources/mode_data/{mode}/stages.tres` and parse stages.
+2. **Sort Stages**: Stages are automatically sorted by `req_exp` (ascending).
 3. **Load Skills**: Load all skills from `resources/skills/`
 4. **Initialize Skill Levels**: Set all skills to level 1
-5. **Load Cutscenes**: Load all cutscenes from `resources/cutscenes/`
-6. **Load Memories**: Load all memories from `resources/memories/`
-7. **Load Memory Order**: Load mode-specific order from `resources/memories/orders/{mode}_memory_order.tres`
-8. **Arrange Memories**: Order memories according to MemoryOrder resource
+5. **Load Cutscenes**: Load global cutscenes from `resources/mode_data/global/cutscenes/` and mode-specific cutscenes from `resources/mode_data/{mode}/cutscenes/`
+6. **Load Memories**: Load global memories from `resources/mode_data/global/memories/` and mode-specific memories from `resources/mode_data/{mode}/memories/`
+7. **Load Memory Order**: Load `MemoryOrder` from `resources/mode_data/{mode}/memory_order.tres`
+8. **Arrange Memories**: Order memories according to the `MemoryOrder` resource
 9. **Check Progression**: Trigger any stages that current exp qualifies for
 
 ---
@@ -581,6 +588,6 @@ The `ProgressManager` initializes resources in this order:
 
 ---
 
-**Last Updated:** May 2, 2026  
+**Last Updated:** May 29, 2026  
 **Status:** Complete system architecture documentation  
 **Related Documentation:** [`../RESOURCES.md`](../RESOURCES.md) | [`../BUGS_ARCHIVED.md`](../BUGS_ARCHIVED.md) | [`../AGENTS.md`](../AGENTS.md)
