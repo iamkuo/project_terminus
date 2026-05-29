@@ -9,40 +9,55 @@ var _queue: Array[String] = [] # Queue of cutscene IDs waiting to play
 signal cutscene_finished(cutscene_id: String)
 
 func _ready() -> void:
-	# Load all .tres files from cutscenes directory recursively
-	_load_cutscenes("res://resources/cutscenes/")
+	ProgressManager.gamemode_changed.connect(_reload_cutscenes)
+	_reload_cutscenes()
+
+func _reload_cutscenes() -> void:
+	scripts.clear()
+	_script_map.clear()
+	
+	var paths_to_search: Array[String] = ["res://resources/mode_data/global/cutscenes/"]
+	
+	var mode = ProgressManager.mode
+	if mode != "":
+		var mode_path = "res://resources/mode_data/" + mode + "/cutscenes/"
+		if DirAccess.dir_exists_absolute(mode_path):
+			paths_to_search.append(mode_path)
+	
+	while paths_to_search.size() > 0:
+		var current_path = paths_to_search.pop_back()
+		var dir = DirAccess.open(current_path)
+		if not dir:
+			push_error("Failed to open directory: " + current_path)
+			continue
+		
+		dir.list_dir_begin()
+		var file_name = dir.get_next()
+		
+		while file_name != "":
+			var full_path = current_path.path_join(file_name)
+			if dir.current_is_dir():
+				if not file_name.begins_with("."):
+					paths_to_search.append(full_path + "/")
+			else:
+				var res_path = full_path.trim_suffix(".remap") if full_path.ends_with(".remap") else full_path
+				if res_path.ends_with(".tres"):
+					var cutscene_script = load(res_path) as CutsceneScript
+					if cutscene_script:
+						scripts.append(cutscene_script)
+						# print("Loaded cutscene: ", file_name)
+					else:
+						push_warning("Failed to load cutscene script: " + file_name)
+			file_name = dir.get_next()
+		
+		dir.list_dir_end()
 	
 	# 建立 ID → Script 對照表
 	for script in scripts:
 		_script_map[script.id] = script
 
-func _load_cutscenes(path: String) -> void:
-	var dir = DirAccess.open(path)
-	if not dir:
-		push_error("Failed to open directory: " + path)
-		return
-	
-	dir.list_dir_begin()
-	var file_name = dir.get_next()
-	
-	while file_name != "":
-		var full_path = path.path_join(file_name)
-		if dir.current_is_dir():
-			if not file_name.begins_with("."):
-				_load_cutscenes(full_path + "/")
-		elif file_name.ends_with(".tres"):
-			var cutscene_script = load(full_path) as CutsceneScript
-			if cutscene_script:
-				scripts.append(cutscene_script)
-				# print("Loaded cutscene: ", file_name)
-			else:
-				push_warning("Failed to load cutscene script: " + file_name)
-		file_name = dir.get_next()
-	
-	dir.list_dir_end()
-
 # =============================
-# 對外 API（你只需要這一行）
+# 對外 API
 # =============================
 func play(id: String) -> void:
 	print("playing cutscene " + id)

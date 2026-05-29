@@ -1043,6 +1043,41 @@ func end_battle():
 
 ---
 
+## Bug 18: Projectile Hit Registration Failure & Premature Tower Collision (FIXED)
+**Status:** ✅ FIXED
+
+### Symptoms
+- Projectiles (arrows/bullets) fired by units fail to register hits on other units in the lanes.
+- Projectiles disappear prematurely or hit towers before reaching targets.
+- The player character in the battle scene physically collides with spawned ally and enemy units, blocking their path.
+
+### Root Cause
+1. **Premature Tower Collision**: The enemy towers have a massive `RestrictionArea` (StaticBody2D) set to **Layer 3 ("Environment")**. Because projectiles' `collision_mask` was set to scan Layer 3, they triggered a collision immediately upon entering the restriction area, dealing damage to the parent Tower and freeing themselves before reaching any units.
+2. **Player Physical Collision**: The `Player` instance in `battle_scene.tscn` had a collision mask override set to `14` (Layer 2 + Layer 3 + Layer 4). Since spawned battle units were assigned to **Layer 2 ("Enemy")**, the player character physically collided with and blocked them.
+
+### Solution
+1. **Ignored Restriction Area**: Updated `projectile.gd`'s `_on_hit()` to check if the collided body belongs to a restriction area (via name or group `"tower_restrictions"`) and return early:
+   ```gdscript
+   func _on_hit(hit_obj: Node) -> void:
+       if hit_obj.is_in_group("tower_restrictions") or "RestrictionArea" in hit_obj.name:
+           return
+   ```
+2. **Native Unit Layer Allocation**: Set `collision_layer = 2` under the root node in `unit.tscn` so spawned units natively reside on **Layer 2 ("Enemy")**.
+3. **Optimized Player Mask**: Changed the Player's collision mask override in `battle_scene.tscn` from `14` to `12` (Layer 3 + Layer 4). This completely excludes Layer 2 ("Enemy"), allowing the player to walk freely through all lane units while still colliding with towers, restriction zones, and background boundaries.
+
+**Files Changed:**
+- `scripts/battle/unit/projectile.gd` - Added early return for restriction area collisions.
+- `scenes/battle/unit.tscn` - Statically set `collision_layer = 2` on the root unit node.
+- `scenes/battle/battle_scene.tscn` - Adjusted Player `collision_mask` to `12` to prevent unit collision.
+
+### Result
+✅ Projectiles ignore restriction areas completely, flying straight through to hit actual targets.
+✅ Projectiles hit enemy/ally units perfectly using the `collision_mask = 6` (scanning Layer 2).
+✅ The Player character is immune to projectiles (since they are on Layer 1) and never triggers projectile hits.
+✅ The Player character can walk freely through all lane units without any physical blocking.
+
+---
+
 ## Related Documentation
 - [`../README.md`](../README.md) - Project architecture and core systems
 - [`ARCHITECTURE.md`](ARCHITECTURE.md) - Game architecture and signal interaction graphs

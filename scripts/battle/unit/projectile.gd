@@ -61,23 +61,35 @@ func _physics_process(delta: float) -> void:
 	if _traveled >= max_travel_distance:
 		queue_free()
 func _on_hit(hit_obj: Node) -> void:
+	print("[Projectile] Collided with: ", hit_obj.name, " (Path: ", hit_obj.get_path(), ") Groups: ", hit_obj.get_groups())
+	
+	# Ignore restriction areas completely
+	if hit_obj.is_in_group("tower_restrictions") or "RestrictionArea" in hit_obj.name:
+		print("[Projectile] Collision ignored: is a tower restriction area.")
+		return
+
 	# Avoid hitting the shooter
 	var shooter = _shooter.get_ref() if _shooter else null
 	if hit_obj == shooter:
+		print("[Projectile] Collision ignored: hit the shooter.")
 		return
 
 	# Find the actual entity (Unit or Tower) - might be a collision shape
 	var target_entity = hit_obj
 	if not target_entity.has_method("take_damage"):
 		target_entity = hit_obj.get_parent()
+		print("[Projectile] hit_obj lacks take_damage, checking parent: ", target_entity.name if target_entity else "null")
 	
 	if not target_entity or not target_entity.has_method("take_damage"):
+		print("[Projectile] Collision ignored: no take_damage method found on target or its parent.")
 		return
 	
 	# Friendly fire check
 	if "team" in target_entity and target_entity.team == team:
+		print("[Projectile] Collision ignored: Friendly fire. Target team: ", target_entity.team, ", Projectile team: ", team)
 		return
 	
 	# Apply damage and destroy projectile
+	print("[Projectile] SUCCESS! Registering hit on: ", target_entity.name, " dealing damage: ", damage)
 	target_entity.take_damage(damage, shooter)
 	queue_free()

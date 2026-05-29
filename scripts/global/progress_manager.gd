@@ -1,11 +1,7 @@
 extends Node
 
 # --- 1. 常數與資源路徑 ---
-const PATH_STAGES = "res://resources/stages/"
-const PATH_MEMORIES = "res://resources/memories/"
 const PATH_SKILLS = "res://resources/skills/"
-const PATH_CUTSCENES = "res://resources/cutscenes/"
-const PATH_ORDERS = "res://resources/memories/orders/"
 const FALLBACK_ID = "default_failure_cutscene"
 
 # --- 2. 玩家數據與狀態 ---
@@ -48,9 +44,12 @@ func _ready() -> void:
 	active_stages.clear()
 	active_memories.clear()
 	
+	var mode_dir = "res://resources/mode_data/" + mode + "/"
+	var global_dir = "res://resources/mode_data/global/"
+	
 	# 初始化基礎資源 - 從單一合併檔案載入關卡
-	var stages_path = PATH_STAGES + mode + ".tres"
-	var stages_res = load(stages_path) as StageCollection
+	var stages_path = mode_dir + "stages.tres"
+	var stages_res = load(stages_path) as StageOrder
 	if stages_res:
 		active_stages.assign(stages_res.stages)
 		active_stages.sort_custom(func(a, b): return a.req_exp < b.req_exp)
@@ -62,11 +61,15 @@ func _ready() -> void:
 	for skill_id in active_skills:
 		if not player_skill_levels.has(skill_id):
 			player_skill_levels[skill_id] = 1
-	active_cutscenes = _load_resources(PATH_CUTSCENES, CutsceneScript)
 	
-	# 初始化記憶系統 (按遊戲模式資料夾分組載入)
-	var all_mems = _load_resources(PATH_MEMORIES + mode + "/", MemoryData)
-	var order_path = PATH_ORDERS + mode + "_memory_order.tres"
+	active_cutscenes = _load_resources(global_dir + "cutscenes/", CutsceneScript)
+	active_cutscenes.merge(_load_resources(mode_dir + "cutscenes/", CutsceneScript))
+	
+	# 初始化記憶系統 (全域與模式專屬)
+	var all_mems = _load_resources(global_dir + "memories/", MemoryData)
+	all_mems.merge(_load_resources(mode_dir + "memories/", MemoryData))
+	
+	var order_path = mode_dir + "memory_order.tres"
 	var order_res = load(order_path) as MemoryOrder
 	if order_res:
 		for mem_id in order_res.ordered_memory_ids:

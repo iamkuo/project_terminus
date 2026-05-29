@@ -1,7 +1,7 @@
-[gd_resource type="Resource" script_class="StageCollection" load_steps=19 format=3 uid="uid://dhbpnygumtmbu"]
+[gd_resource type="Resource" script_class="StageOrder" load_steps=19 format=3 uid="uid://dhbpnygumtmbu"]
 
 [ext_resource type="Script" uid="uid://bfg5kjb0bo8cr" path="res://resources/data_structures/stage_data.gd" id="1_stage_data"]
-[ext_resource type="Script" uid="uid://cc6q1015stjfs" path="res://resources/data_structures/stage_collection.gd" id="2_stage_collection"]
+[ext_resource type="Script" uid="uid://cc6q1015stjfs" path="res://resources/data_structures/stage_order.gd" id="2_stage_order"]
 
 [sub_resource type="Resource" id="Resource_startup"]
 script = ExtResource("1_stage_data")
@@ -124,5 +124,5 @@ cutscene_id = "ending_full"
 unlocks_memory_id = "mem_ending_full"
 
 [resource]
-script = ExtResource("2_stage_collection")
+script = ExtResource("2_stage_order")
 stages = Array[ExtResource("1_stage_data")]([SubResource("Resource_startup"), SubResource("Resource_early"), SubResource("Resource_mini_level"), SubResource("Resource_open_world"), SubResource("Resource_first_village"), SubResource("Resource_get_map"), SubResource("Resource_level_up_1"), SubResource("Resource_defeat_villages"), SubResource("Resource_level_up_2"), SubResource("Resource_goblin_capital"), SubResource("Resource_human_territory"), SubResource("Resource_level_up_3"), SubResource("Resource_attack_towns"), SubResource("Resource_level_up_4"), SubResource("Resource_human_capital"), SubResource("Resource_ending")])

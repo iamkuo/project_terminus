@@ -3,7 +3,7 @@ extends Control
 # Export dictionary for mapping mode prefixes to display names
 @export var mode_display_names: Dictionary = {
 	"full": "完整模式  (~40分鐘)",
-	"trial": "試玩模式  (~5分鐘)", 
+	"trial": "試玩模式  (~5分鐘)",
 	"test": "測試模式  (~1分鐘)"
 }
 
@@ -27,36 +27,26 @@ func _ready() -> void:
 	mode_button_template.hide()
 	
 	# Discover available game modes
-	_discover_game_modes()
-	
-	# Create mode buttons
-	_create_mode_buttons()
-
-func _discover_game_modes() -> void:
-	var orders_path = "res://resources/memories/orders/"
-	var dir = DirAccess.open(orders_path)
+	var mode_data_path = "res://resources/mode_data/"
+	var dir = DirAccess.open(mode_data_path)
 	
 	if not dir:
-		print("[GameModeSelector] Failed to open orders directory: ", orders_path)
+		print("[GameModeSelector] Failed to open mode_data directory: ", mode_data_path)
 		return
 	
 	dir.list_dir_begin()
-	var file_name = dir.get_next()
+	var folder_name = dir.get_next()
 	
-	while file_name != "":
-		# Strip .remap if it exists (necessary for exported Godot builds)
-		var actual_file_name = file_name.trim_suffix(".remap")
-		
-		if actual_file_name.ends_with("_memory_order.tres"):
-			# Extract mode prefix from filename
-			var mode_name = actual_file_name.replace("_memory_order.tres", "")
-			available_modes.append(mode_name)
-			print("[GameModeSelector] Found game mode: ", mode_name)
-		file_name = dir.get_next()
+	while folder_name != "":
+		var is_valid_folder = dir.current_is_dir() and not folder_name.begins_with(".") and folder_name != "global"
+		if is_valid_folder:
+			available_modes.append(folder_name)
+			print("[GameModeSelector] Found game mode: ", folder_name)
+		folder_name = dir.get_next()
 	
 	dir.list_dir_end()
-
-func _create_mode_buttons() -> void:
+	
+	# Create mode buttons
 	# Clear any existing buttons (except template)
 	for child in mode_buttons_container.get_children():
 		if child != mode_button_template:

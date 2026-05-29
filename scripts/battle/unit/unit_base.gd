@@ -143,10 +143,10 @@ func _perform_attack(target: Node) -> void:
 				else:
 					final_damage = int(final_damage * ConfigManager.enemy_multiplyer)
 				
-				target.take_damage(final_damage, self)
+				target.take_damage(final_damage, self )
 				damage_dealt.emit(final_damage, target)
 				if team == Team.PLAYER:
-					BattleManager.on_unit_damage_dealt(self, final_damage, target)
+					BattleManager.on_unit_damage_dealt(self , final_damage, target)
 		UnitStats.AttackType.PROJECTILE:
 			ProjectileManager.spawn_projectile(self , target)
 
@@ -166,7 +166,7 @@ func take_damage(amount: int, attacker: Node) -> void:
 	if current_health <= 0 and lifecycle_state == LifecycleState.ALIVE:
 		# Notify the attacker so it can emit enemy_killed and update BattleManager
 		if attacker and attacker.has_method("_on_killed_target"):
-			attacker._on_killed_target(self)
+			attacker._on_killed_target(self )
 		lifecycle_state = LifecycleState.DYING
 		_play_action("die")
 		await get_tree().create_timer(DEATH_ANIMATION_DELAY).timeout
@@ -179,7 +179,7 @@ func take_damage(amount: int, attacker: Node) -> void:
 ## Allows the attacker to emit enemy_killed and update BattleManager.
 func _on_killed_target(target: Node) -> void:
 	enemy_killed.emit(target)
-	BattleManager.on_unit_enemy_killed(self, target)
+	BattleManager.on_unit_enemy_killed(self , target)
 
 func set_behavior_pattern(pattern: BehaviorPattern):
 	behavior_pattern = pattern

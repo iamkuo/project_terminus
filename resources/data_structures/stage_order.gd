@@ -1,4 +1,4 @@
 extends Resource
-class_name StageCollection
+class_name StageOrder
 
 @export var stages: Array[StageData] = []

@@ -1,7 +1,7 @@
-[gd_resource type="Resource" script_class="StageCollection" load_steps=7 format=3 uid="uid://s7qyawfxlhcw"]
+[gd_resource type="Resource" script_class="StageOrder" load_steps=7 format=3 uid="uid://s7qyawfxlhcw"]
 
 [ext_resource type="Script" uid="uid://bfg5kjb0bo8cr" path="res://resources/data_structures/stage_data.gd" id="1_stage_data"]
-[ext_resource type="Script" uid="uid://cc6q1015stjfs" path="res://resources/data_structures/stage_collection.gd" id="2_stage_collection"]
+[ext_resource type="Script" uid="uid://cc6q1015stjfs" path="res://resources/data_structures/stage_order.gd" id="2_stage_order"]
 
 [sub_resource type="Resource" id="Resource_startup"]
 script = ExtResource("1_stage_data")
@@ -35,5 +35,5 @@ cutscene_id = "ending_trial"
 unlocks_memory_id = "mem_ending_trial"
 
 [resource]
-script = ExtResource("2_stage_collection")
+script = ExtResource("2_stage_order")
 stages = Array[ExtResource("1_stage_data")]([SubResource("Resource_startup"), SubResource("Resource_early"), SubResource("Resource_tutorial"), SubResource("Resource_end")])
