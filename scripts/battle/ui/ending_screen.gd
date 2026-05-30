@@ -16,6 +16,8 @@ enum Team { PLAYER = 0, OPPONENT = 1 }
 func _ready():
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	visible = false
+	if BattleManager and not BattleManager.battle_ended.is_connected(show_result):
+		BattleManager.battle_ended.connect(show_result)
 
 func show_result(winning_team: int):
 	print("[EndingScreen] show_result called with winning_team: ", winning_team)

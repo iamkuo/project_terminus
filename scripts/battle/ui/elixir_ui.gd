@@ -11,12 +11,17 @@ var accumulated_time: float = 0.0
 @onready var elixir_label: Label = $ElixirLabel
 
 func _ready():
+	current = float(ConfigManager.starting_elixir)
+	max_elixir += SkillManager.max_elixir_bonus
+	regen_per_sec *= SkillManager.elixir_recovery_mult
+	
 	# Initialize the progress bar
 	if elixir_bar:
 		elixir_bar.max_value = max_elixir
 		elixir_bar.value = current
 	# Connect to our own signal to update UI
 	elixir_changed.connect(_update_ui)
+	emit_signal("elixir_changed", int(floor(current)))
 
 func _process(delta):
 	# Accumulate time for precise 1-second intervals

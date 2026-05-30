@@ -2,6 +2,7 @@ extends Node
 
 signal game_state_changed(state: GameState)
 signal rewards_applied(exp_earned: int, crystals_earned: int)
+signal battle_ended(winning_team: int)
 
 enum Team {PLAYER = 0, OPPONENT = 1}
 enum GameState {IDLE = 0, READY = 1, GAME_OVER = 2}
@@ -118,10 +119,6 @@ func start_battle(player_node: Node2D = null, return_scene: String = "main_world
 	if not ConfigManager.background_scene:
 		ConfigManager.background_scene = _default_background
 	
-	# Connect to scene transition signal only when battle starts
-	if not SceneSwitcher.scene_transition_finished.is_connected(_on_scene_transition_finished):
-		SceneSwitcher.scene_transition_finished.connect(_on_scene_transition_finished)
-	
 	# Transition to battle scene
 	if _battle_scene:
 		var battle_scene_instance = _battle_scene.instantiate()
@@ -136,18 +133,14 @@ func start_battle(player_node: Node2D = null, return_scene: String = "main_world
 		SceneSwitcher.switch_to_scene_instance(battle_scene_instance, "battle_scene", "fade")
 	else:
 		SceneSwitcher.switch_scene("battle_scene", "fade")
+		
+	var finished_scene_name = await SceneSwitcher.scene_transition_finished
+	if finished_scene_name == "battle_scene":
+		_initialize_battle()
 
 # ============================================================================
 # BATTLE INITIALIZATION & CLEANUP
 # ============================================================================
-
-func _on_scene_transition_finished(scene_name: String) -> void:
-	match scene_name:
-		"battle_scene":
-			_initialize_battle()
-		_:
-			if game_state != GameState.IDLE:
-				_cleanup_battle()
 
 func _initialize_battle() -> void:
 	# Setup scene references
@@ -176,17 +169,6 @@ func _initialize_battle() -> void:
 	ai_cooldown_min = ConfigManager.ai_cooldown_min
 	ai_cooldown_max = ConfigManager.ai_cooldown_max
 	
-	# Apply elixir configuration with skill bonuses
-	if elixir:
-		elixir.current = ConfigManager.starting_elixir
-		# Apply max elixir bonus from skills
-		elixir.max_elixir = elixir.max_elixir + SkillManager.max_elixir_bonus
-		# Apply elixir recovery multiplier from skills
-		elixir.regen_per_sec = elixir.regen_per_sec * SkillManager.elixir_recovery_mult
-		# Update UI to reflect new max elixir
-		elixir.elixir_bar.max_value = elixir.max_elixir
-		elixir.emit_signal("elixir_changed", int(floor(elixir.current)))
-	
 	# Update background reference
 	if ConfigManager.background_scene and curr:
 		var bg_node = curr.get_node_or_null("Background")
@@ -213,10 +195,6 @@ func _cleanup_battle() -> void:
 	game_state = GameState.IDLE
 	game_state_changed.emit(game_state)
 	game_ended = false
-	
-	# Disconnect from scene transition signal when battle ends
-	if SceneSwitcher.scene_transition_finished.is_connected(_on_scene_transition_finished):
-		SceneSwitcher.scene_transition_finished.disconnect(_on_scene_transition_finished)
 	
 	if is_instance_valid(background_instance):
 		background_instance.queue_free()
@@ -365,17 +343,7 @@ func can_spawn(team: int, cost: int) -> bool:
 
 func show_ending_screen(winning_team: int) -> void:
 	game_ended = true
-	var root = SceneSwitcher.current_scene
-	
-	if not root:
-		return
-	
-	var ending_screen = root.get_node_or_null("UI/EndingScreen")
-	
-	if ending_screen and ending_screen.has_method("show_result"):
-		ending_screen.call("show_result", winning_team)
-	else:
-		get_tree().paused = true
+	battle_ended.emit(winning_team)
 
 func on_tower_destroyed(_tower: Node) -> void:
 	# This function is now just for potential logic expansion or specific tower death effects
@@ -398,9 +366,6 @@ func on_unit_enemy_killed(_source_unit: UnitBase, _target: Node) -> void:
 	if game_ended:
 		return
 	enemy_killed += 1
-
-func is_game_ended() -> bool:
-	return game_ended
 
 # ============================================================================
 # REWARDS & PROGRESSION
@@ -454,13 +419,9 @@ func end_battle(exp_earned: int = -1, crystals_earned: int = -1) -> void:
 func _return_to_main_world() -> void:
 	print("[BattleManager] Returning to world: ", _return_scene)
 	
-	# Connect to scene_added to restore position while the screen is still black
-	if not SceneSwitcher.scene_added.is_connected(_on_return_scene_added):
-		SceneSwitcher.scene_added.connect(_on_return_scene_added)
-	
 	SceneSwitcher.switch_scene(_return_scene, "fade")
-
-func _on_return_scene_added(scene_name: String) -> void:
+	
+	var scene_name = await SceneSwitcher.scene_added
 	if scene_name == _return_scene:
 		var root = SceneSwitcher.current_scene
 		
@@ -485,10 +446,10 @@ func _on_return_scene_added(scene_name: String) -> void:
 		# 3. Apply battle rewards AFTER scene transition and position restoration
 		# This prevents cutscenes from being blocked by the battle return transition
 		apply_battle_rewards()
-		
-		# Disconnect to avoid multiple calls
-		if SceneSwitcher.scene_added.is_connected(_on_return_scene_added):
-			SceneSwitcher.scene_added.disconnect(_on_return_scene_added)
+
+	# Wait for fade in to complete
+	await SceneSwitcher.scene_transition_finished
+	_cleanup_battle()
 
 func _get_player() -> Node:
 	# 1. Primary: Try to find player in the current active scene (most reliable)

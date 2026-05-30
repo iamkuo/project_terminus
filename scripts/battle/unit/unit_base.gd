@@ -56,7 +56,7 @@ func _physics_process(delta: float):
 		return
 	
 	# Check if game has ended - stop movement for non-player units
-	if BattleManager.is_game_ended():
+	if BattleManager.game_ended:
 		# Only allow player movement when game has ended
 		if team != Team.PLAYER:
 			velocity = Vector2.ZERO
