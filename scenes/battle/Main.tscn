@@ -207,7 +207,6 @@ position = Vector2(584, 328)
 [node name="UI" type="CanvasLayer" parent="."]
 
 [node name="SpawnUI" parent="UI" instance=ExtResource("6_nxtc6")]
-visible = false
 z_index = 0
 anchors_preset = -1
 anchor_left = 0.05
@@ -221,5 +220,3 @@ offset_right = 65.599976
 
 [node name="EndingScreen" parent="UI" instance=ExtResource("7_jlsqs")]
 visible = false
-
-[node name="Node2D" type="Node2D" parent="."]
