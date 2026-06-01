@@ -1,0 +1,79 @@
+[gd_resource type="Resource" script_class="CutsceneScript" format=3 uid="uid://be61lsjuhjnwl"]
+
+[ext_resource type="Script" uid="uid://c7505rjkk6rpg" path="res://resources/data_structures/cutscene_script.gd" id="1_y0frc"]
+[ext_resource type="Script" uid="uid://b2sxig6otw26p" path="res://resources/data_structures/cutscene_step.gd" id="2_idh0c"]
+[ext_resource type="Texture2D" uid="uid://4iyrct48jtkr" path="res://assets/images/objects/2-1.png" id="3_20uj5"]
+[ext_resource type="Texture2D" uid="uid://bcv504gehs3o6" path="res://assets/images/objects/2-2.png" id="4_2aapa"]
+[ext_resource type="Texture2D" uid="uid://bktcdom0yk7wl" path="res://assets/images/objects/2-3.png" id="5_xkaxt"]
+[ext_resource type="Texture2D" uid="uid://dwbx2i6ijhrr2" path="res://assets/images/objects/2-4.png" id="6_pqowr"]
+[ext_resource type="Texture2D" uid="uid://dvv70r0vgc2xc" path="res://assets/images/objects/2-5.png" id="7_mb5s8"]
+[ext_resource type="Texture2D" uid="uid://kugill2ke0j4" path="res://assets/images/objects/2-6.png" id="8_0hvib"]
+[ext_resource type="Texture2D" uid="uid://bcitg1kikb42j" path="res://assets/images/objects/2-7.png" id="9_7f34b"]
+[ext_resource type="Texture2D" uid="uid://bgen2w7kjb25s" path="res://assets/images/objects/2-8.png" id="10_e1rxq"]
+[ext_resource type="Texture2D" uid="uid://b3pxdee0rfr7y" path="res://assets/images/objects/2-9.png" id="11_jmekc"]
+
+[sub_resource type="Resource" id="Resource_c5hbs"]
+script = ExtResource("2_idh0c")
+type = 2
+text = "200年前"
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_orhen"]
+script = ExtResource("2_idh0c")
+type = 3
+texture = ExtResource("3_20uj5")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_6ges7"]
+script = ExtResource("2_idh0c")
+type = 3
+texture = ExtResource("4_2aapa")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_v3fma"]
+script = ExtResource("2_idh0c")
+type = 3
+texture = ExtResource("5_xkaxt")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_wqorb"]
+script = ExtResource("2_idh0c")
+type = 3
+texture = ExtResource("6_pqowr")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_vo2sv"]
+script = ExtResource("2_idh0c")
+type = 3
+texture = ExtResource("7_mb5s8")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_p42u0"]
+script = ExtResource("2_idh0c")
+type = 3
+texture = ExtResource("8_0hvib")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_5bxlj"]
+script = ExtResource("2_idh0c")
+type = 3
+texture = ExtResource("9_7f34b")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_lfvry"]
+script = ExtResource("2_idh0c")
+type = 3
+texture = ExtResource("10_e1rxq")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_ktem7"]
+script = ExtResource("2_idh0c")
+type = 3
+texture = ExtResource("11_jmekc")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[resource]
+script = ExtResource("1_y0frc")
+id = "second_cutscene"
+steps = Array[ExtResource("2_idh0c")]([SubResource("Resource_c5hbs"), SubResource("Resource_orhen"), SubResource("Resource_6ges7"), SubResource("Resource_v3fma"), SubResource("Resource_wqorb"), SubResource("Resource_vo2sv"), SubResource("Resource_p42u0"), SubResource("Resource_5bxlj"), SubResource("Resource_lfvry"), SubResource("Resource_ktem7")])
+metadata/_custom_type_script = "uid://c7505rjkk6rpg"

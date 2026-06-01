@@ -1,0 +1,66 @@
+[gd_resource type="Resource" script_class="CutsceneScript" format=3 uid="uid://7h718dp6226w"]
+
+[ext_resource type="Script" uid="uid://c7505rjkk6rpg" path="res://resources/data_structures/cutscene_script.gd" id="1_jjm0u"]
+[ext_resource type="Script" uid="uid://b2sxig6otw26p" path="res://resources/data_structures/cutscene_step.gd" id="2_6rlbh"]
+[ext_resource type="Texture2D" uid="uid://cdy1aqfj6v8j8" path="res://assets/images/objects/2.png" id="3_xxqk8"]
+[ext_resource type="Texture2D" uid="uid://cqh1w4rkgo1xl" path="res://assets/images/objects/3.png" id="4_b2ow3"]
+[ext_resource type="Texture2D" uid="uid://br2xobb2ukobi" path="res://assets/images/objects/white.png" id="5_kbmdy"]
+[ext_resource type="Texture2D" uid="uid://bsu4mnab5u63r" path="res://assets/images/objects/4.png" id="6_uwk0q"]
+
+[sub_resource type="Resource" id="Resource_a4xui"]
+script = ExtResource("2_6rlbh")
+speaker = "尼多"
+text = "終於走到這一步了..."
+texture = ExtResource("3_xxqk8")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_urxg2"]
+script = ExtResource("2_6rlbh")
+type = 3
+texture = ExtResource("3_xxqk8")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_ynur6"]
+script = ExtResource("2_6rlbh")
+type = 3
+texture = ExtResource("4_b2ow3")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_lx16x"]
+script = ExtResource("2_6rlbh")
+type = 3
+texture = ExtResource("5_kbmdy")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_s8qdm"]
+script = ExtResource("2_6rlbh")
+type = 3
+texture = ExtResource("6_uwk0q")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_qyyi6"]
+script = ExtResource("2_6rlbh")
+speaker = "弓箭手"
+text = "成功了呢，尼多大人。"
+texture = ExtResource("6_uwk0q")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_h5ae8"]
+script = ExtResource("2_6rlbh")
+speaker = "尼多"
+text = "接下來就剩下將哥布林族趕盡殺絕，終結戰爭。"
+texture = ExtResource("6_uwk0q")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_j5q3d"]
+script = ExtResource("2_6rlbh")
+speaker = "尼多"
+text = "去找出適格者，增強人族的戰力。"
+texture = ExtResource("6_uwk0q")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[resource]
+script = ExtResource("1_jjm0u")
+id = "first_cutscene"
+steps = Array[ExtResource("2_6rlbh")]([SubResource("Resource_a4xui"), SubResource("Resource_urxg2"), SubResource("Resource_ynur6"), SubResource("Resource_lx16x"), SubResource("Resource_s8qdm"), SubResource("Resource_qyyi6"), SubResource("Resource_h5ae8"), SubResource("Resource_j5q3d")])
+metadata/_custom_type_script = "uid://c7505rjkk6rpg"

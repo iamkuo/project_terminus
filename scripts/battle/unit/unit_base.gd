@@ -50,6 +50,10 @@ func _ready():
 	_play_action("idle")
 	# Emit health changed signal to initialize UI display
 	health_changed.emit(current_health, stats.health)
+	
+	if a_sprite:
+		a_sprite.visible = false
+
 
 func _physics_process(delta: float):
 	if lifecycle_state != LifecycleState.ALIVE:
@@ -126,11 +130,11 @@ func _perform_attack(target: Node) -> void:
 	var anim_name = stats.unit_id
 	
 	# Try to play specific animation for this unit type
-	a_sprite.visible = true
-	a_sprite.play(anim_name)
-	
-	if stats.unit_id != "ally_warrior":
-		a_sprite.visible = false
+	if stats.unit_id == "ally_warrior" and a_sprite:
+		if sprite:
+			a_sprite.flip_h = sprite.flip_h
+		a_sprite.visible = true
+		a_sprite.play(anim_name)
 	
 	_play_action("attack")
 
@@ -151,6 +155,9 @@ func _perform_attack(target: Node) -> void:
 			ProjectileManager.spawn_projectile(self , target)
 
 	await get_tree().create_timer(ATTACK_ANIMATION_DELAY).timeout
+
+	if stats.unit_id == "ally_warrior" and a_sprite:
+		a_sprite.visible = false
 
 	is_attacking = false
 

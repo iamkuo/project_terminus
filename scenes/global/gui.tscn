@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://dm625ksy5738w"]
+[gd_scene format=3 uid="uid://dm625ksy5738w"]
 
 [ext_resource type="Texture2D" uid="uid://cjmwhv0846in6" path="res://assets/images/ui/panels/04 Border 03.png" id="1_mfius"]
 [ext_resource type="Texture2D" uid="uid://cy6peac0akac7" path="res://icon.svg" id="2_7lpba"]
@@ -225,12 +225,12 @@ font_size = 48
 font = ExtResource("2_ynd5l")
 font_size = 48
 
-[node name="GUI" type="CanvasLayer"]
+[node name="GUI" type="CanvasLayer" unique_id=471161671]
 
-[node name="MessageUI" parent="." instance=ExtResource("3_ynd5l")]
+[node name="MessageUI" parent="." unique_id=358919001 instance=ExtResource("3_ynd5l")]
 z_index = -1
 
-[node name="FullscreenUI" type="Control" parent="."]
+[node name="FullscreenUI" type="Control" parent="." unique_id=1202979002]
 visible = false
 layout_mode = 3
 anchors_preset = 15
@@ -240,23 +240,11 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="FullscreenUI"]
+[node name="AnimationPlayer" type="AnimationPlayer" parent="FullscreenUI" unique_id=927822629]
 root_node = NodePath("../..")
-libraries = {
-&"": SubResource("AnimationLibrary_cpr0p")
-}
+libraries/ = SubResource("AnimationLibrary_cpr0p")
 
-[node name="TextureRect" type="TextureRect" parent="FullscreenUI"]
-visible = false
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-texture = ExtResource("2_7lpba")
-
-[node name="TransitionColorRect" type="ColorRect" parent="FullscreenUI"]
+[node name="TransitionColorRect" type="ColorRect" parent="FullscreenUI" unique_id=909452377]
 visible = false
 layout_mode = 1
 anchors_preset = 15
@@ -269,7 +257,17 @@ size_flags_vertical = 3
 mouse_filter = 2
 color = Color(0, 0, 0, 0)
 
-[node name="Label" type="Label" parent="FullscreenUI"]
+[node name="TextureRect" type="TextureRect" parent="FullscreenUI" unique_id=1713060897]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_7lpba")
+
+[node name="Label" type="Label" parent="FullscreenUI" unique_id=62151686]
 visible = false
 layout_mode = 1
 anchors_preset = 15
@@ -282,7 +280,7 @@ label_settings = SubResource("LabelSettings_mfius")
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Dialog" type="Panel" parent="."]
+[node name="Dialog" type="Panel" parent="." unique_id=211708265]
 visible = false
 anchors_preset = -1
 anchor_top = 0.5
@@ -292,7 +290,7 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxTexture_s0nni")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Dialog"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Dialog" unique_id=1642802567]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.05
@@ -302,13 +300,13 @@ anchor_bottom = 0.9
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Start" type="Label" parent="Dialog/HBoxContainer"]
+[node name="Start" type="Label" parent="Dialog/HBoxContainer" unique_id=280362117]
 layout_mode = 2
 size_flags_vertical = 0
 text = "▶"
 label_settings = SubResource("LabelSettings_aug50")
 
-[node name="Label" type="Label" parent="Dialog/HBoxContainer"]
+[node name="Label" type="Label" parent="Dialog/HBoxContainer" unique_id=145057466]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 1
@@ -317,12 +315,12 @@ label_settings = SubResource("LabelSettings_kiw3p")
 autowrap_mode = 3
 clip_text = true
 
-[node name="End" type="Label" parent="Dialog/HBoxContainer"]
+[node name="End" type="Label" parent="Dialog/HBoxContainer" unique_id=1921770488]
 layout_mode = 2
 size_flags_horizontal = 8
 size_flags_vertical = 8
 text = "▼"
 label_settings = SubResource("LabelSettings_400sg")
 
-[node name="Pause" parent="." instance=ExtResource("4_gnobw")]
+[node name="Pause" parent="." unique_id=631204680 instance=ExtResource("4_gnobw")]
 visible = false

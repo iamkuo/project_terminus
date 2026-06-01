@@ -1,8 +1,8 @@
-[gd_resource type="Resource" script_class="MemoryOrder" load_steps=2 format=3 uid="uid://b4tax71vicles"]
+[gd_resource type="Resource" script_class="MemoryOrder" format=3 uid="uid://b4tax71vicles"]
 
 [ext_resource type="Script" uid="uid://b6a0wprwmwr0o" path="res://resources/data_structures/memory_order.gd" id="1_script"]
 
 [resource]
 script = ExtResource("1_script")
-ordered_memory_ids = Array[String](["first_mem", "second_mem", "third_mem"])
+ordered_memory_ids = Array[String](["first_mem", "second_mem"])
 metadata/_custom_type_script = "uid://b6a0wprwmwr0o"

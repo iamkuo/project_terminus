@@ -157,20 +157,26 @@ func _skip_typing(tween: Tween, label: Label) -> void:
 			_change_state(gui_state.FULLSCREEN_FINISHED)
 
 func _show_dialog_logic(text: String, background_image: Texture2D = null) -> void:
-	# 1. Reset UI
-	_reset_all_ui()
-	# 2. Show Dialog Panel
+	# Kill any in-progress tween so it doesn't interfere with the new step
+	if dialog_tween and dialog_tween.is_running():
+		dialog_tween.kill()
+		dialog_tween = null
+	# 1. Show Dialog Panel
 	dialog.show()
 	print("dialog been shown")
 	
-	# 3. Handle Portrait / Background Image
+	# 2. Handle Portrait / Background Image
 	if background_image:
 		fullscreen_ui.show()
 		texture_rect.show()
 		texture_rect.texture = background_image
 		texture_rect.modulate.a = 0.75
+	else:
+		# Hide portrait if previous dialog had one but this one doesn't
+		texture_rect.hide()
+		texture_rect.texture = null
 		
-	# 4. Setup State & Tween
+	# 3. Setup State & Tween
 	_change_state(gui_state.DIALOG_READING)
 	text_label.visible_ratio = 0
 	text_label.text = text
@@ -181,7 +187,10 @@ func _show_dialog_logic(text: String, background_image: Texture2D = null) -> voi
 	dialog_tween.finished.connect(func(): _change_state(gui_state.DIALOG_FINISHED))
 
 func _show_fullscreen_logic(data: Dictionary) -> void:
-	_reset_all_ui()
+	# Kill any in-progress tween so it doesn't interfere with the new step
+	if fullscreen_tween and fullscreen_tween.is_running():
+		fullscreen_tween.kill()
+		fullscreen_tween = null
 	_change_state(gui_state.FULLSCREEN_READING)
 	fullscreen_ui.show()
 	transition_rect.show()
@@ -190,6 +199,7 @@ func _show_fullscreen_logic(data: Dictionary) -> void:
 	
 	match data.type:
 		"text":
+			texture_rect.hide()
 			fullscreen_label.visible_ratio = 0
 			fullscreen_label.text = data.text
 			fullscreen_label.show()
@@ -197,6 +207,7 @@ func _show_fullscreen_logic(data: Dictionary) -> void:
 			fullscreen_tween.tween_property(fullscreen_label, "visible_ratio", 1.0, len(data.text) * show_speed)
 			fullscreen_tween.finished.connect(func(): _change_state(gui_state.FULLSCREEN_FINISHED))
 		"image":
+			fullscreen_label.hide()
 			texture_rect.show()
 			texture_rect.texture = data.texture
 			_change_state(gui_state.FULLSCREEN_FINISHED)

@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="MemoryData" format=3 uid="uid://sxgo5hxhjks3"]
+
+[ext_resource type="Script" uid="uid://cfdxuil23cl5k" path="res://resources/data_structures/memory_data.gd" id="1_nunjs"]
+
+[resource]
+script = ExtResource("1_nunjs")
+id = "second_mem"
+name = "記憶2"
+cutscene_id = "second_cutscene"
+metadata/_custom_type_script = "uid://cfdxuil23cl5k"
