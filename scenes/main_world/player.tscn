@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3 uid="uid://dw83txjhdwws0"]
+[gd_scene format=3 uid="uid://dw83txjhdwws0"]
 
 [ext_resource type="Script" uid="uid://cduh6xpc3w6ah" path="res://scripts/main_world/player.gd" id="1_qhqgy"]
 [ext_resource type="Texture2D" uid="uid://b0oecl585bnd3" path="res://assets/images/characters/player.png" id="2_dqkch"]
@@ -141,22 +141,23 @@ animations = [{
 [sub_resource type="CircleShape2D" id="CircleShape2D_gee14"]
 radius = 8.0
 
-[node name="Player" type="CharacterBody2D" groups=["player"]]
+[node name="Player" type="CharacterBody2D" unique_id=2061624684 groups=["player"]]
 y_sort_enabled = true
 rotation = -0.0145766
 collision_mask = 14
 script = ExtResource("1_qhqgy")
 speed = 100.0
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1844004146]
+y_sort_enabled = true
 position = Vector2(1, -12)
 sprite_frames = SubResource("SpriteFrames_bhx41")
 animation = &"walk_down"
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=2051358510]
 position = Vector2(0, -8)
 shape = SubResource("CircleShape2D_gee14")
 
-[node name="Camera2D" type="Camera2D" parent="."]
+[node name="Camera2D" type="Camera2D" parent="." unique_id=32907192]
 zoom = Vector2(2, 2)
 limit_enabled = false

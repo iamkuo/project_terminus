@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://dw1mwbbepdoi1"]
+[gd_scene format=3 uid="uid://dw1mwbbepdoi1"]
 
 [ext_resource type="PackedScene" uid="uid://bm5dlf6je4yve" path="res://scenes/main_world/main_world_goblin_map.tscn" id="1_x1dih"]
 [ext_resource type="Script" uid="uid://bvh8x7n4k2nap" path="res://resources/data_structures/transition_config.gd" id="2_vjrnk"]
@@ -19,25 +19,26 @@ zone_marker = "TransitionZoneLower"
 target_scene = "res://scenes/main_world/main_world_goblin_map.tscn"
 spawn_marker = "SpawnPointUpper"
 
-[node name="MainWorld" type="Node2D"]
+[node name="MainWorld" type="Node2D" unique_id=362556931]
 y_sort_enabled = true
 script = ExtResource("15_trans_mgr")
 transitions = Array[ExtResource("2_vjrnk")]([SubResource("Resource_vjrnk"), SubResource("Resource_4lrb5")])
 
-[node name="MapContainer" type="Node2D" parent="."]
+[node name="MapContainer" type="Node2D" parent="." unique_id=1656133681]
+y_sort_enabled = true
 
-[node name="GoblinMap" parent="MapContainer" instance=ExtResource("1_x1dih")]
+[node name="GoblinMap" parent="MapContainer" unique_id=851927233 instance=ExtResource("1_x1dih")]
 
-[node name="Player" parent="." instance=ExtResource("7_so2xy")]
+[node name="Player" parent="." unique_id=1710806527 instance=ExtResource("7_so2xy")]
 unique_name_in_owner = true
 position = Vector2(2352, 3928)
 rotation = 0.0
 speed = 1000.0
 
-[node name="GUILayer" type="CanvasLayer" parent="."]
+[node name="GUILayer" type="CanvasLayer" parent="." unique_id=451286200]
 
-[node name="HUD" parent="GUILayer" instance=ExtResource("14_urbfd")]
+[node name="HUD" parent="GUILayer" unique_id=1495301564 instance=ExtResource("14_urbfd")]
 visible = false
 
-[node name="Backpack" parent="GUILayer" instance=ExtResource("4_avgj4")]
+[node name="Backpack" parent="GUILayer" unique_id=188971982 instance=ExtResource("4_avgj4")]
 visible = false

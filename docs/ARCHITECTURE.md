@@ -201,7 +201,7 @@ graph TD
 - **Key Methods**:
   - `load_config(config: Dictionary)` - Load configuration from TP Point
   - `clear()` - Clear all configuration
-  - `load_unit_stats(unit_stats_path: String)` - Load unit stats into registry
+  - `load_enemy_unit_stats(unit_stats_path: String)` - Load unit stats into registry
 
 #### **TowerManager** (`scripts/battle/tower/tower_manager.gd`)
 - **Role**: Tracks tower health and game end conditions

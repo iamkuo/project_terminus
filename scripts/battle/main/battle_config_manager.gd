@@ -101,8 +101,8 @@ func clear() -> void:
 	
 	unit_stats_registry.clear()
 
-## Load unit stats into registry
-func load_unit_stats(unit_stats_path: String = "res://resources/unit_stats/") -> void:
+## Load enemy unit stats into registry for AI spawning
+func load_enemy_unit_stats(unit_stats_path: String = "res://resources/unit_stats/") -> void:
 	unit_stats_registry.clear()
 	var dir = DirAccess.open(unit_stats_path)
 	
@@ -121,5 +121,7 @@ func load_unit_stats(unit_stats_path: String = "res://resources/unit_stats/") ->
 		if not resource or not "cost" in resource:
 			continue
 		
-		var stats_id = file_name.replace(".tres", "").replace(".res", "")
-		unit_stats_registry[stats_id] = resource
+		# Only register enemy-team units for AI spawning
+		if "team" in resource and resource.team != UnitStats.Team.PLAYER:
+			var stats_id = file_name.replace(".tres", "").replace(".res", "")
+			unit_stats_registry[stats_id] = resource

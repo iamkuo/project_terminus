@@ -20,7 +20,10 @@ var is_destroyed: bool = false
 
 func _ready():
 	if team == Team.PLAYER:
-		_restriction_area.get_node("CollisionShape2D").set_deferred("disabled", true)
+		if _restriction_area:
+			var shape = _restriction_area.get_node_or_null("CollisionShape2D")
+			if shape:
+				shape.set_deferred("disabled", true)
 		max_health = int(max_health * SkillManager.tower_health_mult)
 		
 	

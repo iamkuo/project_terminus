@@ -118,6 +118,8 @@ func queue_fullscreen(item_data: Dictionary) -> void:
 
 func _change_state(next_state: int) -> void:
 	current_state = next_state as gui_state
+	if text_end:
+		text_end.visible = (current_state == gui_state.DIALOG_FINISHED)
 
 func _reset_all_ui() -> void:
 	if dialog_tween and dialog_tween.is_running():
@@ -177,8 +179,6 @@ func _show_dialog_logic(text: String, background_image: Texture2D = null) -> voi
 	_change_state(gui_state.DIALOG_READING)
 	text_label.visible_ratio = 0
 	text_label.text = text
-	text_end.show()
-	text_end.visible = true
 	dialog_tween = create_tween()
 	dialog_tween.tween_property(text_label, "visible_ratio", 1.0, len(text) * show_speed)
 	dialog_tween.finished.connect(func(): _change_state(gui_state.DIALOG_FINISHED))

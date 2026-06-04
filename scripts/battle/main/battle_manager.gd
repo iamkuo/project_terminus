@@ -112,8 +112,8 @@ func start_battle(player_node: Node2D = null, return_scene: String = "main_world
 	ConfigManager.allies_multiplyer = allies_multiplyer
 	
 	# Load enemy stats via config manager
-	ConfigManager.load_unit_stats(UNIT_STATS_PATH)
-	unit_stats_registry = ConfigManager.unit_stats_registry
+	ConfigManager.load_enemy_unit_stats(UNIT_STATS_PATH)
+	unit_stats_registry = ConfigManager.unit_stats_registry.duplicate()
 	
 	# Set default background if none provided
 	if not ConfigManager.background_scene:

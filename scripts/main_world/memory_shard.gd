@@ -4,6 +4,8 @@ extends Node2D
 
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D # Corrected node reference
 
+var _collected := false # Guard against duplicate collection before queue_free()
+
 func _ready() -> void:
 	# Remove this shard if its memory ID is not registered in the current mode.
 	# This handles mismatches between scene placements and the active memory_order.
@@ -17,6 +19,9 @@ func _ready() -> void:
 		queue_free()
 
 func _on_area_2d_body_entered(_body: Node2D) -> void:
+	if _collected: return
+	_collected = true
+	
 	ProgressManager.collect_memory(memory_resource.id)
 	
 	if memory_resource.cutscene_id != "":
