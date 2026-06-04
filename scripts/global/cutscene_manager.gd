@@ -100,13 +100,16 @@ func _play_impl(id: String) -> void:
 		# Run each step based on type
 		match step.type:
 			CutsceneStep.StepType.DIALOG:
-				GuiManager.queue_dialog("%s: %s" % [step.speaker, step.text], step.texture)
+				GuiManager.play_dialog("%s: %s" % [step.speaker, step.text], step.texture)
 				await GuiManager.dialog_finished # 等待 GUI 宣告播放完畢
 
 			CutsceneStep.StepType.FULLSCREEN_TEXT:
-				GuiManager.queue_fullscreen({"type": "text", "text": step.text})
+				GuiManager.play_fullscreen({"type": "text", "text": step.text})
 				await GuiManager.fullscreen_finished
 
 			CutsceneStep.StepType.FULLSCREEN_IMAGE:
-				GuiManager.queue_fullscreen({"type": "image", "texture": step.texture})
+				GuiManager.play_fullscreen({"type": "image", "texture": step.texture})
 				await GuiManager.fullscreen_finished
+
+	# All steps done — Controller is responsible for closing the View
+	GuiManager.hide_gui()

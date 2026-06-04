@@ -1,9 +1,10 @@
-[gd_scene load_steps=63 format=3 uid="uid://bs71l34xeqxed"]
+[gd_scene format=3 uid="uid://bs71l34xeqxed"]
 
 [ext_resource type="Script" uid="uid://coyj5pgpo364x" path="res://scripts/battle/unit/unit.gd" id="1_k673f"]
 [ext_resource type="Texture2D" uid="uid://bg8ovc14n13vq" path="res://assets/images/characters/goblin_summon.png" id="2_k673f"]
 [ext_resource type="Script" uid="uid://c0ncr1jav0yc7" path="res://scripts/battle/ui/unit_selection_circle.gd" id="3_selection_circle"]
 [ext_resource type="Texture2D" uid="uid://bnexb4v2r3ceg" path="res://assets/images/objects/rickroll.png" id="3_wvcvb"]
+[ext_resource type="Texture2D" uid="uid://clj6jpscrcwcl" path="res://assets/images/characters/human_wizard.png" id="4_5edy5"]
 [ext_resource type="PackedScene" uid="uid://bdw7ku2f5uedd" path="res://scenes/battle/ui/properties_ui.tscn" id="4_properties_ui"]
 [ext_resource type="FontFile" uid="uid://dxc2pi1bwr1uu" path="res://assets/fonts/Cubic_11.ttf" id="5_ruro2"]
 [ext_resource type="Script" uid="uid://du72fit35e2ys" path="res://scripts/battle/label.gd" id="6_e8hdl"]
@@ -171,6 +172,62 @@ region = Rect2(48, 27, 24, 27)
 atlas = ExtResource("2_k673f")
 region = Rect2(72, 27, 24, 27)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_ppcdi"]
+atlas = ExtResource("4_5edy5")
+region = Rect2(192, 0, 24, 26)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pn6sd"]
+atlas = ExtResource("4_5edy5")
+region = Rect2(216, 0, 24, 26)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8g65u"]
+atlas = ExtResource("4_5edy5")
+region = Rect2(240, 0, 24, 26)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_scdyu"]
+atlas = ExtResource("4_5edy5")
+region = Rect2(264, 0, 24, 26)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_aoe5o"]
+atlas = ExtResource("4_5edy5")
+region = Rect2(192, 26, 24, 26)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cuoqv"]
+atlas = ExtResource("4_5edy5")
+region = Rect2(216, 26, 24, 26)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_uddmq"]
+atlas = ExtResource("4_5edy5")
+region = Rect2(0, 0, 24, 26)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ohel0"]
+atlas = ExtResource("4_5edy5")
+region = Rect2(24, 0, 24, 26)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7434m"]
+atlas = ExtResource("4_5edy5")
+region = Rect2(48, 0, 24, 26)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_08vv5"]
+atlas = ExtResource("4_5edy5")
+region = Rect2(72, 0, 24, 26)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_655pc"]
+atlas = ExtResource("4_5edy5")
+region = Rect2(0, 26, 24, 26)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_r4it8"]
+atlas = ExtResource("4_5edy5")
+region = Rect2(24, 26, 24, 26)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mv7is"]
+atlas = ExtResource("4_5edy5")
+region = Rect2(48, 26, 24, 26)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yj2pm"]
+atlas = ExtResource("4_5edy5")
+region = Rect2(72, 26, 24, 26)
+
 [sub_resource type="SpriteFrames" id="SpriteFrames_warrior_player"]
 animations = [{
 "frames": [{
@@ -337,15 +394,67 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
+"texture": SubResource("AtlasTexture_ppcdi")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pn6sd")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8g65u")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_scdyu")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_aoe5o")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_cuoqv")
+}],
+"loop": false,
+"name": &"enemy_mage_die",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_uddmq")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ohel0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7434m")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_08vv5")
+}],
+"loop": true,
+"name": &"enemy_mage_idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_655pc")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_r4it8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mv7is")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_yj2pm")
+}],
+"loop": true,
+"name": &"enemy_mage_walk",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
 "texture": ExtResource("3_wvcvb")
 }],
 "loop": true,
 "name": &"fallback",
-"speed": 5.0
-}, {
-"frames": [],
-"loop": true,
-"name": &"init",
 "speed": 5.0
 }]
 
@@ -434,29 +543,29 @@ animations = [{
 "speed": 5.0
 }]
 
-[node name="unit" type="CharacterBody2D"]
+[node name="unit" type="CharacterBody2D" unique_id=1494614451]
 scale = Vector2(1.5, 1.5)
 collision_layer = 2
 collision_mask = 10
 script = ExtResource("1_k673f")
 stats = SubResource("UnitStats_warrior")
 
-[node name="BodyCollision" type="CollisionShape2D" parent="."]
+[node name="BodyCollision" type="CollisionShape2D" parent="." unique_id=506510294]
 shape = SubResource("CircleShape2D_r0du0")
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=2110425086]
 position = Vector2(-4.7683716e-07, 4.7683716e-07)
 scale = Vector2(1.5, 1.5)
 sprite_frames = SubResource("SpriteFrames_warrior_player")
-animation = &"ally_mage_die"
+animation = &"fallback"
 
-[node name="SelectionCircle" type="Node2D" parent="."]
+[node name="SelectionCircle" type="Node2D" parent="." unique_id=23988128]
 script = ExtResource("3_selection_circle")
 
-[node name="PropertiesUI" parent="." instance=ExtResource("4_properties_ui")]
+[node name="PropertiesUI" parent="." unique_id=99875031 instance=ExtResource("4_properties_ui")]
 visible = false
 
-[node name="Control" type="Control" parent="."]
+[node name="Control" type="Control" parent="." unique_id=1759779473]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -467,7 +576,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("6_e8hdl")
 
-[node name="ProgressBar" type="ProgressBar" parent="Control"]
+[node name="ProgressBar" type="ProgressBar" parent="Control" unique_id=477001526]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -482,7 +591,7 @@ theme = SubResource("Theme_oee7j")
 value = 100.0
 show_percentage = false
 
-[node name="Label" type="Label" parent="Control"]
+[node name="Label" type="Label" parent="Control" unique_id=1615823775]
 layout_mode = 0
 offset_left = -13.333334
 offset_top = -30.0
@@ -491,7 +600,7 @@ offset_bottom = -7.0
 label_settings = SubResource("LabelSettings_ruro2")
 horizontal_alignment = 1
 
-[node name="AnimatedSpriteattack" type="AnimatedSprite2D" parent="."]
+[node name="AnimatedSpriteattack" type="AnimatedSprite2D" parent="." unique_id=1476582827]
 scale = Vector2(1.5, 1.5)
 sprite_frames = SubResource("SpriteFrames_ppcdi")
 animation = &"ally_warrior"

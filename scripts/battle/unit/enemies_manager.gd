@@ -19,12 +19,21 @@ func spawn_unit(stats: UnitStats, pos: Vector2, lane: int) -> void:
 	unit.global_position = pos
 	unit.team = opponent_team
 	unit.lane = lane
+	# NOTE: stats must be set BEFORE add_child so _ready() sees the correct unit_id.
+	# The scene has a blank embedded UnitStats sub-resource; assigning here before
+	# add_child ensures _ready()/_play_action() uses the real unit_id (e.g. "enemy_mage").
 	unit.stats = stats.duplicate()
 	
 	add_child(unit)
 	
 	unit.add_to_group("units")
 	unit.add_to_group("enemy_units")
+	
+	# Re-play idle after add_child in case the scene's embedded blank stats
+	# caused _ready() to fail the animation lookup. This is a safe no-op if
+	# _ready() already succeeded.
+	if unit.has_method("_play_action"):
+		unit._play_action("idle")
 	
 	var sprite = unit.get_node_or_null("AnimatedSprite2D")
 	if sprite:

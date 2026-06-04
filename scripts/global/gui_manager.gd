@@ -20,7 +20,6 @@ var transition_rect: ColorRect
 # =============================
 # State Variables
 # =============================
-var main_queue: Array[Dictionary] = []
 var dialog_tween: Tween = null
 var fullscreen_tween: Tween = null
 var is_transitioning: bool = false
@@ -60,24 +59,16 @@ func _ready() -> void:
 	_change_state(gui_state.READY)
 	
 func _process(_delta: float) -> void:
-	# Process unified state machine
+	# Pure input handling — no queue polling
 	match current_state:
-		gui_state.READY:
-			if not main_queue.is_empty():
-				var cmd = main_queue.pop_front()
-				match cmd.type:
-					"dialog":
-						_show_dialog_logic(cmd.content, cmd.get("background_image"))
-					"fullscreen":
-						_show_fullscreen_logic(cmd.content)
-		
 		gui_state.DIALOG_READING:
 			if Input.is_action_just_pressed("ui_skip"):
 				_skip_typing(dialog_tween, text_label)
 		
 		gui_state.DIALOG_FINISHED:
 			if Input.is_action_just_pressed("ui_skip"):
-				_advance_queue("dialog")
+				_change_state(gui_state.READY)
+				emit_signal("dialog_finished")
 
 		gui_state.FULLSCREEN_READING:
 			if Input.is_action_just_pressed("ui_skip"):
@@ -85,46 +76,49 @@ func _process(_delta: float) -> void:
 		
 		gui_state.FULLSCREEN_FINISHED:
 			if Input.is_action_just_pressed("ui_skip"):
-				_advance_queue("fullscreen")
+				_change_state(gui_state.READY)
+				emit_signal("fullscreen_finished")
 
 # =============================
-# Public API
+# Public API (View layer)
 # =============================
 
+## Show a dialog line with an optional fullscreen background image.
+## The background image is fully opaque; the dialog panel becomes semi-transparent over it.
+func play_dialog(text: String, background_image: Texture2D = null) -> void:
+	_show_dialog_logic(text, background_image)
+
+## Show fullscreen content (text or image).
+func play_fullscreen(item_data: Dictionary) -> void:
+	_show_fullscreen_logic(item_data)
+
+## Hide all GUI elements and reset state. Call this when the cutscene ends.
+func hide_gui() -> void:
+	_reset_all_ui()
+	_change_state(gui_state.READY)
+
+# Legacy wrappers kept for non-cutscene callers (battle messages, etc.)
 func queue_text(text: String) -> void:
-	main_queue.push_back({"type": "dialog", "content": text})
-	
+	play_dialog(text)
+
 func queue_dialog(text: String, background_image: Texture2D = null) -> void:
-	main_queue.push_back({"type": "dialog", "content": text, "background_image": background_image})
-	
+	play_dialog(text, background_image)
+
 func queue_texts(texts: Array[String]) -> void:
+	# Non-cutscene callers: play first immediately; remaining must be chained by caller
 	for t in texts:
-		main_queue.push_back({"type": "dialog", "content": t})
+		play_dialog(t)
 
 func queue_fullscreen(item_data: Dictionary) -> void:
-		main_queue.push_back({"type": "fullscreen", "content": item_data})
+	play_fullscreen(item_data)
 
 # =============================
 # Helper Functions
 # =============================
 
 func _change_state(next_state: int) -> void:
-	# var previous_state = current_state
 	current_state = next_state as gui_state
-	# print("GUI state changed from %s to %s" % [gui_state.keys()[previous_state],
-	# gui_state.keys()[current_state]])ss
-	
-func _advance_queue(finished_type: String) -> void:
-	# 決定是否要隱藏當前 UI：
-	# 如果下一個指令跟現在類型不同，或是隊列空了，才隱藏
-	if main_queue.is_empty() or main_queue[0].type != finished_type: _reset_all_ui()
 
-	# 發送訊號讓 CutsceneManager 知道這一步跑完了
-	if finished_type == "dialog": emit_signal("dialog_finished")
-	else: emit_signal("fullscreen_finished")
-	
-	_change_state(gui_state.READY)
-	
 func _reset_all_ui() -> void:
 	if dialog_tween and dialog_tween.is_running():
 		dialog_tween.kill()
@@ -134,6 +128,7 @@ func _reset_all_ui() -> void:
 		fullscreen_tween = null
 	
 	dialog.hide()
+	dialog.modulate.a = 1.0
 	text_end.hide()
 	fullscreen_ui.hide()
 	fullscreen_label.hide()
@@ -150,7 +145,7 @@ func _skip_typing(tween: Tween, label: Label) -> void:
 	if tween and tween.is_running():
 		tween.kill()
 		label.visible_ratio = 1.0
-		# 根據目前狀態手動觸發轉場
+		# Manually advance state on skip
 		if current_state == gui_state.DIALOG_READING:
 			_change_state(gui_state.DIALOG_FINISHED)
 		elif current_state == gui_state.FULLSCREEN_READING:
@@ -163,18 +158,20 @@ func _show_dialog_logic(text: String, background_image: Texture2D = null) -> voi
 		dialog_tween = null
 	# 1. Show Dialog Panel
 	dialog.show()
-	print("dialog been shown")
 	
 	# 2. Handle Portrait / Background Image
 	if background_image:
 		fullscreen_ui.show()
 		texture_rect.show()
 		texture_rect.texture = background_image
-		texture_rect.modulate.a = 0.75
+		texture_rect.modulate.a = 1.0  # Image fully opaque
+		dialog.modulate.a = 0.5        # Dialog box semi-transparent over the image
 	else:
 		# Hide portrait if previous dialog had one but this one doesn't
+		fullscreen_ui.hide()
 		texture_rect.hide()
 		texture_rect.texture = null
+		dialog.modulate.a = 1.0        # Dialog fully opaque when no background image
 		
 	# 3. Setup State & Tween
 	_change_state(gui_state.DIALOG_READING)
@@ -191,14 +188,16 @@ func _show_fullscreen_logic(data: Dictionary) -> void:
 	if fullscreen_tween and fullscreen_tween.is_running():
 		fullscreen_tween.kill()
 		fullscreen_tween = null
+	# Hide dialog in case a dialog step preceded this fullscreen step
+	dialog.hide()
 	_change_state(gui_state.FULLSCREEN_READING)
 	fullscreen_ui.show()
-	transition_rect.show()
-	# Set semi‑transparent black overlay for fullscreen text
-	transition_rect.color = Color(0, 0, 0, 1)
 	
 	match data.type:
 		"text":
+			# Show semi-transparent black overlay only for text (no background image)
+			transition_rect.show()
+			transition_rect.color = Color(0, 0, 0, 1)
 			texture_rect.hide()
 			fullscreen_label.visible_ratio = 0
 			fullscreen_label.text = data.text
@@ -207,6 +206,9 @@ func _show_fullscreen_logic(data: Dictionary) -> void:
 			fullscreen_tween.tween_property(fullscreen_label, "visible_ratio", 1.0, len(data.text) * show_speed)
 			fullscreen_tween.finished.connect(func(): _change_state(gui_state.FULLSCREEN_FINISHED))
 		"image":
+			# No dim overlay when displaying a fullscreen image
+			transition_rect.hide()
+			transition_rect.color = Color(0, 0, 0, 0)
 			fullscreen_label.hide()
 			texture_rect.show()
 			texture_rect.texture = data.texture

@@ -5,12 +5,22 @@ extends Control
 @onready var lvl_label: Label = $MarginContainer/HBoxContainer/lvl
 @onready var hud_button: Button = $MarginContainer/HBoxContainer/Button
 
+var fps_label: Label
+
 func _ready() -> void:
 	hud_button.pressed.connect(_on_hud_button_pressed)
 	_refresh_hud_labels()
 	self.visible = true
 	ProgressManager.data_updated.connect(_refresh_hud_labels)
 	BattleManager.rewards_applied.connect(_show_reward_toast)
+	
+	# Create FPS label dynamically
+	fps_label = Label.new()
+	fps_label.name = "FPSLabel"
+	fps_label.position = Vector2(8, 8)
+	fps_label.add_theme_color_override("font_color", Color(1, 1, 0))
+	fps_label.add_theme_font_size_override("font_size", 14)
+	add_child(fps_label)
 	
 	# Set initial cheat button visibility
 	_update_cheat_button_visibility()
@@ -40,6 +50,10 @@ func _show_reward_toast(exp_earned: int, crystals_earned: int) -> void:
 func _process(_delta: float) -> void:
 	# Check cheat mode visibility continuously
 	_update_cheat_button_visibility()
+	# Update FPS display
+	if ConfigManager.cheat_mode:
+		fps_label.text = "FPS: %d" % Engine.get_frames_per_second()
+	fps_label.visible = ConfigManager.cheat_mode
 
 func _update_cheat_button_visibility() -> void:
 	hud_button.visible = ConfigManager.cheat_mode
