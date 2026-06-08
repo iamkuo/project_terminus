@@ -32,6 +32,10 @@ func _deferred_switch_scene(scene_name: String, transition_type: String):
 	current_scene.queue_free()
 	
 	var direct_path = "res://scenes/%s.tscn" % scene_name
+	if not ResourceLoader.exists(direct_path):
+		var binary_path = "res://scenes/%s.scn" % scene_name
+		if ResourceLoader.exists(binary_path):
+			direct_path = binary_path
 	var new_scene
 	if ResourceLoader.exists(direct_path):
 		new_scene = load(direct_path)
@@ -86,7 +90,8 @@ func _deferred_switch_to_instance(scene_instance: Node, scene_name: String, tran
 	scene_transition_finished.emit(scene_name)
 
 func _find_scene_path(path: String, scene_name: String) -> String:
-	var target_file = scene_name + ".tscn"
+	var target_tscn = scene_name + ".tscn"
+	var target_scn = scene_name + ".scn"
 	var dir = DirAccess.open(path)
 	if dir:
 		dir.list_dir_begin()
@@ -98,7 +103,8 @@ func _find_scene_path(path: String, scene_name: String) -> String:
 					if found_path != "":
 						return found_path
 			else:
-				if file_name.trim_suffix(".remap") == target_file:
-					return path + "/" + target_file
+				var clean_name = file_name.trim_suffix(".remap")
+				if clean_name == target_tscn or clean_name == target_scn:
+					return path + "/" + clean_name
 			file_name = dir.get_next()
 	return ""

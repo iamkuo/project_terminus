@@ -29,6 +29,14 @@ var crystals_per_kill: int = 2
 var enemy_multiplyer: float = 1.0
 var allies_multiplyer: float = 1.0
 
+# TP Point — written by tp_point._build_config(), read by BattleManager
+var tp_point_id: String = ""
+var tp_point_position: Vector2 = Vector2.ZERO
+var tp_point_loss_return_offset: Vector2 = Vector2.ZERO
+
+# Memory unlock — set per tp_point, consumed by BattleManager post-battle
+var unlock_memory_on_win: String = ""
+
 var unit_stats_registry: Dictionary = {}
 
 # Cheat mode toggle - affects HUD cheat button visibility
@@ -73,6 +81,12 @@ func load_config(config: Dictionary) -> void:
 	crystals_per_kill = config.get("crystals_per_kill", 2)
 	enemy_multiplyer = config.get("enemy_multiplyer", 1.0)
 	allies_multiplyer = config.get("allies_multiplyer", 1.0)
+
+	tp_point_id = config.get("tp_point_id", "")
+	tp_point_position = config.get("tp_point_position", Vector2.ZERO)
+	tp_point_loss_return_offset = config.get("tp_point_loss_return_offset", Vector2.ZERO)
+
+	unlock_memory_on_win = config.get("unlock_memory_on_win", "")
 	
 	config_loaded.emit()
 
@@ -98,7 +112,13 @@ func clear() -> void:
 	crystals_per_kill = 2
 	enemy_multiplyer = 1.0
 	allies_multiplyer = 1.0
-	
+
+	tp_point_id = ""
+	tp_point_position = Vector2.ZERO
+	tp_point_loss_return_offset = Vector2.ZERO
+
+	unlock_memory_on_win = ""
+
 	unit_stats_registry.clear()
 
 ## Load enemy unit stats into registry for AI spawning

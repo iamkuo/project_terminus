@@ -57,6 +57,14 @@ var _saved_map_path: String = ""
 var unit_stats_registry: Dictionary = {}
 var _triggered_tp_points: Array[String] = []
 
+# TP Point data — captured from ConfigManager at battle start
+var _tp_point_id: String = ""
+var _tp_point_position: Vector2 = Vector2.ZERO
+var _tp_point_loss_return_offset: Vector2 = Vector2.ZERO
+
+# Outcome — stored in show_ending_screen() so _return_to_main_world() can read it
+var _winning_team: int = Team.PLAYER
+
 # Scene references
 var curr: Node
 var spawn_points: Node2D
@@ -118,6 +126,11 @@ func start_battle(player_node: Node2D = null, return_scene: String = "main_world
 	# Set default background if none provided
 	if not ConfigManager.background_scene:
 		ConfigManager.background_scene = _default_background
+
+	# Capture tp_point metadata before transitioning (ConfigManager is cleared after battle)
+	_tp_point_id = ConfigManager.tp_point_id
+	_tp_point_position = ConfigManager.tp_point_position
+	_tp_point_loss_return_offset = ConfigManager.tp_point_loss_return_offset
 	
 	# Transition to battle scene
 	if _battle_scene:
@@ -342,6 +355,7 @@ func can_spawn(team: int, cost: int) -> bool:
 # ============================================================================
 
 func show_ending_screen(winning_team: int) -> void:
+	_winning_team = winning_team
 	game_ended = true
 	battle_ended.emit(winning_team)
 
@@ -442,10 +456,31 @@ func _return_to_main_world() -> void:
 			if player:
 				player.global_position = _saved_player_position
 				print("[BattleManager] Delayed restored player position to: ", _saved_player_position, " on node: ", player.get_path())
-		
-		# 3. Apply battle rewards AFTER scene transition and position restoration
+
+		# 3. Handle TP Point and position offset based on battle outcome
+		if _winning_team == Team.PLAYER:
+			# Win: permanently remove the tp_point from future world loads
+			if not _tp_point_id.is_empty():
+				mark_tp_point_triggered(_tp_point_id)
+				print("[BattleManager] Marked tp_point triggered (win): ", _tp_point_id)
+		else:
+			# Loss: tp_point is NOT marked — it will reappear on reload.
+			# Apply the designer-set offset so the player doesn't land inside the Area2D.
+			if not _tp_point_loss_return_offset.is_zero_approx():
+				var loss_player = _get_player()
+				if is_instance_valid(loss_player):
+					loss_player.global_position = _saved_player_position + _tp_point_loss_return_offset
+					print("[BattleManager] Applied loss return offset: ", _tp_point_loss_return_offset,
+						" → final pos: ", loss_player.global_position)
+
+		# 4. Apply battle rewards AFTER scene transition and position restoration
 		# This prevents cutscenes from being blocked by the battle return transition
 		apply_battle_rewards()
+
+		# 5. Unlock memory on win only
+		if _winning_team == Team.PLAYER and not ConfigManager.unlock_memory_on_win.is_empty():
+			ProgressManager.collect_memory(ConfigManager.unlock_memory_on_win)
+			print("[BattleManager] Unlocked memory '%s' (win)" % ConfigManager.unlock_memory_on_win)
 
 	# Wait for fade in to complete
 	await SceneSwitcher.scene_transition_finished

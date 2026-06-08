@@ -27,16 +27,49 @@ extends AnimatedSprite2D
 @export var crystals_per_kill: int = 2
 @export var enemy_multiplyer: float = 1
 
+## --- Memory Unlock ---
+## Memory ID to unlock when the player wins this battle. Leave empty for none.
+@export var unlock_memory_on_win: String = ""
+
+## --- Loss Return Safety ---
+## Offset (in world-space pixels) applied to the player's position when returning
+## after a loss, to ensure they don't land inside this trigger's Area2D again.
+## Set this in the editor to a direction that is clear of walls/terrain.
+## Example: Vector2(0, 150) pushes the player 150px downward (below the trigger).
+@export var loss_return_offset: Vector2 = Vector2(0, 150)
+
+# Guard flag: prevents the Area2D from firing immediately after the scene loads.
+# Necessary because on loss-return the player is placed at the saved position
+# which is inside the Area2D, and body_entered would fire on the same frame.
+var _entry_cooldown_active: bool = true
+
 func _ready() -> void:
 	if BattleManager.is_tp_point_triggered(_get_internal_id()):
 		queue_free()
+		return
+
+	# Allow 0.5 s before the Area2D signal is honoured.
+	# The signal is wired in the .tscn so we can't defer connecting it;
+	# instead we gate it via this flag.
+	await get_tree().create_timer(0.5).timeout
+	_entry_cooldown_active = false
 
 func _on_area_2d_body_entered(_body: Node2D) -> void:
-	BattleManager.mark_tp_point_triggered(_get_internal_id())
-	
+	if _entry_cooldown_active:
+		return
+	if not _is_valid_player(_body):
+		return
+
+	# NOTE: We intentionally do NOT call mark_tp_point_triggered here.
+	# BattleManager will mark it only on a player victory, so a loss
+	# causes the tp_point to reappear when the world is reloaded.
 	ConfigManager.load_config(_build_config())
 	BattleManager.start_battle(_body)
 	queue_free()
+
+func _is_valid_player(body: Node2D) -> bool:
+	return body.name == "Player" or body.is_in_group("player")
+
 func _build_config() -> Dictionary:
 	return {
 		"battle_id": battle_id,
@@ -54,6 +87,12 @@ func _build_config() -> Dictionary:
 		"exp_per_kill": exp_per_kill,
 		"exp_per_damage": exp_per_damage,
 		"crystals_per_kill": crystals_per_kill,
+		# Memory unlock
+		"unlock_memory_on_win": unlock_memory_on_win,
+		# TP Point identity (used by BattleManager to mark triggered on WIN only)
+		"tp_point_id": _get_internal_id(),
+		"tp_point_position": global_position,
+		"tp_point_loss_return_offset": loss_return_offset,
 	}
 
 func _get_internal_id() -> String:
@@ -64,5 +103,5 @@ func _get_internal_id() -> String:
 	var scene_name = "unknown_scene"
 	if get_tree() and get_tree().current_scene:
 		scene_name = get_tree().current_scene.name
-	
+
 	return "%s_%s" % [scene_name, str(global_position)]

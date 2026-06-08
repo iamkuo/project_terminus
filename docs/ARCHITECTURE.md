@@ -82,6 +82,7 @@ This details the specific bidirectional transition between the RPG World and the
 ```mermaid
 sequenceDiagram
     participant World as Main World
+    participant TP as tp_point
     participant Cfg as ConfigManager
     participant BM as BattleManager
     participant SS as SceneSwitcher
@@ -89,19 +90,33 @@ sequenceDiagram
     participant PM as ProgressManager
     
     Note over World, Battle: Entering Battle
-    World->>Cfg: load_config(config_dict)
-    World->>BM: start_battle(player_node)
+    World->>TP: Player enters Area2D
+    TP->>Cfg: load_config(config_dict) [includes tp_point_id, tp_point_position, tp_point_loss_return_offset, unlock_memory_on_win/loss]
+    TP->>BM: start_battle(player_node)
     BM->>BM: Save player position & map
+    BM->>BM: Capture tp_point metadata from ConfigManager
     BM->>SS: switch_to_scene_instance(battle_scene)
     SS->>Battle: Scene Loaded
     Battle->>BM: _initialize_battle() (Reads Cfg)
     
-    Note over World, Battle: Leaving Battle
+    Note over World, Battle: Leaving Battle (Win)
     Battle->>BM: end_battle()
+    BM->>BM: _winning_team = Team.PLAYER
     BM->>SS: switch_scene("main_world")
     SS->>World: Scene Loaded
     BM->>BM: Restore player position & map
-    BM->>PM: Update EXP and Crystals
+    BM->>BM: mark_tp_point_triggered(tp_point_id) [tp_point vanishes permanently]
+    BM->>PM: apply_battle_rewards() → Update EXP and Crystals
+    BM->>PM: collect_memory(unlock_memory_on_win) [if set]
+    BM-->>World: emit rewards_applied(exp, crystals)
+
+    Note over World, Battle: Leaving Battle (Loss)
+    Battle->>BM: end_battle()
+    BM->>BM: _winning_team = Team.OPPONENT
+    BM->>SS: switch_scene("main_world")
+    SS->>World: Scene Loaded
+    BM->>BM: Restore player position + loss_return_offset [tp_point NOT marked, reappears]
+    BM->>PM: apply_battle_rewards() → Update EXP and Crystals (×0.5)
     BM-->>World: emit rewards_applied(exp, crystals)
 ```
 
@@ -588,6 +603,42 @@ The `ProgressManager` initializes resources in this order:
 
 ---
 
-**Last Updated:** May 29, 2026  
+---
+
+## 11. Minimap System
+
+### **Minimap** (`scripts/main_world/minimap.gd`)
+- **Role**: HUD corner widget showing player position on a world-map thumbnail
+- **Toggle**: `M` key (`ui_minimap` input action)
+- **Key Properties (Editor Exports)**:
+  - `goblin_map_texture: Texture2D` — map image for the goblin world (`map_goblin.png`)
+  - `human_map_texture: Texture2D` — map image for the human world (`map_human.png`)
+  - `goblin_world_rect: Rect2` — world bounds matching the goblin world coordinates
+  - `human_world_rect: Rect2` — world bounds matching the human world coordinates
+  - `minimap_size: Vector2` — pixel size of the minimap HUD widget (default: `200x160`)
+  - `view_range: Vector2` — size of the zoom window in world units (default: `2000x1600`)
+- **Dynamic Switching**:
+  - The script checks `SceneSwitcher.current_scene` and checks the name of the child node in `MapContainer`.
+  - If the path matches `human`, it selects the human map texture and human bounds. Otherwise, it defaults to the goblin map.
+  - The map texture inside the AtlasTexture and bounding rect scale properties update automatically on change.
+- **Lives in**: Child of `hud.tscn` (instanced within the HUD control)
+
+---
+
+## 12. TP Point Persistence & Loss Return Safety
+
+### Design
+- `tp_point.gd` no longer calls `mark_tp_point_triggered()` at battle start.
+- `BattleManager` calls `mark_tp_point_triggered()` **only on player victory**, so losing a battle leaves the tp_point alive for the next attempt.
+- On loss return, `BattleManager` applies the `loss_return_offset` (a `Vector2` set per-tp_point in the editor) to the saved player position, placing the player outside the Area2D trigger zone.
+- A 0.5s `_entry_cooldown_active` flag in `tp_point._ready()` provides a belt-and-suspenders guard in case the offset isn't set.
+
+### New tp_point Exports
+| Export | Purpose |
+|---|---|
+| `unlock_memory_on_win` | Memory ID unlocked on player victory |
+| `loss_return_offset` | World-space pixel offset applied to player position on loss return (set to a clear direction in the editor) |
+
+**Last Updated:** June 8, 2026  
 **Status:** Complete system architecture documentation  
 **Related Documentation:** [`../RESOURCES.md`](../RESOURCES.md) | [`../BUGS_ARCHIVED.md`](../BUGS_ARCHIVED.md) | [`../AGENTS.md`](../AGENTS.md)

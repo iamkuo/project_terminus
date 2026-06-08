@@ -2,6 +2,7 @@
 
 [ext_resource type="Texture2D" uid="uid://7ga0ljs8vtel" path="res://assets/images/ui/elements/Icons.png" id="1_ahhtf"]
 [ext_resource type="Script" uid="uid://jlq3wtd2h8tu" path="res://scripts/main_world/hud.gd" id="1_huds"]
+[ext_resource type="PackedScene" uid="uid://minimap_main_world" path="res://scenes/main_world/minimap.tscn" id="2_minimap"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_urbfd"]
 atlas = ExtResource("1_ahhtf")
@@ -62,3 +63,7 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 24
 text = "水晶數量: 0"
 vertical_alignment = 1
+
+[node name="Minimap" parent="." instance=ExtResource("2_minimap")]
+layout_mode = 1
+

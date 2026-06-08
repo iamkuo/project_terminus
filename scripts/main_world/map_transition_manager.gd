@@ -3,11 +3,16 @@ extends Node2D
 @export var transitions: Array[TransitionConfig] = []
 var is_transitioning: bool = false
 var previous_map_path: String = ""
+var transition_cooldown: float = 0.0
 
 @onready var map_container: Node = $MapContainer
 
 func _ready() -> void:
 	_connect_current_map_zones()
+
+func _process(delta: float) -> void:
+	if transition_cooldown > 0:
+		transition_cooldown -= delta
 
 ## Public API to change maps externally (e.g. from BattleManager)
 func load_map(target_scene_path: String) -> Node:
@@ -32,6 +37,8 @@ func _connect_current_map_zones() -> void:
 			zone.body_entered.connect(_on_zone_entered.bind(transition))
 
 func _on_zone_entered(body: Node2D, transition: TransitionConfig) -> void:
+	if transition_cooldown > 0 or is_transitioning:
+		return
 	if not _is_valid_player(body):
 		return
 		
@@ -63,6 +70,7 @@ func _execute_map_transition(player: Node2D, transition: TransitionConfig) -> vo
 	await GuiManager.transition_in("fade")
 	
 	is_transitioning = false
+	transition_cooldown = 1.5
 
 func _swap_map_scene(target_scene_path: String) -> Node:
 	# Remove old maps immediately
@@ -81,4 +89,3 @@ func _teleport_player(player: Node2D, current_map: Node, spawn_marker_path: Stri
 		player.global_position = Vector2(player.global_position.x, spawn_point.global_position.y)
 	else:
 		push_error("Spawn point not found: ", spawn_marker_path)
- 
