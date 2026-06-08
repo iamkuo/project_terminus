@@ -607,21 +607,18 @@ The `ProgressManager` initializes resources in this order:
 
 ## 11. Minimap System
 
-### **Minimap** (`scripts/main_world/minimap.gd`)
-- **Role**: HUD corner widget showing player position on a world-map thumbnail
-- **Toggle**: `M` key (`ui_minimap` input action)
+- **Role**: Sidebar widget showing a static layout image of the current level, gated by memory unlocks
 - **Key Properties (Editor Exports)**:
   - `goblin_map_texture: Texture2D` — map image for the goblin world (`map_goblin.png`)
   - `human_map_texture: Texture2D` — map image for the human world (`map_human.png`)
-  - `goblin_world_rect: Rect2` — world bounds matching the goblin world coordinates
-  - `human_world_rect: Rect2` — world bounds matching the human world coordinates
-  - `minimap_size: Vector2` — pixel size of the minimap HUD widget (default: `200x160`)
-  - `view_range: Vector2` — size of the zoom window in world units (default: `2000x1600`)
-- **Dynamic Switching**:
-  - The script checks `SceneSwitcher.current_scene` and checks the name of the child node in `MapContainer`.
-  - If the path matches `human`, it selects the human map texture and human bounds. Otherwise, it defaults to the goblin map.
-  - The map texture inside the AtlasTexture and bounding rect scale properties update automatically on change.
-- **Lives in**: Child of `hud.tscn` (instanced within the HUD control)
+  - `locked_map_texture: Texture2D` — map image to display when locked
+  - `goblin_memory_id: String` — memory ID required to view the goblin map
+  - `human_memory_id: String` — memory ID required to view the human map
+- **Dynamic Switching & Memory Locks**:
+  - The script checks the path of the current sub-scene under `MapContainer` to choose the active map texture and active memory lock ID.
+  - If the memory ID exists in `ProgressManager.active_memories` but is not yet unlocked in `unlocked_memory_ids`, the widget displays the custom `locked_map_texture`.
+  - If the memory ID is empty, or not found/unregistered in `active_memories`, the normal map texture is shown directly.
+- **Lives in**: Directly attached to the `TextureRect` on the right side of the `SkillsTab` in `backpack.tscn`
 
 ---
 

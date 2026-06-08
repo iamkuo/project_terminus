@@ -24,9 +24,13 @@ func _ready():
 			var shape = _restriction_area.get_node_or_null("CollisionShape2D")
 			if shape:
 				shape.set_deferred("disabled", true)
+		if ConfigManager.player_tower_hp > 0:
+			max_health = ConfigManager.player_tower_hp
 		max_health = int(max_health * SkillManager.tower_health_mult)
+	else:
+		if ConfigManager.enemy_tower_hp > 0:
+			max_health = ConfigManager.enemy_tower_hp
 		
-	
 	current_health = max_health
 	add_to_group("towers")
 	

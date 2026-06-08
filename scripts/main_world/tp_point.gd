@@ -1,30 +1,45 @@
 extends AnimatedSprite2D
 
 ## --- Battle Identity ---
+## Unique battle identifier. If empty, a fallback ID will be generated.
 @export var battle_id: String = ""
+## Battle name shown on the victory/ending screen. If empty, falls back to the battle ID.
 @export var battle_name: String = ""
 
 ## --- Visual / Scene Setup ---
+## Custom battle background scene. If empty, uses the default background.
 @export var background_scene: PackedScene
+## Custom music track to play during battle. If empty, no custom music is played.
 @export var music_track: AudioStream
 
 ## --- AI Enemy Configuration ---
+## Minimum spawn cooldown (in seconds) for enemy units.
 @export var ai_cooldown_min: float = 2.0
+## Maximum spawn cooldown (in seconds) for enemy units.
 @export var ai_cooldown_max: float = 5.0
 
 ## --- Player Constraints ---
+## Starting聖水 (elixir) amount for the player.
 @export var starting_elixir: float = 5.0
 
 ## --- Tower Stats ---
+## Starting HP for the player's towers. Set to 0 to use scene/tower defaults.
 @export var player_tower_hp: int = 1000
+## Starting HP for the opponent's towers. Set to 0 to use scene/tower defaults.
 @export var enemy_tower_hp: int = 1000
 
 ## --- Reward Configuration (Victory only) ---
+## Base EXP rewarded on victory.
 @export var exp_reward_victory: int = 100
+## Base crystals rewarded on victory.
 @export var crystal_reward_victory: int = 50
+## EXP granted per enemy killed.
 @export var exp_per_kill: int = 10
+## EXP granted per 1 damage dealt to enemies.
 @export var exp_per_damage: float = 0.05
+## Crystals granted per enemy killed.
 @export var crystals_per_kill: int = 2
+## Enemy strength multiplier (affects health and damage).
 @export var enemy_multiplyer: float = 1
 
 ## --- Memory Unlock ---

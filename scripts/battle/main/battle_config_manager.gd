@@ -62,25 +62,61 @@ func _ready() -> void:
 ## Load configuration from TP Point
 func load_config(config: Dictionary) -> void:
 	battle_id = config.get("battle_id", "")
+	
 	battle_name = config.get("battle_name", "")
+	if battle_name.is_empty():
+		battle_name = battle_id if not battle_id.is_empty() else "Battle"
+		
 	background_scene = config.get("background_scene", null)
 	music_track = config.get("music_track", null)
 	
 	ai_cooldown_min = config.get("ai_cooldown_min", 2.0)
+	if ai_cooldown_min <= 0.0:
+		ai_cooldown_min = 2.0
+		
 	ai_cooldown_max = config.get("ai_cooldown_max", 5.0)
+	if ai_cooldown_max <= 0.0 or ai_cooldown_max < ai_cooldown_min:
+		ai_cooldown_max = max(ai_cooldown_min, 5.0)
 	
 	starting_elixir = config.get("starting_elixir", 5.0)
+	if starting_elixir < 0.0:
+		starting_elixir = 5.0
 	
 	player_tower_hp = config.get("player_tower_hp", 1000)
+	if player_tower_hp < 0:
+		player_tower_hp = 1000
+		
 	enemy_tower_hp = config.get("enemy_tower_hp", 1000)
+	if enemy_tower_hp < 0:
+		enemy_tower_hp = 1000
 	
 	exp_reward_victory = config.get("exp_reward_victory", 100)
+	if exp_reward_victory < 0:
+		exp_reward_victory = 100
+		
 	crystal_reward_victory = config.get("crystal_reward_victory", 50)
+	if crystal_reward_victory < 0:
+		crystal_reward_victory = 50
+		
 	exp_per_kill = config.get("exp_per_kill", 10)
+	if exp_per_kill < 0:
+		exp_per_kill = 10
+		
 	exp_per_damage = config.get("exp_per_damage", 0.05)
+	if exp_per_damage < 0.0:
+		exp_per_damage = 0.05
+		
 	crystals_per_kill = config.get("crystals_per_kill", 2)
+	if crystals_per_kill < 0:
+		crystals_per_kill = 2
+		
 	enemy_multiplyer = config.get("enemy_multiplyer", 1.0)
+	if enemy_multiplyer <= 0.0:
+		enemy_multiplyer = 1.0
+		
 	allies_multiplyer = config.get("allies_multiplyer", 1.0)
+	if allies_multiplyer <= 0.0:
+		allies_multiplyer = 1.0
 
 	tp_point_id = config.get("tp_point_id", "")
 	tp_point_position = config.get("tp_point_position", Vector2.ZERO)

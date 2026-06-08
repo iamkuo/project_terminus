@@ -61,6 +61,7 @@ var _triggered_tp_points: Array[String] = []
 var _tp_point_id: String = ""
 var _tp_point_position: Vector2 = Vector2.ZERO
 var _tp_point_loss_return_offset: Vector2 = Vector2.ZERO
+var _battle_bgm_player: AudioStreamPlayer = null
 
 # Outcome — stored in show_ending_screen() so _return_to_main_world() can read it
 var _winning_team: int = Team.PLAYER
@@ -203,6 +204,15 @@ func _initialize_battle() -> void:
 	
 	game_state = GameState.READY
 	game_state_changed.emit(game_state)
+	
+	# Play battle background music if provided
+	if ConfigManager.music_track:
+		_battle_bgm_player = AudioStreamPlayer.new()
+		_battle_bgm_player.stream = ConfigManager.music_track
+		_battle_bgm_player.bus = &"Music"
+		add_child(_battle_bgm_player)
+		_battle_bgm_player.play()
+		print("[BattleManager] Playing battle BGM: ", ConfigManager.music_track.resource_path)
 
 func _cleanup_battle() -> void:
 	game_state = GameState.IDLE
@@ -212,6 +222,11 @@ func _cleanup_battle() -> void:
 	if is_instance_valid(background_instance):
 		background_instance.queue_free()
 		background_instance = null
+		
+	if is_instance_valid(_battle_bgm_player):
+		_battle_bgm_player.stop()
+		_battle_bgm_player.queue_free()
+		_battle_bgm_player = null
 	
 	curr = null
 	spawn_points = null
