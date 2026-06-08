@@ -494,8 +494,16 @@ func _return_to_main_world() -> void:
 
 		# 5. Unlock memory on win only
 		if _winning_team == Team.PLAYER and not ConfigManager.unlock_memory_on_win.is_empty():
-			ProgressManager.collect_memory(ConfigManager.unlock_memory_on_win)
-			print("[BattleManager] Unlocked memory '%s' (win)" % ConfigManager.unlock_memory_on_win)
+			var memory_id = ConfigManager.unlock_memory_on_win
+			ProgressManager.collect_memory(memory_id)
+			print("[BattleManager] Unlocked memory '%s' (win)" % memory_id)
+			# Play the cutscene associated with the memory (if any)
+			var mem_data: MemoryData = ProgressManager.active_memories.filter(
+				func(m): return m.id == memory_id
+			).front()
+			if mem_data and not mem_data.cutscene_id.is_empty():
+				CutsceneManager.play(mem_data.cutscene_id)
+				print("[BattleManager] Playing memory cutscene '%s'" % mem_data.cutscene_id)
 
 	# Wait for fade in to complete
 	await SceneSwitcher.scene_transition_finished
