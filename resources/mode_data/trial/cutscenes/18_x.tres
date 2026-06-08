@@ -1,0 +1,125 @@
+[gd_resource type="Resource" script_class="CutsceneScript" format=3 uid="uid://bugvk0foq31uo"]
+
+[ext_resource type="Script" uid="uid://c7505rjkk6rpg" path="res://resources/data_structures/cutscene_script.gd" id="1_oeywh"]
+[ext_resource type="Script" uid="uid://b2sxig6otw26p" path="res://resources/data_structures/cutscene_step.gd" id="2_wvyuy"]
+[ext_resource type="Texture2D" uid="uid://cln1ssbs7jqhi" path="res://assets/images/objects/c18-1.png" id="3_udri6"]
+[ext_resource type="Texture2D" uid="uid://begmvtd67o02g" path="res://assets/images/objects/c18x-2.png" id="4_yegxf"]
+[ext_resource type="Texture2D" uid="uid://sbis5eiwbv4r" path="res://assets/images/objects/c18x-3.png" id="5_852eu"]
+[ext_resource type="Texture2D" uid="uid://b0ll3y0ahexop" path="res://assets/images/objects/c18x-4.png" id="6_hgixi"]
+[ext_resource type="Texture2D" uid="uid://detsobbr1lj37" path="res://assets/images/objects/c18x-5.png" id="7_mgki2"]
+[ext_resource type="Texture2D" uid="uid://b6n64tl4eil17" path="res://assets/images/objects/c18x-6.png" id="8_yok83"]
+[ext_resource type="Texture2D" uid="uid://b7uscruqepiyu" path="res://assets/images/objects/c18x-7.png" id="9_udri6"]
+[ext_resource type="Texture2D" uid="uid://c4w3gj3dqbhma" path="res://assets/images/objects/c18x-8.png" id="10_tx0nn"]
+[ext_resource type="Texture2D" uid="uid://1puv63u7gb5e" path="res://assets/images/objects/c18x-9.png" id="11_5y5ur"]
+[ext_resource type="Texture2D" uid="uid://cvvlcyrqfnour" path="res://assets/images/objects/c18-10.png" id="12_2p2vo"]
+
+[sub_resource type="Resource" id="Resource_gmacf"]
+script = ExtResource("2_wvyuy")
+speaker = "維利夫"
+text = "呼...呼..."
+texture = ExtResource("3_udri6")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_oeywh"]
+script = ExtResource("2_wvyuy")
+speaker = "維利夫"
+text = "終於，我在世界被太陽吞噬之前完成復仇了。
+"
+texture = ExtResource("3_udri6")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_la62b"]
+script = ExtResource("2_wvyuy")
+speaker = "尼多"
+text = "你贏了，我會把世界之樹交給你。"
+texture = ExtResource("3_udri6")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_yvok5"]
+script = ExtResource("2_wvyuy")
+speaker = "維利夫"
+text = "不，我說過了吧，我要你死。"
+texture = ExtResource("4_yegxf")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_wk374"]
+script = ExtResource("2_wvyuy")
+speaker = "尼多"
+text = "等等!你不殺我，我可以為你做任何事情.............!"
+texture = ExtResource("4_yegxf")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_15gcg"]
+script = ExtResource("2_wvyuy")
+type = 3
+texture = ExtResource("5_852eu")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_2veig"]
+script = ExtResource("2_wvyuy")
+type = 3
+texture = ExtResource("6_hgixi")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_g6t1j"]
+script = ExtResource("2_wvyuy")
+type = 3
+texture = ExtResource("7_mgki2")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_24fpc"]
+script = ExtResource("2_wvyuy")
+texture = ExtResource("8_yok83")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_wvyuy"]
+script = ExtResource("2_wvyuy")
+speaker = "維利夫"
+text = "感覺一切都無所謂了。"
+texture = ExtResource("8_yok83")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_itid1"]
+script = ExtResource("2_wvyuy")
+speaker = "維利夫"
+text = "世界越來越熱了呢。"
+texture = ExtResource("9_udri6")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_rcxww"]
+script = ExtResource("2_wvyuy")
+speaker = "維利夫"
+text = "看來.....我馬上就能去見你們了。"
+texture = ExtResource("10_tx0nn")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_cebcq"]
+script = ExtResource("2_wvyuy")
+speaker = "維利夫"
+text = "父親、母親、格莉德......"
+texture = ExtResource("10_tx0nn")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_ehrlx"]
+script = ExtResource("2_wvyuy")
+type = 3
+texture = ExtResource("11_5y5ur")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_g5e8h"]
+script = ExtResource("2_wvyuy")
+type = 3
+texture = ExtResource("12_2p2vo")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_i7cpa"]
+script = ExtResource("2_wvyuy")
+type = 2
+text = "而每個故事，不見得都已喜劇收場。"
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[resource]
+script = ExtResource("1_oeywh")
+id = "boss_6_end_x"
+steps = Array[ExtResource("2_wvyuy")]([SubResource("Resource_gmacf"), SubResource("Resource_oeywh"), SubResource("Resource_la62b"), SubResource("Resource_yvok5"), SubResource("Resource_wk374"), SubResource("Resource_15gcg"), SubResource("Resource_2veig"), SubResource("Resource_g6t1j"), SubResource("Resource_24fpc"), SubResource("Resource_wvyuy"), SubResource("Resource_itid1"), SubResource("Resource_rcxww"), SubResource("Resource_cebcq"), SubResource("Resource_ehrlx"), SubResource("Resource_g5e8h"), SubResource("Resource_i7cpa")])
+metadata/_custom_type_script = "uid://c7505rjkk6rpg"

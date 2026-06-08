@@ -1,0 +1,152 @@
+[gd_resource type="Resource" script_class="CutsceneScript" format=3 uid="uid://pbboojg5dxgu"]
+
+[ext_resource type="Script" uid="uid://c7505rjkk6rpg" path="res://resources/data_structures/cutscene_script.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://b2sxig6otw26p" path="res://resources/data_structures/cutscene_step.gd" id="2_step"]
+[ext_resource type="Texture2D" uid="uid://ccgdqlphfgu5u" path="res://assets/images/objects/c4-1.png" id="3_gvmjc"]
+
+[sub_resource type="Resource" id="Resource_7cs7t"]
+script = ExtResource("2_step")
+speaker = "族長"
+text = "維利夫!
+"
+texture = ExtResource("3_gvmjc")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_gvmjc"]
+script = ExtResource("2_step")
+speaker = "維利夫"
+text = "!?"
+texture = ExtResource("3_gvmjc")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_kit8b"]
+script = ExtResource("2_step")
+speaker = "族長"
+text = "醒了嗎。"
+texture = ExtResource("3_gvmjc")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_w0rkk"]
+script = ExtResource("2_step")
+speaker = "維利夫"
+text = "嗯...
+"
+texture = ExtResource("3_gvmjc")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_6hpb7"]
+script = ExtResource("2_step")
+speaker = "族長"
+text = "呼~太好了。"
+texture = ExtResource("3_gvmjc")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_cog5y"]
+script = ExtResource("2_step")
+speaker = "族長"
+text = "但是，永恆之火好像被你手中的手杖給吸收了。"
+texture = ExtResource("3_gvmjc")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_exu4h"]
+script = ExtResource("2_step")
+speaker = "維利夫"
+text = "我看見了畫面，應該說想起來了某些我沒看過的東西。
+"
+texture = ExtResource("3_gvmjc")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_dn1hu"]
+script = ExtResource("2_step")
+speaker = "維利夫"
+text = "....那個，您知道尼多是誰嗎？"
+texture = ExtResource("3_gvmjc")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_bh0dc"]
+script = ExtResource("2_step")
+speaker = "族長"
+text = "當然知道，他是人族的首領。不過他已經是我爺爺，也就是前前族長那一輩的人，所以應該已經去世了才對。
+"
+texture = ExtResource("3_gvmjc")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_ncldx"]
+script = ExtResource("2_step")
+speaker = "維利夫"
+text = "...看來吸收永恆之火可以讓我看見一些過去啊。
+"
+texture = ExtResource("3_gvmjc")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_2evuo"]
+script = ExtResource("2_step")
+speaker = "族長"
+text = "你接下來要前往前線對吧。"
+texture = ExtResource("3_gvmjc")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_m3trx"]
+script = ExtResource("2_step")
+speaker = "族長"
+text = "那裡不是你現在該去的地方。
+"
+texture = ExtResource("3_gvmjc")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_y6bwy"]
+script = ExtResource("2_step")
+speaker = "維利夫"
+text = "我已經沒有可以回去的地方了。
+"
+texture = ExtResource("3_gvmjc")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_ybbwa"]
+script = ExtResource("2_step")
+speaker = "族長"
+text = "......好吧。既然如此，我不會阻止你。"
+texture = ExtResource("3_gvmjc")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_gcu5d"]
+script = ExtResource("2_step")
+speaker = "族長"
+text = "但你要記住一件事。"
+texture = ExtResource("3_gvmjc")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_iris2"]
+script = ExtResource("2_step")
+speaker = "維利夫"
+text = "？"
+texture = ExtResource("3_gvmjc")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_10re6"]
+script = ExtResource("2_step")
+speaker = "族長"
+text = "仇恨可以讓你活下去。"
+texture = ExtResource("3_gvmjc")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_amtow"]
+script = ExtResource("2_step")
+speaker = "族長"
+text = "但也會讓你，變得不像「活著的東西」。
+"
+texture = ExtResource("3_gvmjc")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_p0f51"]
+script = ExtResource("2_step")
+speaker = "維利夫"
+text = "……"
+texture = ExtResource("3_gvmjc")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[resource]
+script = ExtResource("1_script")
+id = "4"
+steps = Array[ExtResource("2_step")]([SubResource("Resource_7cs7t"), SubResource("Resource_gvmjc"), SubResource("Resource_kit8b"), SubResource("Resource_w0rkk"), SubResource("Resource_6hpb7"), SubResource("Resource_cog5y"), SubResource("Resource_exu4h"), SubResource("Resource_dn1hu"), SubResource("Resource_bh0dc"), SubResource("Resource_ncldx"), SubResource("Resource_2evuo"), SubResource("Resource_m3trx"), SubResource("Resource_y6bwy"), SubResource("Resource_ybbwa"), SubResource("Resource_gcu5d"), SubResource("Resource_iris2"), SubResource("Resource_10re6"), SubResource("Resource_amtow"), SubResource("Resource_p0f51")])
+metadata/_custom_type_script = "uid://c7505rjkk6rpg"

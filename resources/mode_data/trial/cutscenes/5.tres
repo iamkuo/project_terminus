@@ -1,0 +1,68 @@
+[gd_resource type="Resource" script_class="CutsceneScript" format=3 uid="uid://da2pr0stc13td"]
+
+[ext_resource type="Script" uid="uid://c7505rjkk6rpg" path="res://resources/data_structures/cutscene_script.gd" id="1_rq25h"]
+[ext_resource type="Script" uid="uid://b2sxig6otw26p" path="res://resources/data_structures/cutscene_step.gd" id="2_tqwp4"]
+[ext_resource type="Texture2D" uid="uid://dknathdah8484" path="res://assets/images/objects/c5-1.png" id="3_4eibp"]
+
+[sub_resource type="Resource" id="Resource_8kb5p"]
+script = ExtResource("2_tqwp4")
+speaker = "維利夫"
+text = "約頓海姆...看起來有個不弱的人族。"
+texture = ExtResource("3_4eibp")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_y53eg"]
+script = ExtResource("2_tqwp4")
+speaker = "瑞爾夫"
+text = "……就只有你一個？"
+texture = ExtResource("3_4eibp")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_y0tcq"]
+script = ExtResource("2_tqwp4")
+speaker = "維利夫"
+text = "足夠了。"
+texture = ExtResource("3_4eibp")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_4eibp"]
+script = ExtResource("2_tqwp4")
+speaker = "維利夫"
+text = "哥布林也開始學會說大話了嗎。
+"
+texture = ExtResource("3_4eibp")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_326g4"]
+script = ExtResource("2_tqwp4")
+speaker = "維利夫"
+text = "你殺了多少。"
+texture = ExtResource("3_4eibp")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_t80c7"]
+script = ExtResource("2_tqwp4")
+speaker = "瑞爾夫"
+text = "記不清。"
+texture = ExtResource("3_4eibp")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_pe14f"]
+script = ExtResource("2_tqwp4")
+speaker = "維利夫"
+text = "那你就死在這裡。"
+texture = ExtResource("3_4eibp")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_4odxt"]
+script = ExtResource("2_tqwp4")
+speaker = "瑞爾夫"
+text = "試試看。"
+texture = ExtResource("3_4eibp")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[resource]
+script = ExtResource("1_rq25h")
+id = "boss_1"
+steps = Array[ExtResource("2_tqwp4")]([SubResource("Resource_8kb5p"), SubResource("Resource_y53eg"), SubResource("Resource_y0tcq"), SubResource("Resource_4eibp"), SubResource("Resource_326g4"), SubResource("Resource_t80c7"), SubResource("Resource_pe14f"), SubResource("Resource_4odxt")])
+metadata/_custom_type_script = "uid://c7505rjkk6rpg"

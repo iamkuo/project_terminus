@@ -1,0 +1,93 @@
+[gd_resource type="Resource" script_class="CutsceneScript" format=3 uid="uid://p75ttqqau6fb"]
+
+[ext_resource type="Script" uid="uid://c7505rjkk6rpg" path="res://resources/data_structures/cutscene_script.gd" id="1_rb376"]
+[ext_resource type="Script" uid="uid://b2sxig6otw26p" path="res://resources/data_structures/cutscene_step.gd" id="2_5icvq"]
+[ext_resource type="Texture2D" uid="uid://ccqs4k56cf0uf" path="res://assets/images/objects/c6-1.png" id="3_jduo1"]
+[ext_resource type="Texture2D" uid="uid://bco023nr3s8td" path="res://assets/images/objects/c6-2.png" id="4_m3u5l"]
+[ext_resource type="Texture2D" uid="uid://b5f0oywof7tnl" path="res://assets/images/objects/c6-3.png" id="5_15d2m"]
+
+[sub_resource type="Resource" id="Resource_rq25h"]
+script = ExtResource("2_5icvq")
+speaker = "瑞爾夫"
+text = "……哈……
+"
+texture = ExtResource("3_jduo1")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_tqwp4"]
+script = ExtResource("2_5icvq")
+speaker = "瑞爾夫"
+text = "沒想到……會輸給哥布林……"
+texture = ExtResource("3_jduo1")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_vtsaq"]
+script = ExtResource("2_5icvq")
+speaker = "瑞爾夫"
+text = "你……是為了什麼而戰？"
+texture = ExtResource("3_jduo1")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_6sdpy"]
+script = ExtResource("2_5icvq")
+speaker = "維利夫"
+text = "復仇。"
+texture = ExtResource("3_jduo1")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_nno66"]
+script = ExtResource("2_5icvq")
+speaker = "瑞爾夫"
+text = "呵......你很像我兒子啊......"
+texture = ExtResource("3_jduo1")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_786vj"]
+script = ExtResource("2_5icvq")
+speaker = "瑞爾夫"
+text = "……
+"
+texture = ExtResource("4_m3u5l")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_fbixm"]
+script = ExtResource("2_5icvq")
+speaker = "維利夫"
+text = "首都已經淪陷了啊......"
+texture = ExtResource("5_15d2m")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_8lgqc"]
+script = ExtResource("2_5icvq")
+speaker = "維利夫"
+text = "......瑞爾夫身上有地圖吧。
+"
+texture = ExtResource("4_m3u5l")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_m0tro"]
+script = ExtResource("2_5icvq")
+text = "(獲得人界得地圖了)
+"
+texture = ExtResource("4_m3u5l")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_jduo1"]
+script = ExtResource("2_5icvq")
+speaker = "維利夫"
+text = "這樣就前往人界了。"
+texture = ExtResource("4_m3u5l")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_m3u5l"]
+script = ExtResource("2_5icvq")
+speaker = "維利夫"
+text = "去看看這裡的永恆之火吧。"
+texture = ExtResource("5_15d2m")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[resource]
+script = ExtResource("1_rb376")
+id = "boss_1_end"
+steps = Array[ExtResource("2_5icvq")]([SubResource("Resource_rq25h"), SubResource("Resource_tqwp4"), SubResource("Resource_vtsaq"), SubResource("Resource_6sdpy"), SubResource("Resource_nno66"), SubResource("Resource_786vj"), SubResource("Resource_fbixm"), SubResource("Resource_8lgqc"), SubResource("Resource_m0tro"), SubResource("Resource_jduo1"), SubResource("Resource_m3u5l")])
+metadata/_custom_type_script = "uid://c7505rjkk6rpg"

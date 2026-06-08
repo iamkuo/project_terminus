@@ -132,16 +132,16 @@ func _reset_all_ui() -> void:
 	dialog.hide()
 	dialog.modulate.a = 1.0
 	text_end.hide()
-	fullscreen_ui.hide()
+	
 	fullscreen_label.hide()
 	texture_rect.hide()
-
-	# Reset transition rect visibility and clear color/opacity
-	transition_rect.hide()
-	transition_rect.color = Color(0, 0, 0, 0)
-	
-	# Clean up texture to free memory
 	texture_rect.texture = null
+
+	# Only touch transition and fullscreen_ui root if not transitioning
+	if not is_transitioning:
+		transition_rect.hide()
+		transition_rect.color = Color(0, 0, 0, 0)
+		fullscreen_ui.hide()
 
 func _skip_typing(tween: Tween, label: Label) -> void:
 	if tween and tween.is_running():
@@ -154,10 +154,8 @@ func _skip_typing(tween: Tween, label: Label) -> void:
 			_change_state(gui_state.FULLSCREEN_FINISHED)
 
 func _show_dialog_logic(text: String, background_image: Texture2D = null) -> void:
-	# Kill any in-progress tween so it doesn't interfere with the new step
-	if dialog_tween and dialog_tween.is_running():
-		dialog_tween.kill()
-		dialog_tween = null
+	_reset_all_ui()
+	
 	# 1. Show Dialog Panel
 	dialog.show()
 	
@@ -168,12 +166,6 @@ func _show_dialog_logic(text: String, background_image: Texture2D = null) -> voi
 		texture_rect.texture = background_image
 		texture_rect.modulate.a = 1.0  # Image fully opaque
 		dialog.modulate.a = 0.5        # Dialog box semi-transparent over the image
-	else:
-		# Hide portrait if previous dialog had one but this one doesn't
-		fullscreen_ui.hide()
-		texture_rect.hide()
-		texture_rect.texture = null
-		dialog.modulate.a = 1.0        # Dialog fully opaque when no background image
 		
 	# 3. Setup State & Tween
 	_change_state(gui_state.DIALOG_READING)
@@ -184,12 +176,8 @@ func _show_dialog_logic(text: String, background_image: Texture2D = null) -> voi
 	dialog_tween.finished.connect(func(): _change_state(gui_state.DIALOG_FINISHED))
 
 func _show_fullscreen_logic(data: Dictionary) -> void:
-	# Kill any in-progress tween so it doesn't interfere with the new step
-	if fullscreen_tween and fullscreen_tween.is_running():
-		fullscreen_tween.kill()
-		fullscreen_tween = null
-	# Hide dialog in case a dialog step preceded this fullscreen step
-	dialog.hide()
+	_reset_all_ui()
+	
 	_change_state(gui_state.FULLSCREEN_READING)
 	fullscreen_ui.show()
 	
@@ -197,8 +185,8 @@ func _show_fullscreen_logic(data: Dictionary) -> void:
 		"text":
 			# Show semi-transparent black overlay only for text (no background image)
 			transition_rect.show()
-			transition_rect.color = Color(0, 0, 0, 1)
-			texture_rect.hide()
+			if not is_transitioning:
+				transition_rect.color = Color(0, 0, 0, 1)
 			fullscreen_label.visible_ratio = 0
 			fullscreen_label.text = data.text
 			fullscreen_label.show()
@@ -207,9 +195,6 @@ func _show_fullscreen_logic(data: Dictionary) -> void:
 			fullscreen_tween.finished.connect(func(): _change_state(gui_state.FULLSCREEN_FINISHED))
 		"image":
 			# No dim overlay when displaying a fullscreen image
-			transition_rect.hide()
-			transition_rect.color = Color(0, 0, 0, 0)
-			fullscreen_label.hide()
 			texture_rect.show()
 			texture_rect.texture = data.texture
 			_change_state(gui_state.FULLSCREEN_FINISHED)

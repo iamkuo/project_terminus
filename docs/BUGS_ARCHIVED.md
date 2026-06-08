@@ -1078,6 +1078,27 @@ func end_battle():
 
 ---
 
+## Bug 19: Fullscreen UI Fails to Hide When Dialog Follows Fullscreen Text (FIXED)
+**Status:** ✅ FIXED
+
+### Symptoms
+- When a cutscene transitions from `FULLSCREEN_TEXT` (or `FULLSCREEN_IMAGE`) to `DIALOG`, the fullscreen background/text from the previous step remains visible underneath the new dialog panel.
+- The `fullscreen_ui` won't clean up its state properly if a dialog doesn't overwrite it.
+
+### Root Cause
+In `GuiManager`, the `_show_dialog_logic` and `_show_fullscreen_logic` methods were conditionally hiding/showing specific sub-components (like `texture_rect`, `fullscreen_label`, and `transition_rect`) instead of clearing the slate. When switching between UI types, orphaned visible components were left active behind the new UI.
+
+### Solution
+Consolidated UI resetting into a single robust `_reset_all_ui()` function that safely hides all components and stops all tweens.
+1. Updated `_reset_all_ui()` to protect `transition_rect` and `fullscreen_ui` root node ONLY if `is_transitioning` is true (to avoid breaking scene transitions).
+2. Called `_reset_all_ui()` at the very beginning of both `_show_dialog_logic()` and `_show_fullscreen_logic()`.
+3. Simplified both display functions since they no longer have to manually hide or kill individual components conditionally.
+
+**Files Changed:**
+- `scripts/global/gui_manager.gd` - Refactored UI hiding logic for cleaner transitions
+
+---
+
 ## Related Documentation
 - [`../README.md`](../README.md) - Project architecture and core systems
 - [`ARCHITECTURE.md`](ARCHITECTURE.md) - Game architecture and signal interaction graphs

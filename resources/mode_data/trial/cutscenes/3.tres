@@ -1,0 +1,215 @@
+[gd_resource type="Resource" script_class="CutsceneScript" format=3 uid="uid://dl1ccfwnxveh6"]
+
+[ext_resource type="Script" uid="uid://c7505rjkk6rpg" path="res://resources/data_structures/cutscene_script.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://b2sxig6otw26p" path="res://resources/data_structures/cutscene_step.gd" id="2_step"]
+[ext_resource type="Texture2D" uid="uid://b7aetxp4w2oe2" path="res://assets/images/objects/c3-1.png" id="3_yhtkl"]
+[ext_resource type="Texture2D" uid="uid://c74b8lmtyorn" path="res://assets/images/objects/c3-2.png" id="4_2l5mi"]
+[ext_resource type="Texture2D" uid="uid://bw5f35n3x5f3i" path="res://assets/images/objects/c3-3.png" id="5_4oe6t"]
+[ext_resource type="Texture2D" uid="uid://cat7v83blbtjy" path="res://assets/images/objects/c3-4.png" id="6_dab7c"]
+
+[sub_resource type="Resource" id="Resource_tlai8"]
+script = ExtResource("2_step")
+speaker = "維利夫"
+text = "這裡...就是穆斯貝爾海姆吧。"
+texture = ExtResource("3_yhtkl")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_yhtkl"]
+script = ExtResource("2_step")
+speaker = "族長"
+text = "來者何人。
+"
+texture = ExtResource("3_yhtkl")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_0k4xe"]
+script = ExtResource("2_step")
+speaker = "維利夫"
+text = "維利夫，我是來打仗的。"
+texture = ExtResource("3_yhtkl")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_onj4x"]
+script = ExtResource("2_step")
+speaker = "族長"
+text = "你背上的……是暗界之樹的枝幹嗎？"
+texture = ExtResource("3_yhtkl")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_2l5mi"]
+script = ExtResource("2_step")
+speaker = "維利夫"
+text = "它吸收了我妹妹。
+"
+texture = ExtResource("3_yhtkl")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_4oe6t"]
+script = ExtResource("2_step")
+speaker = "族長"
+text = "那不是普通的樹，它來自很久以前，被譽為神的產物。"
+texture = ExtResource("3_yhtkl")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_dab7c"]
+script = ExtResource("2_step")
+speaker = "維利夫"
+text = "......神?"
+texture = ExtResource("3_yhtkl")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_sjvjo"]
+script = ExtResource("2_step")
+speaker = "族長"
+text = "你聽過創世神話嗎?
+"
+texture = ExtResource("3_yhtkl")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_jq3uu"]
+script = ExtResource("2_step")
+speaker = "維利夫"
+text = "沒有。"
+texture = ExtResource("3_yhtkl")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_fb75d"]
+script = ExtResource("2_step")
+speaker = "族長"
+text = "那我告訴你吧。那是這個世界還沒出現時......"
+texture = ExtResource("3_yhtkl")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_dlujb"]
+script = ExtResource("2_step")
+type = 2
+text = "在開端，當時沒有任何事物，
+既沒有沙，也沒有海，
+也沒有清冷的波濤；
+"
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_2xiln"]
+script = ExtResource("2_step")
+type = 2
+text = "大地並不存在，
+天空也不存在，
+只有鴻蒙的深淵，
+而草木在任何地方都沒有。
+"
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_tr2gm"]
+script = ExtResource("2_step")
+type = 2
+text = "那時，
+南方存在著火之世界，
+北方存在著霧與寒之世界；
+在這兩者之間，
+存在著鴻蒙的深淵。"
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_1dsuy"]
+script = ExtResource("2_step")
+type = 2
+text = "當寒冷的水流自寒之世界流出，
+而火之世界的熱迎面吹來，
+以致鴻蒙深淵變得溫暖；
+"
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_el2nq"]
+script = ExtResource("2_step")
+type = 2
+text = "冰霜與暖風在其中相遇，
+冰開始融化並滴落，
+從融水之中誕生了生命，
+在那裡形成了一個存在者，
+名為尤彌爾。那時也出現了一頭母牛，名為歐德姆拉布。
+"
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_pv4sq"]
+script = ExtResource("2_step")
+speaker = "族長"
+text = "不過沒有人親眼所見，所以無法辯其真假。"
+texture = ExtResource("3_yhtkl")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_t3oyv"]
+script = ExtResource("2_step")
+speaker = "族長"
+text = "但是，這個世界上存在著一些無法被熄滅的火，我們將它稱為永恆之火。"
+texture = ExtResource("3_yhtkl")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_dolt5"]
+script = ExtResource("2_step")
+speaker = "族長"
+text = "它的存在就如文中提及的火之世界，這也是使此版神話成為主流的原因之一。
+"
+texture = ExtResource("3_yhtkl")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_tp0te"]
+script = ExtResource("2_step")
+speaker = "族長"
+text = "至於你手上那的暗界之樹與人族領域的世界之樹，雖在神話中並未提及，但是應為其難以被破壞的特性，先知們將它們稱為神的產物。"
+texture = ExtResource("3_yhtkl")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_jao70"]
+script = ExtResource("2_step")
+speaker = "維利夫"
+text = "......."
+texture = ExtResource("3_yhtkl")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_v6xju"]
+script = ExtResource("2_step")
+speaker = "族長"
+text = "跟我來，我要給你看個東西。
+"
+texture = ExtResource("3_yhtkl")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_70cuo"]
+script = ExtResource("2_step")
+type = 2
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_rj6qu"]
+script = ExtResource("2_step")
+speaker = "維利夫"
+text = "這是......"
+texture = ExtResource("4_2l5mi")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_u8nj5"]
+script = ExtResource("2_step")
+speaker = "族長"
+text = "這就是我剛剛與你提到的永恆之火，因為它不會熄滅，於是我等族人便圍繞著它發展至今，我們哥布林族的首都約頓海姆也是如此。應該說，世界各地重要的城市幾乎都在永恆之火的所在之地。
+"
+texture = ExtResource("4_2l5mi")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_sbu66"]
+script = ExtResource("2_step")
+speaker = "維利夫"
+text = "!?
+"
+texture = ExtResource("5_4oe6t")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_hlpcg"]
+script = ExtResource("2_step")
+speaker = "族長"
+text = "!?"
+texture = ExtResource("6_dab7c")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[resource]
+script = ExtResource("1_script")
+id = "3"
+steps = Array[ExtResource("2_step")]([SubResource("Resource_tlai8"), SubResource("Resource_yhtkl"), SubResource("Resource_0k4xe"), SubResource("Resource_onj4x"), SubResource("Resource_2l5mi"), SubResource("Resource_4oe6t"), SubResource("Resource_dab7c"), SubResource("Resource_sjvjo"), SubResource("Resource_jq3uu"), SubResource("Resource_fb75d"), SubResource("Resource_dlujb"), SubResource("Resource_2xiln"), SubResource("Resource_tr2gm"), SubResource("Resource_1dsuy"), SubResource("Resource_el2nq"), SubResource("Resource_pv4sq"), SubResource("Resource_t3oyv"), SubResource("Resource_dolt5"), SubResource("Resource_tp0te"), SubResource("Resource_jao70"), SubResource("Resource_v6xju"), SubResource("Resource_70cuo"), SubResource("Resource_rj6qu"), SubResource("Resource_u8nj5"), SubResource("Resource_sbu66"), SubResource("Resource_hlpcg")])
+metadata/_custom_type_script = "uid://c7505rjkk6rpg"

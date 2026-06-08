@@ -26,8 +26,4 @@ func _on_area_2d_body_entered(_body: Node2D) -> void:
 	
 	if memory_resource.cutscene_id != "":
 		CutsceneManager.play(memory_resource.cutscene_id)
-		
-	# Optionally play a collection animation here before queue_free() if one exists.
-	# Example: animated_sprite.play("collected")
-	# await animated_sprite.animation_finished # if playing animation
 	queue_free()

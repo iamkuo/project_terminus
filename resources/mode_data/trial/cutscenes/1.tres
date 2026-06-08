@@ -1,0 +1,64 @@
+[gd_resource type="Resource" script_class="CutsceneScript" format=3 uid="uid://bxy1aumobjrs3"]
+
+[ext_resource type="Script" uid="uid://c7505rjkk6rpg" path="res://resources/data_structures/cutscene_script.gd" id="1_crffp"]
+[ext_resource type="Script" uid="uid://b2sxig6otw26p" path="res://resources/data_structures/cutscene_step.gd" id="2_5kihr"]
+[ext_resource type="Texture2D" uid="uid://d2n4srww07dng" path="res://assets/images/objects/c1-1.png" id="3_5kihr"]
+[ext_resource type="Texture2D" uid="uid://cs2277aepk6as" path="res://assets/images/objects/c1-2.png" id="4_t8ul2"]
+
+[sub_resource type="Resource" id="Resource_startup_step_1"]
+script = ExtResource("2_5kihr")
+speaker = "維利夫"
+text = "哈……哈……"
+texture = ExtResource("3_5kihr")
+
+[sub_resource type="Resource" id="Resource_startup_step_2"]
+script = ExtResource("2_5kihr")
+speaker = "維利夫"
+text = "……我殺了……人族？"
+texture = ExtResource("3_5kihr")
+
+[sub_resource type="Resource" id="Resource_crffp"]
+script = ExtResource("2_5kihr")
+speaker = "維利夫"
+text = "但如果我放過他們，會有更多哥布林受害吧"
+texture = ExtResource("3_5kihr")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_5kihr"]
+script = ExtResource("2_5kihr")
+speaker = "維利夫"
+text = "格莉德…抱歉，我無法保護妳。"
+texture = ExtResource("3_5kihr")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_t8ul2"]
+script = ExtResource("2_5kihr")
+speaker = "維利夫"
+text = "我會將人族全部殺掉，為你們復仇。"
+texture = ExtResource("3_5kihr")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_la45k"]
+script = ExtResource("2_5kihr")
+type = 2
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_fe3og"]
+script = ExtResource("2_5kihr")
+speaker = "維利夫"
+text = "安息吧，格莉德。"
+texture = ExtResource("4_t8ul2")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_10nsj"]
+script = ExtResource("2_5kihr")
+speaker = "維利夫"
+text = "那麼，我出發囉。"
+texture = ExtResource("4_t8ul2")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[resource]
+script = ExtResource("1_crffp")
+id = "1"
+steps = Array[ExtResource("2_5kihr")]([SubResource("Resource_startup_step_1"), SubResource("Resource_startup_step_2"), SubResource("Resource_crffp"), SubResource("Resource_5kihr"), SubResource("Resource_t8ul2"), SubResource("Resource_la45k"), SubResource("Resource_fe3og"), SubResource("Resource_10nsj")])
+metadata/_custom_type_script = "uid://c7505rjkk6rpg"

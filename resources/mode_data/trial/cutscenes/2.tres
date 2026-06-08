@@ -1,0 +1,147 @@
+[gd_resource type="Resource" script_class="CutsceneScript" format=3 uid="uid://bj3gupkoptcaa"]
+
+[ext_resource type="Script" uid="uid://c7505rjkk6rpg" path="res://resources/data_structures/cutscene_script.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://b2sxig6otw26p" path="res://resources/data_structures/cutscene_step.gd" id="2_step"]
+[ext_resource type="Texture2D" uid="uid://bq2w6ci82ljer" path="res://assets/images/objects/c2-1.png" id="3_i50cu"]
+
+[sub_resource type="Resource" id="Resource_h5gef"]
+script = ExtResource("2_step")
+speaker = "村長"
+text = "好久不見啊，已經長這麼大了。你妹妹沒有一起來嗎?"
+texture = ExtResource("3_i50cu")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_i50cu"]
+script = ExtResource("2_step")
+speaker = "維利夫"
+text = "格莉德死了..."
+texture = ExtResource("3_i50cu")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_v3jpy"]
+script = ExtResource("2_step")
+speaker = "村長"
+text = "!?"
+texture = ExtResource("3_i50cu")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_2hi1l"]
+script = ExtResource("2_step")
+speaker = "維利夫"
+text = "今天早上，村子被..."
+texture = ExtResource("3_i50cu")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_s2i6h"]
+script = ExtResource("2_step")
+type = 2
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_cd7rp"]
+script = ExtResource("2_step")
+speaker = " 村長"
+text = "可惡，人族已經入侵到這裡了嗎。"
+texture = ExtResource("3_i50cu")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_sra4q"]
+script = ExtResource("2_step")
+speaker = "村長"
+text = "我們民天會遷村。維利夫，你也一起來吧。
+"
+texture = ExtResource("3_i50cu")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_webor"]
+script = ExtResource("2_step")
+speaker = "維利夫"
+text = "不了，我要復仇。"
+texture = ExtResource("3_i50cu")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_hcc1h"]
+script = ExtResource("2_step")
+speaker = "村長"
+text = "......不行，那不是你一個人能背負的東西，仇恨會把你吃掉。
+"
+texture = ExtResource("3_i50cu")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_usokk"]
+script = ExtResource("2_step")
+speaker = "維利夫"
+text = "隨便。"
+texture = ExtResource("3_i50cu")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_76ibb"]
+script = ExtResource("2_step")
+speaker = "村長"
+text = "你會死！
+"
+texture = ExtResource("3_i50cu")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_0w0d8"]
+script = ExtResource("2_step")
+speaker = "維利夫"
+text = "在殺光他們以前，
+我不會死。"
+texture = ExtResource("3_i50cu")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_wqdki"]
+script = ExtResource("2_step")
+speaker = "村長"
+text = "好吧，我不會阻止你。"
+texture = ExtResource("3_i50cu")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_xnl78"]
+script = ExtResource("2_step")
+speaker = "村長"
+text = "但身為村長，我有義務保護大家，所以我不會將遷村的位置告訴可能成為破綻的你。
+"
+texture = ExtResource("3_i50cu")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_5ryvc"]
+script = ExtResource("2_step")
+speaker = "維利夫"
+text = "嗯，這樣就夠了。"
+texture = ExtResource("3_i50cu")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_17vok"]
+script = ExtResource("2_step")
+speaker = "村長"
+text = "這個給你，前往穆斯貝爾海姆吧。"
+texture = ExtResource("3_i50cu")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_b1h4u"]
+script = ExtResource("2_step")
+text = "(獲得小地圖：哥布林族區)"
+texture = ExtResource("3_i50cu")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_wf175"]
+script = ExtResource("2_step")
+speaker = "維利夫"
+text = "謝謝。"
+texture = ExtResource("3_i50cu")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_x7q6k"]
+script = ExtResource("2_step")
+speaker = "村長"
+text = "那就再見了，之後有緣再見面吧。
+"
+texture = ExtResource("3_i50cu")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[resource]
+script = ExtResource("1_script")
+id = "2"
+steps = Array[ExtResource("2_step")]([SubResource("Resource_h5gef"), SubResource("Resource_i50cu"), SubResource("Resource_v3jpy"), SubResource("Resource_2hi1l"), SubResource("Resource_s2i6h"), SubResource("Resource_cd7rp"), SubResource("Resource_sra4q"), SubResource("Resource_webor"), SubResource("Resource_hcc1h"), SubResource("Resource_usokk"), SubResource("Resource_76ibb"), SubResource("Resource_0w0d8"), SubResource("Resource_wqdki"), SubResource("Resource_xnl78"), SubResource("Resource_5ryvc"), SubResource("Resource_17vok"), SubResource("Resource_b1h4u"), SubResource("Resource_wf175"), SubResource("Resource_x7q6k")])
+metadata/_custom_type_script = "uid://c7505rjkk6rpg"
