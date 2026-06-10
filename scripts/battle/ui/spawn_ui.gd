@@ -66,16 +66,9 @@ func _is_properties_panel_open() -> bool:
 	return PropertiesUIPanel.any_open(get_tree())
 
 func _input(event: InputEvent) -> void:
-	var panel_open := _is_properties_panel_open()
-	
-	# Only gate summon hotkeys while a unit attack-mode panel is genuinely open.
-	# Use is_panel_open() (not bare visible) to avoid false blocks on stale UI state.
-	if panel_open:
-		if event is InputEventKey and event.pressed and event.keycode >= KEY_1 and event.keycode <= KEY_9:
-			get_viewport().set_input_as_handled()
-		return
-	
 	if event.is_action_pressed("ui_accept") or (event is InputEventKey and event.keycode == KEY_TAB and event.pressed):
+		if _is_properties_panel_open():
+			return
 		visible = not visible
 		get_viewport().set_input_as_handled()
 		return

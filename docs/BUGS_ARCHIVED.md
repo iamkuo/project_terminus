@@ -1255,8 +1255,8 @@ Three issues combined:
 - Added `PropertiesUI.close_all_panels()` so opening one panel closes others.
 - Blocked unit selection clicks while any Properties UI is visible.
 - Added ESC (`ui_cancel`) handling on the open panel to close it.
-- Stopped SpawnUI from handling TAB while an attack-mode panel is open.
-- Number keys are blocked only when `is_panel_open()` is true (`_panel_open` flag + valid `parent_unit`), not on bare `visible`, to avoid the prior regression where summon hotkeys were incorrectly blocked.
+- Stopped SpawnUI from handling TAB while an attack-mode panel is open (prevents summon UI flicker).
+- Number keys (1–9) always spawn units, even while the attack-mode panel is open.
 
 **Files Changed:**
 - `scripts/battle/ui/spawn_ui.gd` - Mouse passthrough restoration and input gating
