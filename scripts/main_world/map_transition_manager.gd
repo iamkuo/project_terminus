@@ -2,7 +2,6 @@ extends Node2D
 
 @export var transitions: Array[TransitionConfig] = []
 var is_transitioning: bool = false
-var previous_map_path: String = ""
 var transition_cooldown: float = 0.0
 
 @onready var map_container: Node = $MapContainer
@@ -56,22 +55,15 @@ func _is_valid_player(body: Node2D) -> bool:
 func _execute_map_transition(player: Node2D, transition: TransitionConfig) -> void:
 	is_transitioning = true
 	
-	# Store current map as previous before swapping
-	var current_map_path = ""
-	if map_container.get_child_count() > 0:
-		var current_map = map_container.get_child(0)
-		current_map_path = current_map.scene_file_path
-	
 	# Execute transition sequence
 	await GuiManager.transition_out("fade")
 	var new_map = _swap_map_scene(transition.target_scene)
-	previous_map_path = current_map_path
 	_teleport_player(player, new_map, transition.spawn_marker)
 	_connect_current_map_zones()
 	await GuiManager.transition_in("fade")
 	
 	is_transitioning = false
-	transition_cooldown = 1.5
+	transition_cooldown = 1.0
 
 func _swap_map_scene(target_scene_path: String) -> Node:
 	# Remove old maps immediately
@@ -79,8 +71,9 @@ func _swap_map_scene(target_scene_path: String) -> Node:
 		map_container.remove_child(child)
 		child.queue_free()
 	
-	# Load and instantiate new map
-	var new_map = load(target_scene_path).instantiate()
+	# Load and instantiate new map (using preloaded cache if available)
+	var new_scene = SceneSwitcher.get_preloaded_scene(target_scene_path)
+	var new_map = new_scene.instantiate()
 	map_container.add_child(new_map)
 	return new_map
 

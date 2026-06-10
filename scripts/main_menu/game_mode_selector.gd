@@ -1,17 +1,48 @@
 extends Control
 
-# Export dictionary for mapping mode prefixes to display names
-@export var mode_display_names: Dictionary = {
-	"full": "完整模式  (~40分鐘)",
-	"trial": "試玩模式  (~5分鐘)",
-	"test": "測試模式  (~1分鐘)"
+# Dictionary merging display names and keybinds-panel descriptions per mode
+@export var mode_data: Dictionary = {
+	"full": {
+		"name": "完整模式  (~40分鐘)",
+		"description": "【完整模式】\n\n體驗完整的遊戲流程，\n包含所有主線劇情、\n戰鬥關卡與結局。\n\n預計遊玩時間：~40分鐘"
+	},
+	"trial": {
+		"name": "試玩模式  (~5分鐘)",
+		"description": "【試玩模式】\n\n快速體驗遊戲核心玩法，\n包含開場劇情與\n首個戰鬥關卡。\n\n預計遊玩時間：~5分鐘"
+	},
+	"test": {
+		"name": "測試模式  (~1分鐘)",
+		"description": "【測試模式】\n\n開發者測試用途，\n直接進入戰鬥場景，\n跳過所有劇情演出。\n\n預計遊玩時間：~1分鐘"
+	}
 }
+
+# Default keybinds text shown when no mode is hovered
+const KEYBINDS_TEXT: String = "【操作說明】
+
+[W][A][S][D] / 方向鍵
+移動
+
+[E]
+互動
+
+[Space]
+跳過對話
+
+[Esc]
+暫停 / 取消
+
+[Tab]
+開關召喚介面
+
+1~9
+召喚角色(由左到右)"
 
 # Nodes
 @onready var mode_panel: Panel = $ModePanel
 @onready var mode_title: Label = $ModePanel/VBoxContent/ModeTitle
 @onready var mode_buttons_container: VBoxContainer = $ModePanel/VBoxContent/ModeButtonsContainer
 @onready var mode_button_template: Button = $ModePanel/VBoxContent/ModeButtonsContainer/ModeButtonTemplate
+@onready var keybinds_text: Label = $ModePanel/KeybindsPanel/KeybindsText
 
 # Signals
 signal back_to_main_menu()
@@ -57,32 +88,46 @@ func _ready() -> void:
 		var mode_button = mode_button_template.duplicate()
 		mode_buttons_container.add_child(mode_button)
 		
-		# Set button text using display name mapping or prefix directly
-		var display_name = mode_display_names.get(mode, mode)
-		mode_button.text = display_name
+		# Set button text using display name from mode_data, falling back to the mode key
+		var entry = mode_data.get(mode, {})
+		mode_button.text = entry.get("name", mode)
 		mode_button.show()
 		
 		# Connect the button signal
 		mode_button.pressed.connect(_on_mode_button_pressed.bind(mode))
+		
+		# Connect hover signals to update keybinds panel with mode description
+		mode_button.mouse_entered.connect(_on_mode_button_hovered.bind(mode))
+		mode_button.mouse_exited.connect(_on_mode_button_unhovered)
+		mode_button.focus_entered.connect(_on_mode_button_hovered.bind(mode))
+		mode_button.focus_exited.connect(_on_mode_button_unhovered)
+
+func _on_mode_button_hovered(mode: String) -> void:
+	# Show the mode-specific description in the keybinds panel
+	var entry = mode_data.get(mode, {})
+	keybinds_text.text = entry.get("description", KEYBINDS_TEXT)
+
+func _on_mode_button_unhovered() -> void:
+	# Restore the default keybinds text
+	keybinds_text.text = KEYBINDS_TEXT
 
 func _on_mode_button_pressed(mode: String) -> void:
 	selected_mode = mode
 	print("[GameModeSelector] Selected mode: ", mode)
 	
-	# Initialize ProgressManager with the selected mode
-	ProgressManager.mode = mode
+	# Define the heavy setup task to be run during the transition (while black)
+	var setup_task = func():
+		# Initialize ProgressManager with the selected mode
+		ProgressManager.load_mode(mode)
+		
+		# Enable cutscene triggers now that game mode has been explicitly selected
+		ProgressManager._allow_cutscene_triggers = true
+		
+		# Add some starting experience as in original code
+		ProgressManager.current_exp += 10
 	
-	# Enable cutscene triggers now that game mode has been explicitly selected
-	ProgressManager._allow_cutscene_triggers = true
-	
-	# Reload ProgressManager to apply the new mode
-	ProgressManager._ready()
-	
-	# Add some starting experience as in original code
-	ProgressManager.current_exp += 10
-	
-	# Switch to main world scene
-	SceneSwitcher.switch_scene("main_world", "none")
+	# Switch to main world scene, running the setup task during the fade
+	SceneSwitcher.switch_scene("main_world", "none", setup_task)
 	
 	# Hide the mode selection
 	hide()

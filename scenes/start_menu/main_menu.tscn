@@ -188,6 +188,9 @@ corner_radius_bottom_left = 5
 [sub_resource type="LabelSettings" id="LabelSettings_wu84c"]
 font_size = 24
 
+[sub_resource type="LabelSettings" id="LabelSettings_gv1dc"]
+font_size = 20
+
 [node name="MainMenu" type="Control" unique_id=756820166]
 layout_mode = 3
 anchors_preset = 15
@@ -354,6 +357,38 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("7_mode_selector")
+mode_data = {
+"full": {
+"description": "【完整模式】
+
+體驗完整的遊戲流程，
+包含所有主線劇情、
+戰鬥關卡與結局。
+
+預計遊玩時間：~40分鐘",
+"name": "完整模式"
+},
+"test": {
+"description": "【測試模式】
+
+開發者測試用途，
+直接進入戰鬥場景，
+跳過所有劇情演出。
+
+預計遊玩時間：~1分鐘",
+"name": "測試模式"
+},
+"trial": {
+"description": "【試玩模式】
+
+快速體驗遊戲核心玩法，
+包含開場劇情與
+首個戰鬥關卡。
+
+預計遊玩時間：~5分鐘",
+"name": "試玩模式"
+}
+}
 
 [node name="ModePanel" type="Panel" parent="GameModeSelector" unique_id=1305971451]
 layout_mode = 1
@@ -388,6 +423,9 @@ text = "【操作說明】
 [Space]
 跳過對話
 
+[Ctrl] + [Space]
+跳過所有劇情
+
 [Esc]
 暫停 / 取消
 
@@ -396,6 +434,7 @@ text = "【操作說明】
 
 1~9
 召喚角色(由左到右)"
+label_settings = SubResource("LabelSettings_gv1dc")
 horizontal_alignment = 1
 vertical_alignment = 1
 

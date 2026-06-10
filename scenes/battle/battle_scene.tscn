@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://dbm3ecaqtfqdr"]
+[gd_scene format=3 uid="uid://dbm3ecaqtfqdr"]
 
 [ext_resource type="PackedScene" uid="uid://tu7tole1qm3h" path="res://scenes/battle/player.tscn" id="4_rarhs"]
 [ext_resource type="PackedScene" uid="uid://d2kbgk6v4hfw4" path="res://scenes/battle/spawn_ui.tscn" id="6_nxtc6"]
@@ -9,45 +9,45 @@
 [ext_resource type="Script" uid="uid://d1p045ha2ggom" path="res://scripts/battle/unit/allies_manager.gd" id="script_allies"]
 [ext_resource type="Script" uid="uid://c5g2dyd8mbwcg" path="res://scripts/battle/unit/enemies_manager.gd" id="script_enemies"]
 
-[node name="Main" type="Node2D"]
+[node name="Main" type="Node2D" unique_id=972256869]
 
-[node name="Background" type="Node2D" parent="."]
+[node name="Background" type="Node2D" parent="." unique_id=1094655650]
 
-[node name="SpawnPoints" type="Node2D" parent="."]
+[node name="SpawnPoints" type="Node2D" parent="." unique_id=154672010]
 
-[node name="R_Top" type="Marker2D" parent="SpawnPoints"]
+[node name="R_Top" type="Marker2D" parent="SpawnPoints" unique_id=1226384116]
 position = Vector2(962, 137)
 
-[node name="R_Middle" type="Marker2D" parent="SpawnPoints"]
+[node name="R_Middle" type="Marker2D" parent="SpawnPoints" unique_id=1582933988]
 position = Vector2(970, 329)
 
-[node name="R_Bottom" type="Marker2D" parent="SpawnPoints"]
+[node name="R_Bottom" type="Marker2D" parent="SpawnPoints" unique_id=1543053931]
 position = Vector2(965, 540)
 
-[node name="Towers" type="Node2D" parent="."]
+[node name="Towers" type="Node2D" parent="." unique_id=1455824910]
 script = ExtResource("9_tower_mgr")
 
-[node name="AllyLane0" parent="Towers" instance=ExtResource("8_tower_scene")]
+[node name="AllyLane0" parent="Towers" unique_id=2141591619 instance=ExtResource("8_tower_scene")]
 position = Vector2(64, 126)
 max_health = 500
 defense = 5
 lane = 0
 tower_name = "Ally Top"
 
-[node name="AllyLane1" parent="Towers" instance=ExtResource("8_tower_scene")]
+[node name="AllyLane1" parent="Towers" unique_id=750106244 instance=ExtResource("8_tower_scene")]
 position = Vector2(64, 326)
 max_health = 500
 defense = 5
 tower_name = "Ally Mid"
 
-[node name="AllyLane2" parent="Towers" instance=ExtResource("8_tower_scene")]
+[node name="AllyLane2" parent="Towers" unique_id=45238796 instance=ExtResource("8_tower_scene")]
 position = Vector2(64, 521)
 max_health = 500
 defense = 5
 lane = 2
 tower_name = "Ally Bot"
 
-[node name="EnemyLane0" parent="Towers" instance=ExtResource("8_tower_scene")]
+[node name="EnemyLane0" parent="Towers" unique_id=1242588606 instance=ExtResource("8_tower_scene")]
 position = Vector2(1048, 104)
 max_health = 500
 defense = 5
@@ -55,14 +55,14 @@ team = 1
 lane = 0
 tower_name = "Enemy Top"
 
-[node name="EnemyLane1" parent="Towers" instance=ExtResource("8_tower_scene")]
+[node name="EnemyLane1" parent="Towers" unique_id=1891607113 instance=ExtResource("8_tower_scene")]
 position = Vector2(1048, 328)
 max_health = 500
 defense = 5
 team = 1
 tower_name = "Enemy Mid"
 
-[node name="EnemyLane2" parent="Towers" instance=ExtResource("8_tower_scene")]
+[node name="EnemyLane2" parent="Towers" unique_id=278549161 instance=ExtResource("8_tower_scene")]
 position = Vector2(1048, 552)
 max_health = 500
 defense = 5
@@ -70,19 +70,18 @@ team = 1
 lane = 2
 tower_name = "Enemy Bot"
 
-[node name="AlliesContainer" type="Node2D" parent="."]
+[node name="AlliesContainer" type="Node2D" parent="." unique_id=1370214122]
 script = ExtResource("script_allies")
 
-[node name="EnemiesContainer" type="Node2D" parent="."]
+[node name="EnemiesContainer" type="Node2D" parent="." unique_id=2009115854]
 script = ExtResource("script_enemies")
 
-[node name="Player" parent="." instance=ExtResource("4_rarhs")]
+[node name="Player" parent="." unique_id=1111319489 instance=ExtResource("4_rarhs")]
 position = Vector2(488, 328)
 
-[node name="UI" type="CanvasLayer" parent="."]
+[node name="UI" type="CanvasLayer" parent="." unique_id=1265558712]
 
-[node name="SpawnUI" parent="UI" instance=ExtResource("6_nxtc6")]
-visible = false
+[node name="SpawnUI" parent="UI" unique_id=398720925 instance=ExtResource("6_nxtc6")]
 anchors_preset = -1
 anchor_left = 0.05
 anchor_top = 0.5
@@ -92,11 +91,11 @@ offset_left = -49.600002
 offset_top = -133.0
 offset_right = 65.599976
 
-[node name="EndingScreen" parent="UI" instance=ExtResource("7_jlsqs")]
+[node name="EndingScreen" parent="UI" unique_id=1662254421 instance=ExtResource("7_jlsqs")]
 visible = false
 z_index = 5
 
-[node name="ElixirUI" parent="UI" instance=ExtResource("10_7hnyd")]
+[node name="ElixirUI" parent="UI" unique_id=1676341450 instance=ExtResource("10_7hnyd")]
 z_index = 2
 anchors_preset = -1
 anchor_left = 0.05

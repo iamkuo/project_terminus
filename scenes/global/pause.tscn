@@ -1,9 +1,20 @@
-[gd_scene load_steps=26 format=3 uid="uid://cpog3fskyl4m7"]
+[gd_scene format=3 uid="uid://cpog3fskyl4m7"]
 
 [ext_resource type="Script" uid="uid://bsa684qtsf8iq" path="res://scripts/global/pause.gd" id="1_pauses"]
 [ext_resource type="FontFile" uid="uid://dxc2pi1bwr1uu" path="res://assets/fonts/Cubic_11.ttf" id="3_cubic"]
 [ext_resource type="Texture2D" uid="uid://ctsb3wvh450d3" path="res://assets/images/objects/owowowwo.png" id="3_wen6a"]
 [ext_resource type="Texture2D" uid="uid://7ga0ljs8vtel" path="res://assets/images/ui/elements/Icons.png" id="4_cml1b"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_keybinds"]
+content_margin_left = 15.0
+content_margin_top = 15.0
+content_margin_right = 15.0
+content_margin_bottom = 15.0
+bg_color = Color(0.05, 0.06, 0.04, 0.6)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
 
 [sub_resource type="LabelSettings" id="LabelSettings_aicil"]
 font_size = 36
@@ -73,7 +84,7 @@ texture = SubResource("AtlasTexture_sr1c3")
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_jn4bt"]
 
-[node name="Pause" type="Control"]
+[node name="Pause" type="Control" unique_id=173955638]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -82,7 +93,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_pauses")
 
-[node name="ColorRect" type="ColorRect" parent="."]
+[node name="ColorRect" type="ColorRect" parent="." unique_id=1046608321]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -91,18 +102,8 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 0.490196)
 
-[node name="Panel" type="Panel" parent="."]
-custom_minimum_size = Vector2(400, 320)
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.2
-anchor_top = 0.2
-anchor_right = 0.8
-anchor_bottom = 0.8
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="VBoxContainer" type="VBoxContainer" parent="Panel"]
+[node name="Panel" type="Panel" parent="." unique_id=1263870359]
+custom_minimum_size = Vector2(700, 320)
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.05
@@ -111,9 +112,60 @@ anchor_right = 0.95
 anchor_bottom = 0.95
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="HBoxLayout" type="HBoxContainer" parent="Panel" unique_id=2017062816]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.03
+anchor_top = 0.05
+anchor_right = 0.97
+anchor_bottom = 0.95
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 20
+
+[node name="KeybindsPanel" type="PanelContainer" parent="Panel/HBoxLayout" unique_id=1322461394]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_keybinds")
+
+[node name="KeybindsText" type="Label" parent="Panel/HBoxLayout/KeybindsPanel" unique_id=1884214808]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_cubic")
+theme_override_font_sizes/font_size = 16
+text = "【操作說明】
+
+[W][A][S][D] / 方向鍵
+移動
+
+[E]
+互動
+
+[Space]
+跳過對話
+
+[Ctrl] + [Space]
+跳過所有劇情
+
+[Esc]
+暫停 / 取消
+
+[Tab]
+開關召喚介面
+
+1~9
+召喚角色(由左到右)"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel/HBoxLayout" unique_id=330212378]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
 theme_override_constants/separation = 25
 
-[node name="Label" type="Label" parent="Panel/VBoxContainer"]
+[node name="Label" type="Label" parent="Panel/HBoxLayout/VBoxContainer" unique_id=690879722]
 layout_mode = 2
 theme_override_fonts/font = ExtResource("3_cubic")
 theme_override_font_sizes/font_size = 24
@@ -121,14 +173,14 @@ text = "遊戲選單"
 label_settings = SubResource("LabelSettings_aicil")
 horizontal_alignment = 1
 
-[node name="GridContainer" type="GridContainer" parent="Panel/VBoxContainer"]
+[node name="GridContainer" type="GridContainer" parent="Panel/HBoxLayout/VBoxContainer" unique_id=50314918]
 layout_mode = 2
 size_flags_vertical = 6
 theme_override_constants/h_separation = 20
 theme_override_constants/v_separation = 15
 columns = 2
 
-[node name="main_volume_label" type="Label" parent="Panel/VBoxContainer/GridContainer"]
+[node name="main_volume_label" type="Label" parent="Panel/HBoxLayout/VBoxContainer/GridContainer" unique_id=476097326]
 layout_mode = 2
 theme_override_fonts/font = ExtResource("3_cubic")
 theme_override_font_sizes/font_size = 12
@@ -136,7 +188,7 @@ text = "主音量"
 label_settings = SubResource("LabelSettings_jn4bt")
 vertical_alignment = 1
 
-[node name="main_volume_slider" type="HSlider" parent="Panel/VBoxContainer/GridContainer"]
+[node name="main_volume_slider" type="HSlider" parent="Panel/HBoxLayout/VBoxContainer/GridContainer" unique_id=593780453]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -148,7 +200,7 @@ theme_override_styles/grabber_area = SubResource("StyleBoxLine_8jl4h")
 theme_override_styles/grabber_area_highlight = SubResource("StyleBoxLine_8jl4h")
 value = 50.0
 
-[node name="music_label" type="Label" parent="Panel/VBoxContainer/GridContainer"]
+[node name="music_label" type="Label" parent="Panel/HBoxLayout/VBoxContainer/GridContainer" unique_id=448613645]
 layout_mode = 2
 theme_override_fonts/font = ExtResource("3_cubic")
 theme_override_font_sizes/font_size = 12
@@ -156,7 +208,7 @@ text = "音樂"
 label_settings = SubResource("LabelSettings_jn4bt")
 vertical_alignment = 1
 
-[node name="music_slider" type="HSlider" parent="Panel/VBoxContainer/GridContainer"]
+[node name="music_slider" type="HSlider" parent="Panel/HBoxLayout/VBoxContainer/GridContainer" unique_id=785888359]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -168,7 +220,7 @@ theme_override_styles/grabber_area = SubResource("StyleBoxLine_8jl4h")
 theme_override_styles/grabber_area_highlight = SubResource("StyleBoxLine_8jl4h")
 value = 50.0
 
-[node name="sound_effect_label" type="Label" parent="Panel/VBoxContainer/GridContainer"]
+[node name="sound_effect_label" type="Label" parent="Panel/HBoxLayout/VBoxContainer/GridContainer" unique_id=1458615107]
 layout_mode = 2
 theme_override_fonts/font = ExtResource("3_cubic")
 theme_override_font_sizes/font_size = 12
@@ -176,7 +228,7 @@ text = "音效"
 label_settings = SubResource("LabelSettings_jn4bt")
 vertical_alignment = 1
 
-[node name="sound_effect_slider" type="HSlider" parent="Panel/VBoxContainer/GridContainer"]
+[node name="sound_effect_slider" type="HSlider" parent="Panel/HBoxLayout/VBoxContainer/GridContainer" unique_id=458083957]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -188,7 +240,7 @@ theme_override_styles/grabber_area = SubResource("StyleBoxLine_8jl4h")
 theme_override_styles/grabber_area_highlight = SubResource("StyleBoxLine_8jl4h")
 value = 50.0
 
-[node name="check_button" type="CheckButton" parent="Panel/VBoxContainer"]
+[node name="check_button" type="CheckButton" parent="Panel/HBoxLayout/VBoxContainer" unique_id=2143157485]
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_font_sizes/font_size = 24
@@ -197,7 +249,7 @@ theme_override_icons/checked = SubResource("DPITexture_swtu5")
 theme_override_icons/unchecked = SubResource("DPITexture_qudjn")
 text = "全螢幕/視窗"
 
-[node name="cheat_mode_button" type="CheckButton" parent="Panel/VBoxContainer"]
+[node name="cheat_mode_button" type="CheckButton" parent="Panel/HBoxLayout/VBoxContainer" unique_id=723123411]
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_font_sizes/font_size = 24
@@ -206,12 +258,12 @@ theme_override_icons/checked = SubResource("DPITexture_swtu5")
 theme_override_icons/unchecked = SubResource("DPITexture_qudjn")
 text = "作弊模式"
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Panel/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Panel/HBoxLayout/VBoxContainer" unique_id=80501568]
 layout_mode = 2
 theme_override_constants/separation = 40
 alignment = 1
 
-[node name="continue_button" type="Button" parent="Panel/VBoxContainer/HBoxContainer"]
+[node name="continue_button" type="Button" parent="Panel/HBoxLayout/VBoxContainer/HBoxContainer" unique_id=167894527]
 custom_minimum_size = Vector2(30, 30)
 layout_mode = 2
 theme_override_styles/normal = SubResource("StyleBoxTexture_liqfm")
@@ -219,7 +271,7 @@ theme_override_styles/pressed = SubResource("StyleBoxTexture_agict")
 theme_override_styles/hover = SubResource("StyleBoxTexture_xeu3l")
 theme_override_styles/focus = SubResource("StyleBoxEmpty_r1fnm")
 
-[node name="exit_button" type="Button" parent="Panel/VBoxContainer/HBoxContainer"]
+[node name="exit_button" type="Button" parent="Panel/HBoxLayout/VBoxContainer/HBoxContainer" unique_id=161574802]
 custom_minimum_size = Vector2(30, 30)
 layout_mode = 2
 theme_override_styles/normal = SubResource("StyleBoxTexture_urbfd")

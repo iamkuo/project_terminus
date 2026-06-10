@@ -9,6 +9,7 @@ var _queue: Array[String] = [] # Queue of cutscene IDs waiting to play
 signal cutscene_finished(cutscene_id: String)
 
 var played_cutscenes: Array[String] = []
+var _is_skipping_all = false
 
 func _ready() -> void:
 	ProgressManager.gamemode_changed.connect(_reload_cutscenes)
@@ -63,6 +64,7 @@ func _reload_cutscenes() -> void:
 # =============================
 func play(id: String) -> void:
 	print("playing cutscene " + id)
+	_is_skipping_all = false
 	# Validate cutscene exists
 	if not _script_map.has(id):
 		push_error("Cutscene ID not found: " + id)
@@ -97,23 +99,37 @@ func _play_next_queued() -> void:
 		var next_id = _queue.pop_front()
 		play(next_id)
 
+func _process(_delta: float) -> void:
+	if is_playing and Input.is_action_just_pressed("skip_all_cutscenes"):
+		_skip_all_cutscenes()
+
+func _skip_all_cutscenes() -> void:
+	print("Skipping all cutscenes")
+	_queue.clear()
+	_is_skipping_all = true
+	# Force wake up any awaiting GuiManager signals
+	GuiManager.dialog_finished.emit()
+	GuiManager.fullscreen_finished.emit()
+
 func _play_impl(id: String) -> void:
 	# Run the cutscene script
 	var script = _script_map[id]
 	for step in script.steps:
+		if _is_skipping_all:
+			break
 		# Run each step based on type
 		match step.type:
 			CutsceneStep.StepType.DIALOG:
 				GuiManager.play_dialog("%s: %s" % [step.speaker, step.text], step.texture)
-				await GuiManager.dialog_finished # 等待 GUI 宣告播放完畢
+				if not _is_skipping_all: await GuiManager.dialog_finished # 等待 GUI 宣告播放完畢
 
 			CutsceneStep.StepType.FULLSCREEN_TEXT:
 				GuiManager.play_fullscreen({"type": "text", "text": step.text})
-				await GuiManager.fullscreen_finished
+				if not _is_skipping_all: await GuiManager.fullscreen_finished
 
 			CutsceneStep.StepType.FULLSCREEN_IMAGE:
 				GuiManager.play_fullscreen({"type": "image", "texture": step.texture})
-				await GuiManager.fullscreen_finished
+				if not _is_skipping_all: await GuiManager.fullscreen_finished
 
 	# All steps done — Controller is responsible for closing the View
 	GuiManager.hide_gui()

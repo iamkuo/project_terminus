@@ -37,6 +37,18 @@ signal gamemode_changed()
 # --- 5. 初始化流程 ---
 
 func _ready() -> void:
+	# Initial wiring
+	_connect_signals()
+	
+	# If mode is already set (e.g. from previous session or editor), load it
+	if not mode.is_empty():
+		load_mode(mode)
+
+## Centralized mode initialization. Call this to switch or reload game modes.
+func load_mode(new_mode: String = "") -> void:
+	if not new_mode.is_empty():
+		mode = new_mode
+		
 	# Validate game mode
 	_validate_mode()
 	
@@ -78,7 +90,7 @@ func _ready() -> void:
 	# Validate all resources are consistent
 	_validate_resources()
 	
-	# Wire up all signal connections (see _connect_signals below).
+	# Ensure signals are connected (idempotent)
 	_connect_signals()
 	
 	# Only check progression if cutscene triggers are enabled (i.e., after game mode selection)
@@ -92,7 +104,8 @@ func _ready() -> void:
 func _connect_signals() -> void:
 	# Listen to BattleManager so we can respond to game events without
 	# BattleManager knowing anything about cutscenes.
-	BattleManager.battle_won.connect(_on_battle_won)
+	if not BattleManager.battle_won.is_connected(_on_battle_won):
+		BattleManager.battle_won.connect(_on_battle_won)
 
 # --- 6. 核心進度邏輯 ---
 
