@@ -1,9 +1,14 @@
 extends Control
 
+const PropertiesUIPanel = preload("res://scripts/battle/ui/properties_ui.gd")
+
 @onready var cards_container: Control = $CardsUI/CardsContainer
+@onready var background: Panel = $Background
+@onready var cards_ui: Control = $CardsUI
 
 var card_scene: PackedScene = preload("res://scenes/battle/ui/card.tscn")
 var active_cards: Array[Button] = []
+var _mouse_passthrough_active: bool = false
 
 func _ready():
 	# Auto-generate cards from unit stats resources
@@ -42,24 +47,34 @@ func _create_card(stats: UnitStats):
 	if card.has_method("set_hotkey"):
 		card.call("set_hotkey", str(active_cards.size()))
 
+func _process(_delta: float) -> void:
+	_update_mouse_passthrough()
+
+func _update_mouse_passthrough() -> void:
+	var should_pass_through := _is_properties_panel_open()
+	if should_pass_through == _mouse_passthrough_active:
+		return
+	_mouse_passthrough_active = should_pass_through
+	var filter := Control.MOUSE_FILTER_IGNORE if should_pass_through else Control.MOUSE_FILTER_STOP
+	mouse_filter = filter
+	if background:
+		background.mouse_filter = filter
+	if cards_ui:
+		cards_ui.mouse_filter = filter
+
+func _is_properties_panel_open() -> bool:
+	return PropertiesUIPanel.any_open(get_tree())
+
 func _input(event: InputEvent) -> void:
-	# Check if any Properties UI is visible
-	var all_properties = get_tree().get_nodes_in_group("properties_ui")
-	var any_visible = false
-	for p in all_properties:
-		if p.visible:
-			any_visible = true
-			break
+	var panel_open := _is_properties_panel_open()
 	
-	# CRITICAL: Disable SpawnUI entirely when Properties UI is open due to CanvasLayer priority
-	if any_visible:
-		# Only allow TAB to toggle visibility when Properties UI is open
-		if event.is_action_pressed("ui_accept") or (event is InputEventKey and event.keycode == KEY_TAB and event.pressed):
-			visible = not visible
+	# Only gate summon hotkeys while a unit attack-mode panel is genuinely open.
+	# Use is_panel_open() (not bare visible) to avoid false blocks on stale UI state.
+	if panel_open:
+		if event is InputEventKey and event.pressed and event.keycode >= KEY_1 and event.keycode <= KEY_9:
 			get_viewport().set_input_as_handled()
-		return  # Block all other input when Properties UI is open
+		return
 	
-	# Normal input handling when no Properties UI is visible
 	if event.is_action_pressed("ui_accept") or (event is InputEventKey and event.keycode == KEY_TAB and event.pressed):
 		visible = not visible
 		get_viewport().set_input_as_handled()

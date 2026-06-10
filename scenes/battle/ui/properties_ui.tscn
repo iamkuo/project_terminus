@@ -5,7 +5,7 @@
 [sub_resource type="LabelSettings" id="LabelSettings_pu5tw"]
 font_size = 24
 
-[node name="PropertiesUI" type="Control"]
+[node name="PropertiesUI" type="Control" groups=["properties_ui"]]
 custom_minimum_size = Vector2(140, 130)
 layout_mode = 3
 anchors_preset = 0
@@ -14,6 +14,7 @@ offset_top = -80.0
 offset_right = 200.0
 offset_bottom = 50.0
 mouse_filter = 2
+z_index = 0
 script = ExtResource("1_properties_ui")
 
 [node name="BgCloseButton" type="Button" parent="."]

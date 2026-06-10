@@ -105,13 +105,16 @@ func start_battle(player_node: Node2D = null, return_scene: String = "main_world
 		_saved_player_position = player.global_position
 		print("[BattleManager] Saved player position: ", _saved_player_position, " from node: ", player.get_path())
 		
-		# Also save which sub-map was active
+		# Also save which sub-map was active (prefer MapTransitionManager's tracked path)
 		var world = SceneSwitcher.current_scene
-		if world and world.has_node("MapContainer"):
+		if world and world.has_method("get_current_map_path"):
+			_saved_map_path = world.get_current_map_path()
+		if _saved_map_path.is_empty() and world and world.has_node("MapContainer"):
 			var map_container = world.get_node("MapContainer")
 			if map_container.get_child_count() > 0:
 				_saved_map_path = map_container.get_child(0).scene_file_path
-				print("[BattleManager] Saved map path: ", _saved_map_path)
+		if not _saved_map_path.is_empty():
+			print("[BattleManager] Saved map path: ", _saved_map_path)
 	else:
 		print("[BattleManager] Warning: No player found to save position, using default")
 		_saved_player_position = DEFAULT_PLAYER_POSITION
@@ -466,34 +469,28 @@ func _return_to_main_world() -> void:
 	if scene_name == _return_scene:
 		var root = SceneSwitcher.current_scene
 		
-		# 1. Restore the correct sub-map first
-		if root and root.has_method("load_map") and not _saved_map_path.is_empty():
-			root.load_map(_saved_map_path)
-			print("[BattleManager] Restored active map: ", _saved_map_path)
-		
-		# 2. Then restore the player position
-		var player = _get_player()
-		if player:
-			player.global_position = _saved_player_position
-			print("[BattleManager] Instant restored player position to: ", _saved_player_position, " on node: ", player.get_path())
-		else:
-			# Fallback: if not found immediately, try again next frame
-			await get_tree().process_frame
-			player = _get_player()
-			if player:
-				player.global_position = _saved_player_position
-				print("[BattleManager] Delayed restored player position to: ", _saved_player_position, " on node: ", player.get_path())
+		var restore_position := _saved_player_position
+		if _winning_team != Team.PLAYER and not _tp_point_loss_return_offset.is_zero_approx():
+			restore_position = _saved_player_position + _tp_point_loss_return_offset
 
-		# 3. Handle loss return offset (tp_point marking is done before switch_scene)
-		if _winning_team != Team.PLAYER:
-			# Loss: tp_point is NOT marked — it will reappear on reload.
-			# Apply the designer-set offset so the player doesn't land inside the Area2D.
-			if not _tp_point_loss_return_offset.is_zero_approx():
-				var loss_player = _get_player()
-				if is_instance_valid(loss_player):
-					loss_player.global_position = _saved_player_position + _tp_point_loss_return_offset
-					print("[BattleManager] Applied loss return offset: ", _tp_point_loss_return_offset,
-						" → final pos: ", loss_player.global_position)
+		# 1. Restore sub-map and player position together (before zone signals fire)
+		if root and root.has_method("load_map") and not _saved_map_path.is_empty():
+			root.load_map(_saved_map_path, restore_position)
+			print("[BattleManager] Restored active map: ", _saved_map_path,
+				" with player position: ", restore_position)
+		else:
+			var player = _get_player()
+			if player:
+				player.global_position = restore_position
+				print("[BattleManager] Restored player position to: ", restore_position,
+					" on node: ", player.get_path())
+			else:
+				await get_tree().process_frame
+				player = _get_player()
+				if player:
+					player.global_position = restore_position
+					print("[BattleManager] Delayed restored player position to: ", restore_position,
+						" on node: ", player.get_path())
 
 		# 4. Apply battle rewards AFTER scene transition and position restoration
 		# This prevents cutscenes from being blocked by the battle return transition

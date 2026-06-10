@@ -16,7 +16,7 @@
 resource_name = "UnitStats"
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_r0du0"]
-radius = 20.0
+radius = 15.0
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_k673f"]
 atlas = ExtResource("2_k673f")

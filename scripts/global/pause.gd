@@ -1,12 +1,12 @@
 extends Control
 
-@onready var volume_master_slider: HSlider = $Panel/HBoxLayout/VBoxContainer/GridContainer/main_volume_slider
-@onready var volume_music_slider: HSlider = $Panel/HBoxLayout/VBoxContainer/GridContainer/music_slider
-@onready var volume_sfx_slider: HSlider = $Panel/HBoxLayout/VBoxContainer/GridContainer/sound_effect_slider
-@onready var fullscreen_button: CheckButton = $Panel/HBoxLayout/VBoxContainer/check_button
-@onready var cheat_mode_button: CheckButton = $Panel/HBoxLayout/VBoxContainer/cheat_mode_button
-@onready var continue_button: Button = $Panel/HBoxLayout/VBoxContainer/HBoxContainer/continue_button
-@onready var exit_button: Button = $Panel/HBoxLayout/VBoxContainer/HBoxContainer/exit_button
+@onready var volume_master_slider: HSlider = $Panel/VBoxContainer/GridContainer/main_volume_slider
+@onready var volume_music_slider: HSlider = $Panel/VBoxContainer/GridContainer/music_slider
+@onready var volume_sfx_slider: HSlider = $Panel/VBoxContainer/GridContainer/sound_effect_slider
+@onready var fullscreen_button: CheckButton = $Panel/VBoxContainer/check_button
+@onready var cheat_mode_button: CheckButton = $Panel/VBoxContainer/cheat_mode_button
+@onready var continue_button: Button = $Panel/VBoxContainer/HBoxContainer/continue_button
+@onready var exit_button: Button = $Panel/VBoxContainer/HBoxContainer/exit_button
 
 
 func _ready() -> void:

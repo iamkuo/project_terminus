@@ -1,6 +1,23 @@
+class_name PropertiesUI
 extends Control
 
+static func any_open(tree: SceneTree) -> bool:
+	for panel in tree.get_nodes_in_group("properties_ui"):
+		if panel.has_method("is_panel_open") and panel.is_panel_open():
+			return true
+	return false
+
+static func close_all_panels(tree: SceneTree, except: Control = null) -> void:
+	for panel in tree.get_nodes_in_group("properties_ui"):
+		if panel == except:
+			continue
+		if panel.has_method("is_panel_open") and not panel.is_panel_open():
+			continue
+		if panel.has_method("hide_panel"):
+			panel.hide_panel()
+
 var parent_unit: UnitBase = null
+var _panel_open: bool = false
 
 var title_label: Label
 var stay_button: Button
@@ -12,6 +29,7 @@ var bg_close_button : Button
 
 func _ready():
 	visible = false
+	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	
 	# Ensure we're in the properties_ui group for input blocking detection
 	add_to_group("properties_ui")
@@ -46,11 +64,25 @@ func _ready():
 	if close_button:
 		close_button.pressed.connect(hide_panel)
 
+func is_panel_open() -> bool:
+	return _panel_open and visible and is_instance_valid(parent_unit)
+
 func show_for_unit(unit: UnitBase):
+	close_all_panels(get_tree(), self)
 	parent_unit = unit
+	_panel_open = true
 	title_label.text = "[ %s ]" % (unit.stats.display_name if unit.stats.display_name != "" else unit.stats.unit_id)
+	z_index = 100
+	mouse_filter = Control.MOUSE_FILTER_STOP
 	visible = true
 	_update_button_highlights()
+
+func _unhandled_input(event: InputEvent) -> void:
+	if not is_panel_open():
+		return
+	if event.is_action_pressed("ui_cancel"):
+		hide_panel()
+		get_viewport().set_input_as_handled()
 
 func _on_pattern_selected(pattern_type: int):
 	if not parent_unit:
@@ -95,7 +127,10 @@ func _update_button_highlights():
 			attack_tower_button.modulate = Color(1, 1, 0)
 
 func hide_panel():
+	_panel_open = false
 	visible = false
+	mouse_filter = Control.MOUSE_FILTER_IGNORE
+	z_index = 0
 	if parent_unit:
 		parent_unit.deselect_unit()
 	parent_unit = null

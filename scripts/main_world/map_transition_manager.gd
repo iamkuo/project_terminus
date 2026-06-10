@@ -3,20 +3,36 @@ extends Node2D
 @export var transitions: Array[TransitionConfig] = []
 var is_transitioning: bool = false
 var transition_cooldown: float = 0.0
+var _current_map_path: String = ""
 
 @onready var map_container: Node = $MapContainer
 
 func _ready() -> void:
+	_sync_current_map_path()
 	_connect_current_map_zones()
+
+func get_current_map_path() -> String:
+	return _current_map_path
 
 func _process(delta: float) -> void:
 	if transition_cooldown > 0:
 		transition_cooldown -= delta
 
-## Public API to change maps externally (e.g. from BattleManager)
-func load_map(target_scene_path: String) -> Node:
+## Public API to change maps externally (e.g. from BattleManager).
+## Pass player_position to restore the player before zone signals reconnect.
+func load_map(target_scene_path: String, player_position: Vector2 = Vector2.INF) -> Node:
+	transition_cooldown = 1.0
+	is_transitioning = true
+
 	var new_map = _swap_map_scene(target_scene_path)
+
+	if player_position != Vector2.INF:
+		var player := _find_player()
+		if player:
+			player.global_position = player_position
+
 	_connect_current_map_zones()
+	is_transitioning = false
 	return new_map
 
 func _connect_current_map_zones() -> void:
@@ -75,7 +91,22 @@ func _swap_map_scene(target_scene_path: String) -> Node:
 	var new_scene = SceneSwitcher.get_preloaded_scene(target_scene_path)
 	var new_map = new_scene.instantiate()
 	map_container.add_child(new_map)
+	_current_map_path = target_scene_path
 	return new_map
+
+func _sync_current_map_path() -> void:
+	if not map_container or map_container.get_child_count() == 0:
+		_current_map_path = ""
+		return
+
+	var current_map = map_container.get_child(0)
+	_current_map_path = current_map.scene_file_path
+
+func _find_player() -> Node2D:
+	var player = get_node_or_null("%Player")
+	if is_instance_valid(player):
+		return player
+	return find_child("Player", true, false) as Node2D
 
 func _teleport_player(player: Node2D, current_map: Node, spawn_marker_path: String) -> void:
 	var spawn_point = current_map.get_node_or_null(spawn_marker_path)

@@ -4,6 +4,7 @@ extends CharacterBody2D
 enum Team {PLAYER = 0, OPPONENT = 1}
 
 const unit_selection_circle = preload("res://scripts/battle/ui/unit_selection_circle.gd")
+const PropertiesUIPanel = preload("res://scripts/battle/ui/properties_ui.gd")
 
 const ARRIVAL_DISTANCE: float = 5.0
 const MOVING_SPEED_THRESHOLD: float = 5.0
@@ -230,6 +231,8 @@ func _move_towards(target_pos: Vector2):
 func _input(event: InputEvent):
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 		if team != Team.PLAYER or lifecycle_state != LifecycleState.ALIVE:
+			return
+		if PropertiesUIPanel.any_open(get_tree()):
 			return
 			
 		var local_mouse_pos = to_local(get_global_mouse_position())

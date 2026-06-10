@@ -1211,6 +1211,61 @@ In `ProgressManager`:
 
 ---
 
+## Bug 23: Player Position Not Restored After Battle on Human Map (FIXED)
+**Status:** ✅ FIXED
+
+### Symptoms
+- After entering a battle on the human map, the player returns to the wrong location or the goblin map instead of where they entered the battle.
+- Goblin-map battles worked; human-map battles did not reliably restore position.
+
+### Root Cause
+Two issues combined:
+
+1. **No authoritative map path tracking**: `MapTransitionManager` swapped maps during zone transitions but never stored which map was active. `BattleManager` read `scene_file_path` from `MapContainer`, which could be stale or empty after a dynamic swap to the human map.
+2. **Restore ordering race**: On battle return, `load_map()` reconnected transition zones before the player position was restored, so the player could briefly sit at the default spawn and trigger an unwanted map transition.
+
+### Solution
+- `MapTransitionManager` now tracks `_current_map_path` (updated on init, zone transition, and `load_map`).
+- Added `get_current_map_path()` for `BattleManager` to read the active sub-map path.
+- `load_map()` accepts an optional `player_position` and restores it **before** reconnecting zone signals, with `transition_cooldown` set to block immediate re-triggers.
+
+**Files Changed:**
+- `scripts/main_world/map_transition_manager.gd` - Map path tracking, combined map + position restore API.
+- `scripts/battle/main/battle_manager.gd` - Use `get_current_map_path()` on save; pass position into `load_map()` on return.
+
+---
+
+## Bug 24: Attack Mode Panel Uncloseable / Click-Through / Flicker in Battle (FIXED)
+**Status:** ✅ FIXED
+
+### Symptoms
+- The unit attack-mode panel (Properties UI) sometimes could not be closed
+- Clicks passed through the summon interface and opened multiple unit panels at once
+- The summon interface flickered when the attack-mode panel was open
+
+### Root Cause
+Three issues combined:
+
+1. **Missing mouse passthrough:** `spawn_ui.gd` no longer applied the Bug 9 fix that sets `mouse_filter = IGNORE` on SpawnUI and its fullscreen children when any Properties UI is visible. CanvasLayer SpawnUI kept blocking clicks to the world-space panel.
+2. **No single-panel enforcement:** Each unit owns a Properties UI instance. Opening a second unit did not close the first panel, so multiple panels could stack.
+3. **TAB toggled SpawnUI while Properties UI was open:** This changed SpawnUI visibility and mouse blocking mid-interaction, causing flicker and inconsistent close behavior. Unit `_input` still accepted clicks while any panel was open, stacking panels.
+
+### Solution
+- Restored dynamic `mouse_filter` passthrough on SpawnUI, Background, and CardsUI via `_process()` (only updates when state changes).
+- Added `PropertiesUI.close_all_panels()` so opening one panel closes others.
+- Blocked unit selection clicks while any Properties UI is visible.
+- Added ESC (`ui_cancel`) handling on the open panel to close it.
+- Stopped SpawnUI from handling TAB while an attack-mode panel is open.
+- Number keys are blocked only when `is_panel_open()` is true (`_panel_open` flag + valid `parent_unit`), not on bare `visible`, to avoid the prior regression where summon hotkeys were incorrectly blocked.
+
+**Files Changed:**
+- `scripts/battle/ui/spawn_ui.gd` - Mouse passthrough restoration and input gating
+- `scripts/battle/ui/properties_ui.gd` - Single-panel enforcement, ESC close, mouse filter management
+- `scripts/battle/unit/unit_base.gd` - Block unit clicks while panel open
+- `scenes/battle/ui/properties_ui.tscn` - Added `properties_ui` group on root node
+
+---
+
 ## Related Documentation
 - [`../README.md`](../README.md) - Project architecture and core systems
 - [`ARCHITECTURE.md`](ARCHITECTURE.md) - Game architecture and signal interaction graphs

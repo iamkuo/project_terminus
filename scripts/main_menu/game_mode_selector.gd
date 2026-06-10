@@ -28,6 +28,9 @@ const KEYBINDS_TEXT: String = "【操作說明】
 [Space]
 跳過對話
 
+[Ctrl] + [Space]
+跳過所有劇情
+
 [Esc]
 暫停 / 取消
 
