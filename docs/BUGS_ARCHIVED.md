@@ -1192,6 +1192,25 @@ In `ProgressManager`:
 
 ---
 
+## Bug 22: Cutscenes and Shards Spawn/Trigger Again When Re-entering Maps (FIXED)
+**Status:** ✅ FIXED
+
+### Symptoms
+- When a player leaves a map and re-enters, already triggered cutscene triggers and collected memory shards are spawned again, allowing duplicate collection/playback.
+
+### Root Cause
+- `cutscene.gd` and `memory_shard.gd` did not check the global state registries (`CutsceneManager.played_cutscenes` and `ProgressManager.unlocked_memory_ids`) upon initialization to determine if they should self-destruct.
+
+### Solution
+- Modified `memory_shard.gd` to check if `memory_resource.id` is already in `ProgressManager.unlocked_memory_ids` inside `_ready()`, and if so, perform `queue_free()`.
+- Modified `cutscene.gd` to check if `script_id` is already in `CutsceneManager.played_cutscenes` inside `_ready()`, and if so, perform `queue_free()`. Also added validations for empty or invalid cutscene IDs to prevent runtime issues.
+
+**Files Changed:**
+- `scripts/main_world/memory_shard.gd` - Added already-collected self-destruct check in `_ready()`.
+- `scripts/main_world/cutscene.gd` - Added already-played self-destruct check and validation in `_ready()`.
+
+---
+
 ## Related Documentation
 - [`../README.md`](../README.md) - Project architecture and core systems
 - [`ARCHITECTURE.md`](ARCHITECTURE.md) - Game architecture and signal interaction graphs
