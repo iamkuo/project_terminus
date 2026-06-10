@@ -44,7 +44,8 @@ func _on_zone_entered(body: Node2D, transition: TransitionConfig) -> void:
 		
 	if ProgressManager.get_current_level() < transition.required_level:
 		if not transition.lock_cutscene_id.is_empty():
-			CutsceneManager.play(transition.lock_cutscene_id)
+			# Tell ProgressManager the player was blocked — it decides the response.
+			ProgressManager.on_area_entry_blocked(transition.lock_cutscene_id)
 		return
 		
 	_execute_map_transition(body, transition)

@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="StageOrder" load_steps=4 format=3 uid="uid://b15ivam3g6uy5"]
+[gd_resource type="Resource" script_class="StageOrder" format=3 uid="uid://b15ivam3g6uy5"]
 
 [ext_resource type="Script" uid="uid://bfg5kjb0bo8cr" path="res://resources/data_structures/stage_data.gd" id="1_stage_data"]
 [ext_resource type="Script" uid="uid://cynnybbf5feph" path="res://resources/data_structures/stage_order.gd" id="2_stage_order"]

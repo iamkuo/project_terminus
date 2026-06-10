@@ -1,14 +1,14 @@
-[gd_scene load_steps=3 format=3 uid="uid://ce8g08ght4lv5"]
+[gd_scene format=3 uid="uid://ce8g08ght4lv5"]
 
 [ext_resource type="PackedScene" uid="uid://dm625ksy5738w" path="res://scenes/global/gui.tscn" id="1_qbsmt"]
 [ext_resource type="PackedScene" uid="uid://ypplfbkktob5" path="res://scenes/start_menu/main_menu.tscn" id="3_cpr0p"]
 
-[node name="Game" type="Node2D"]
+[node name="Game" type="Node2D" unique_id=1965162959]
 
-[node name="GUI" parent="." instance=ExtResource("1_qbsmt")]
+[node name="GUI" parent="." unique_id=375616958 instance=ExtResource("1_qbsmt")]
 unique_name_in_owner = true
 layer = 2
 
-[node name="SceneContainer" type="Node" parent="."]
+[node name="SceneContainer" type="Node" parent="." unique_id=880866891]
 
-[node name="MainMenu" parent="SceneContainer" instance=ExtResource("3_cpr0p")]
+[node name="MainMenu" parent="SceneContainer" unique_id=428910527 instance=ExtResource("3_cpr0p")]

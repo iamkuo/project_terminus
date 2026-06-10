@@ -5,6 +5,8 @@
 [ext_resource type="Texture2D" uid="uid://b0oecl585bnd3" path="res://assets/images/characters/player.png" id="3_ut8dg"]
 [ext_resource type="Script" uid="uid://cy3dm07y0rani" path="res://scripts/main_world/minimap.gd" id="4_7py1f"]
 [ext_resource type="Texture2D" uid="uid://kxciaiec21vs" path="res://assets/images/ui/maps/map_goblin.png" id="5_bdtnk"]
+[ext_resource type="Texture2D" uid="uid://bh0v5imvuk7rf" path="res://assets/images/ui/maps/map_human.png" id="6_bdtnk"]
+[ext_resource type="Texture2D" uid="uid://dm48ch7rvlsrd" path="res://assets/images/ui/maps/empty_map.png" id="7_eiovx"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_5gcru"]
 texture = ExtResource("1_q7lps")
@@ -114,12 +116,20 @@ anchor_left = 0.65
 anchor_top = 0.05
 anchor_right = 0.95
 anchor_bottom = 0.95
+offset_left = 28.032043
+offset_top = -1.4039917
+offset_right = 195.28796
+offset_bottom = -1.4039917
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("5_bdtnk")
 expand_mode = 2
 stretch_mode = 5
 script = ExtResource("4_7py1f")
+goblin_map_texture = ExtResource("5_bdtnk")
+human_map_texture = ExtResource("6_bdtnk")
+locked_map_texture = ExtResource("7_eiovx")
+goblin_cutscene_id = "2"
+human_cutscene_id = "boss_1_end"
 
 [node name="MemoriesTab" type="VBoxContainer" parent="TabContainer" unique_id=695927998]
 visible = false

@@ -191,7 +191,9 @@ func setup_backpack():
 		if is_unlocked:
 			torch.pressed.connect(func():
 				backpack_root.visible = false
-				CutsceneManager.play(mem_data.cutscene_id)
+				# Tell ProgressManager the player wants to replay this memory.
+				# It looks up the associated cutscene and plays it.
+				ProgressManager.replay_memory(mem_data.id)
 		)
 	
 	# Refresh UI to ensure initial state is correct
@@ -211,7 +213,9 @@ func _on_memory_collected(memory_id: String):
 		if mem_data:
 			torch.pressed.connect(func():
 				backpack_root.visible = false
-				CutsceneManager.play(mem_data.cutscene_id)
+				# Tell ProgressManager the player wants to replay this memory.
+				# It looks up the associated cutscene and plays it.
+				ProgressManager.replay_memory(mem_data.id)
 			)
 
 func _on_gamemode_changed():

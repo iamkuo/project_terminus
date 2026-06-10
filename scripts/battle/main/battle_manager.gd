@@ -3,6 +3,9 @@ extends Node
 signal game_state_changed(state: GameState)
 signal rewards_applied(exp_earned: int, crystals_earned: int)
 signal battle_ended(winning_team: int)
+## Emitted after rewards are applied when the player wins a battle.
+## ProgressManager listens to this and handles any post-battle cutscenes.
+signal battle_won
 
 enum Team {PLAYER = 0, OPPONENT = 1}
 enum GameState {IDLE = 0, READY = 1, GAME_OVER = 2}
@@ -447,6 +450,15 @@ func end_battle(exp_earned: int = -1, crystals_earned: int = -1) -> void:
 
 func _return_to_main_world() -> void:
 	print("[BattleManager] Returning to world: ", _return_scene)
+
+	# Mark the tp_point as triggered BEFORE the scene switch.
+	# tp_point._ready() fires synchronously inside SceneSwitcher.add_child(), which
+	# happens on the same call as scene_added.emit(). If we marked it only after
+	# awaiting scene_added, the _ready() check would already have passed and the
+	# node would survive — invisible but still triggerable.
+	if _winning_team == Team.PLAYER and not _tp_point_id.is_empty():
+		mark_tp_point_triggered(_tp_point_id)
+		print("[BattleManager] Pre-marked tp_point triggered (win): ", _tp_point_id)
 	
 	SceneSwitcher.switch_scene(_return_scene, "fade")
 	
@@ -472,13 +484,8 @@ func _return_to_main_world() -> void:
 				player.global_position = _saved_player_position
 				print("[BattleManager] Delayed restored player position to: ", _saved_player_position, " on node: ", player.get_path())
 
-		# 3. Handle TP Point and position offset based on battle outcome
-		if _winning_team == Team.PLAYER:
-			# Win: permanently remove the tp_point from future world loads
-			if not _tp_point_id.is_empty():
-				mark_tp_point_triggered(_tp_point_id)
-				print("[BattleManager] Marked tp_point triggered (win): ", _tp_point_id)
-		else:
+		# 3. Handle loss return offset (tp_point marking is done before switch_scene)
+		if _winning_team != Team.PLAYER:
 			# Loss: tp_point is NOT marked — it will reappear on reload.
 			# Apply the designer-set offset so the player doesn't land inside the Area2D.
 			if not _tp_point_loss_return_offset.is_zero_approx():
@@ -492,18 +499,11 @@ func _return_to_main_world() -> void:
 		# This prevents cutscenes from being blocked by the battle return transition
 		apply_battle_rewards()
 
-		# 5. Unlock memory on win only
-		if _winning_team == Team.PLAYER and not ConfigManager.unlock_memory_on_win.is_empty():
-			var memory_id = ConfigManager.unlock_memory_on_win
-			ProgressManager.collect_memory(memory_id)
-			print("[BattleManager] Unlocked memory '%s' (win)" % memory_id)
-			# Play the cutscene associated with the memory (if any)
-			var mem_data: MemoryData = ProgressManager.active_memories.filter(
-				func(m): return m.id == memory_id
-			).front()
-			if mem_data and not mem_data.cutscene_id.is_empty():
-				CutsceneManager.play(mem_data.cutscene_id)
-				print("[BattleManager] Playing memory cutscene '%s'" % mem_data.cutscene_id)
+		# 5. Announce victory — ProgressManager listens to battle_won and handles
+		# any associated cutscene. BattleManager knows nothing about cutscenes.
+		if _winning_team == Team.PLAYER:
+			battle_won.emit()
+			print("[BattleManager] battle_won emitted")
 
 	# Wait for fade in to complete
 	await SceneSwitcher.scene_transition_finished

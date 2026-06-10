@@ -8,6 +8,8 @@ var _queue: Array[String] = [] # Queue of cutscene IDs waiting to play
 
 signal cutscene_finished(cutscene_id: String)
 
+var played_cutscenes: Array[String] = []
+
 func _ready() -> void:
 	ProgressManager.gamemode_changed.connect(_reload_cutscenes)
 	_reload_cutscenes()
@@ -78,6 +80,8 @@ func play(id: String) -> void:
 	is_playing = true
 	await _play_impl(id)
 	is_playing = false
+	if not played_cutscenes.has(id):
+		played_cutscenes.append(id)
 	cutscene_finished.emit(id)
 	
 	# Play next queued cutscene if any

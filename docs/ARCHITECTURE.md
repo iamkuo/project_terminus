@@ -21,6 +21,7 @@ graph TD
     %% Interactions
     PM -->|data_updated| HUD["HUD / UI"]
     PM -->|memory_collected| HUD
+    PM -->|cutscene_requested| CM
     
     SS -->|scene_transition_finished| World["World Scripts"]
     
@@ -550,6 +551,20 @@ ElixirUI
 
 SpawnUI
   └─> card_pressed ──> BattleManager.spawn_ally()
+
+ProgressManager (cutscene signal bus)
+  └─> cutscene_requested(cutscene_id)
+        └─> CutsceneManager.play(cutscene_id)
+
+  All trigger sites call ProgressManager.request_cutscene() instead of
+  CutsceneManager directly. This keeps the _allow_cutscene_triggers guard
+  enforced in one place:
+    - Stage progression  (progress_manager.gd)
+    - Battle win         (battle_manager.gd)
+    - Memory shard       (memory_shard.gd  → collect_memory_with_cutscene)
+    - World area trigger (cutscene.gd)
+    - Map lock           (map_transition_manager.gd)
+    - Backpack replay    (backpack_ui.gd)
 ```
 
 ---

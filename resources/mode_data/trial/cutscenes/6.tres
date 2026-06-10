@@ -2,9 +2,9 @@
 
 [ext_resource type="Script" uid="uid://c7505rjkk6rpg" path="res://resources/data_structures/cutscene_script.gd" id="1_rb376"]
 [ext_resource type="Script" uid="uid://b2sxig6otw26p" path="res://resources/data_structures/cutscene_step.gd" id="2_5icvq"]
-[ext_resource type="Texture2D" uid="uid://ccqs4k56cf0uf" path="res://assets/images/objects/c6-1.png" id="3_jduo1"]
-[ext_resource type="Texture2D" uid="uid://bco023nr3s8td" path="res://assets/images/objects/c6-2.png" id="4_m3u5l"]
-[ext_resource type="Texture2D" uid="uid://b5f0oywof7tnl" path="res://assets/images/objects/c6-3.png" id="5_15d2m"]
+[ext_resource type="Texture2D" uid="uid://fg0np7s8s6o8" path="res://assets/images/objects/c6-1.png" id="3_jduo1"]
+[ext_resource type="Texture2D" uid="uid://bvjrlrvdhw12l" path="res://assets/images/objects/c6-2.png" id="4_m3u5l"]
+[ext_resource type="Texture2D" uid="uid://csb440hqvf0c2" path="res://assets/images/objects/c6-3.png" id="5_15d2m"]
 
 [sub_resource type="Resource" id="Resource_rq25h"]
 script = ExtResource("2_5icvq")
@@ -67,7 +67,7 @@ metadata/_custom_type_script = "uid://b2sxig6otw26p"
 
 [sub_resource type="Resource" id="Resource_m0tro"]
 script = ExtResource("2_5icvq")
-text = "(獲得人界得地圖了)
+text = "(獲得人界的地圖了)
 "
 texture = ExtResource("4_m3u5l")
 metadata/_custom_type_script = "uid://b2sxig6otw26p"

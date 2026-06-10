@@ -1,17 +1,17 @@
-[gd_scene load_steps=6 format=3 uid="uid://hjwobmyip8lh"]
+[gd_scene format=3 uid="uid://hjwobmyip8lh"]
 
-[ext_resource type="Texture2D" uid="uid://dpwll505d2ym" path="res://assets/images/objects/teleport_point.png" id="1_dvxg5"]
+[ext_resource type="Texture2D" uid="uid://do4ef1wbdludw" path="res://assets/images/characters/human_soldier.png" id="1_j1lx6"]
 [ext_resource type="Script" uid="uid://bdfybhcd4oc5i" path="res://scripts/main_world/tp_point.gd" id="2_dvxg5"]
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_1v2qx"]
-atlas = ExtResource("1_dvxg5")
-region = Rect2(0, 0, 50, 50)
+[sub_resource type="AtlasTexture" id="AtlasTexture_qa814"]
+atlas = ExtResource("1_j1lx6")
+region = Rect2(0, 0, 23, 25)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_f8pil"]
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_1v2qx")
+"texture": SubResource("AtlasTexture_qa814")
 }],
 "loop": true,
 "name": &"default",
@@ -21,14 +21,14 @@ animations = [{
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_nwa0e"]
 size = Vector2(45, 48)
 
-[node name="TpPoint" type="AnimatedSprite2D"]
+[node name="TpPoint" type="AnimatedSprite2D" unique_id=669205725]
 sprite_frames = SubResource("SpriteFrames_f8pil")
 script = ExtResource("2_dvxg5")
 
-[node name="Area2D" type="Area2D" parent="."]
+[node name="Area2D" type="Area2D" parent="." unique_id=1567712423]
 collision_layer = 8
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=183417358]
 position = Vector2(-0.5, 0)
 shape = SubResource("RectangleShape2D_nwa0e")
 

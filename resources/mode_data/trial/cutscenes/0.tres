@@ -2,17 +2,17 @@
 
 [ext_resource type="Script" uid="uid://c7505rjkk6rpg" path="res://resources/data_structures/cutscene_script.gd" id="1_jncgk"]
 [ext_resource type="Script" uid="uid://b2sxig6otw26p" path="res://resources/data_structures/cutscene_step.gd" id="2_jcdir"]
-[ext_resource type="Texture2D" uid="uid://61yj0eotama7" path="res://assets/images/objects/1.png" id="3_xjwxv"]
-[ext_resource type="Texture2D" uid="uid://hd6sgkngbk2q" path="res://assets/images/objects/c0-1.png" id="4_xjwxv"]
-[ext_resource type="Texture2D" uid="uid://bma24uiwuh7ds" path="res://assets/images/objects/c0-2.png" id="5_kl1v5"]
-[ext_resource type="Texture2D" uid="uid://ce312lsoui3t0" path="res://assets/images/objects/c0-3.png" id="6_yemme"]
-[ext_resource type="Texture2D" uid="uid://8fm0swt6q07r" path="res://assets/images/objects/c0-4.png" id="7_pecdr"]
-[ext_resource type="Texture2D" uid="uid://dk6xpkc6jno4q" path="res://assets/images/objects/c0-5.png" id="8_u4oa0"]
-[ext_resource type="Texture2D" uid="uid://cwy6p8xjve35o" path="res://assets/images/objects/c0-6.png" id="9_qv8fh"]
-[ext_resource type="Texture2D" uid="uid://bb33vmt6t60q8" path="res://assets/images/objects/c0-7.png" id="10_khoj7"]
-[ext_resource type="Texture2D" uid="uid://dm78diursgydk" path="res://assets/images/objects/c0-8.png" id="11_dx3t6"]
-[ext_resource type="Texture2D" uid="uid://eqt4ymnutuqm" path="res://assets/images/objects/c0-9.png" id="12_oymvd"]
-[ext_resource type="Texture2D" uid="uid://c68fmbnlka8tl" path="res://assets/images/objects/c0-10.png" id="13_6w2bl"]
+[ext_resource type="Texture2D" uid="uid://dnyrghlmpv6jd" path="res://assets/images/objects/1.png" id="3_xjwxv"]
+[ext_resource type="Texture2D" uid="uid://b2k870fh8oxt7" path="res://assets/images/objects/c0-1.png" id="4_xjwxv"]
+[ext_resource type="Texture2D" uid="uid://syc3soj3filh" path="res://assets/images/objects/c0-2.png" id="5_kl1v5"]
+[ext_resource type="Texture2D" uid="uid://datxwa4sit6bk" path="res://assets/images/objects/c0-3.png" id="6_yemme"]
+[ext_resource type="Texture2D" uid="uid://1o41dybywnro" path="res://assets/images/objects/c0-4.png" id="7_pecdr"]
+[ext_resource type="Texture2D" uid="uid://bmtecri2tjqrh" path="res://assets/images/objects/c0-5.png" id="8_u4oa0"]
+[ext_resource type="Texture2D" uid="uid://cxf5t2qbl5ld0" path="res://assets/images/objects/c0-6.png" id="9_qv8fh"]
+[ext_resource type="Texture2D" uid="uid://s74182kwevwl" path="res://assets/images/objects/c0-7.png" id="10_khoj7"]
+[ext_resource type="Texture2D" uid="uid://bjleitgeomynv" path="res://assets/images/objects/c0-8.png" id="11_dx3t6"]
+[ext_resource type="Texture2D" uid="uid://c70mce8ps6lfm" path="res://assets/images/objects/c0-9.png" id="12_oymvd"]
+[ext_resource type="Texture2D" uid="uid://bhn71nsffc61p" path="res://assets/images/objects/c0-10.png" id="13_6w2bl"]
 
 [sub_resource type="Resource" id="Resource_step_1"]
 script = ExtResource("2_jcdir")
@@ -167,6 +167,6 @@ metadata/_custom_type_script = "uid://b2sxig6otw26p"
 
 [resource]
 script = ExtResource("1_jncgk")
-id = "mini_level"
+id = "0"
 steps = Array[ExtResource("2_jcdir")]([SubResource("Resource_step_1"), SubResource("Resource_step_2"), SubResource("Resource_gjmbf"), SubResource("Resource_nwty2"), SubResource("Resource_cfkc3"), SubResource("Resource_1y1mp"), SubResource("Resource_15nbn"), SubResource("Resource_7tots"), SubResource("Resource_xdx82"), SubResource("Resource_qrgqu"), SubResource("Resource_c2g1d"), SubResource("Resource_uxecc"), SubResource("Resource_1mjct"), SubResource("Resource_jx5eh"), SubResource("Resource_3r0sj"), SubResource("Resource_qd1ik"), SubResource("Resource_0h2pg"), SubResource("Resource_hacvf"), SubResource("Resource_petuq"), SubResource("Resource_qagdx"), SubResource("Resource_a5ypr"), SubResource("Resource_diaxw")])
 metadata/_custom_type_script = "uid://c7505rjkk6rpg"

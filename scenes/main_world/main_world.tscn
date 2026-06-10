@@ -19,7 +19,7 @@ zone_marker = "TransitionZoneLower"
 target_scene = "res://scenes/main_world/main_world_goblin_map.scn"
 spawn_marker = "SpawnPointUpper"
 
-[node name="MainWorld" type="Node2D" unique_id=362556931]
+[node name="MainWorld2" type="Node2D" unique_id=362556931]
 y_sort_enabled = true
 script = ExtResource("15_trans_mgr")
 transitions = Array[ExtResource("2_vjrnk")]([SubResource("Resource_vjrnk"), SubResource("Resource_4lrb5")])
@@ -31,7 +31,7 @@ y_sort_enabled = true
 
 [node name="Player" parent="." unique_id=1710806527 instance=ExtResource("7_so2xy")]
 unique_name_in_owner = true
-position = Vector2(-1798, 2047)
+position = Vector2(-4316, 3940)
 rotation = 0.0
 speed = 1000.0
 
@@ -42,4 +42,3 @@ visible = false
 
 [node name="Backpack" parent="GUILayer" unique_id=188971982 instance=ExtResource("4_avgj4")]
 visible = false
-

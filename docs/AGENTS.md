@@ -26,6 +26,7 @@ Update these files when making changes:
 3. **UI ownership** - Each manager owns its UI (no cross-manager control)
 4. **Resource ID matching** - Code IDs must match resource file IDs
 5. **Async operations** - Use `await` for cutscenes, transitions
+6. **Cutscene routing** - NEVER call `CutsceneManager.play()` directly. Always use `ProgressManager.request_cutscene(cutscene_id)`. For memory collection + cutscene in one step, use `ProgressManager.collect_memory_with_cutscene(memory_id)`. CutsceneManager listens to `ProgressManager.cutscene_requested` internally.
 
 ### Critical Singleton Managers
 SceneSwitcher, GuiManager, CutsceneManager, ProgressManager, ConfigManager, BattleManager, ProjectileManager, MessageManager, SkillManager

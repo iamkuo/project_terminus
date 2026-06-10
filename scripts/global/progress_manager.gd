@@ -78,12 +78,21 @@ func _ready() -> void:
 	# Validate all resources are consistent
 	_validate_resources()
 	
+	# Wire up all signal connections (see _connect_signals below).
+	_connect_signals()
+	
 	# Only check progression if cutscene triggers are enabled (i.e., after game mode selection)
 	if _allow_cutscene_triggers:
 		_check_stage_progression()
 	
 	# Emit signal to notify UI that gamemode has changed
 	gamemode_changed.emit()
+
+# Centralised signal wiring — all connects live here so _ready() stays clean.
+func _connect_signals() -> void:
+	# Listen to BattleManager so we can respond to game events without
+	# BattleManager knowing anything about cutscenes.
+	BattleManager.battle_won.connect(_on_battle_won)
 
 # --- 6. 核心進度邏輯 ---
 
@@ -99,19 +108,63 @@ func _check_stage_progression() -> void:
 		# 符合條件：更新進度
 		current_stage_index = next_idx
 		
-			# Unlock the memory shard associated with this stage (if any)
+		# Unlock the memory shard associated with this stage (if any)
 		if stage.unlocks_memory_id:
-			collect_memory(stage.unlocks_memory_id)
+			var play_mem_cutscene = true
+			if not stage.cutscene_id.is_empty():
+				for mem in active_memories:
+					if mem.id == stage.unlocks_memory_id:
+						if mem.cutscene_id == stage.cutscene_id:
+							play_mem_cutscene = false
+						break
+			collect_memory(stage.unlocks_memory_id, play_mem_cutscene)
 		
-		# 處理劇情觸發 (原本的 _handle_stage_unlock 與 _handle_cutscene_fallback 已合併)
-		# Only trigger cutscenes if they have been explicitly enabled (i.e., after game mode selection)
-		if _allow_cutscene_triggers and not stage.cutscene_id.is_empty() and stage.cutscene_id in active_cutscenes:
-			CutsceneManager.play(stage.cutscene_id)
+		# Stage reached — let ProgressManager decide what cutscene to play (if any).
+		if not stage.cutscene_id.is_empty():
+			_play_cutscene(stage.cutscene_id)
 		
 		# Always emit data updated when a stage milestone is reached
 		data_updated.emit()
 
 # --- 7. 通用工具與對外接口 ---
+
+## Private — the ONLY place in the entire codebase that calls CutsceneManager.
+## All cutscene logic flows through here so the guard is enforced once.
+func _play_cutscene(cutscene_id: String) -> void:
+	if cutscene_id.is_empty() or not _allow_cutscene_triggers:
+		return
+	if cutscene_id not in active_cutscenes:
+		push_warning("[ProgressManager] Cutscene ID not found: " + cutscene_id)
+		return
+	CutsceneManager.play(cutscene_id)
+
+# -----------------------------------------------------------------------
+# Semantic event handlers — called by other systems describing what happened.
+# ProgressManager decides the appropriate response (e.g. which cutscene).
+# -----------------------------------------------------------------------
+
+## Called automatically when BattleManager emits battle_won.
+## Plays the win cutscene configured on the tp_point, if any.
+func _on_battle_won() -> void:
+	_play_cutscene(ConfigManager.unlock_memory_on_win)
+
+## Called by world story-event trigger areas when a player walks into one.
+## The event_id maps to a cutscene configured on that trigger node.
+func trigger_story_event(event_id: String) -> void:
+	_play_cutscene(event_id)
+
+## Called by MapTransitionManager when the player is blocked from entering an area.
+## ProgressManager decides how to respond (plays the configured lock cutscene).
+func on_area_entry_blocked(lock_id: String) -> void:
+	_play_cutscene(lock_id)
+
+## Called by BackpackUI when the player wants to replay a collected memory's story.
+## Accepts a memory_id — ProgressManager looks up the associated cutscene internally.
+func replay_memory(memory_id: String) -> void:
+	for mem in active_memories:
+		if mem.id == memory_id:
+			_play_cutscene(mem.cutscene_id)
+			break
 
 func _load_resources(path: String, type: GDScript) -> Dictionary:
 	var collection = {}
@@ -136,14 +189,18 @@ func _load_resources(path: String, type: GDScript) -> Dictionary:
 		file_name = dir.get_next()
 	return collection
 
-func collect_memory(id: String) -> void:
+func collect_memory(id: String, play_cutscene: bool = true) -> void:
 	if id not in unlocked_memory_ids:
 		unlocked_memory_ids.append(id)
 		memory_collected.emit(id)
 		data_updated.emit()
-	else:
-		# Memory already collected
-		pass
+		if play_cutscene:
+			# Play the associated cutscene if this memory has one — handled entirely here
+			# so no caller ever needs to know about cutscenes.
+			for mem in active_memories:
+				if mem.id == id:
+					_play_cutscene(mem.cutscene_id)
+					break
 
 func upgrade_player_skill(id: String) -> bool:
 	var skill = active_skills.get(id)

@@ -1099,6 +1099,99 @@ Consolidated UI resetting into a single robust `_reset_all_ui()` function that s
 
 ---
 
+## Bug 20: TP Point Invisible but Still Triggerable After Winning a Battle (FIXED)
+**Status:** ✅ FIXED
+
+### Symptoms
+- After winning a battle and returning to the main world, the tp_point visually disappears (not rendered).
+- However, walking through its former position still launches a new battle — the Area2D is still live.
+
+### Root Cause: Race Condition Between `_ready()` and `scene_added`
+
+The tp_point's self-destruction guard is in `_ready()`:
+```gdscript
+func _ready() -> void:
+    if BattleManager.is_tp_point_triggered(_get_internal_id()):
+        queue_free()   # ← self-destructs correctly if already marked
+        return
+    await get_tree().create_timer(0.5).timeout
+    _entry_cooldown_active = false   # ← Area2D becomes live after 0.5s
+```
+
+The old `_return_to_main_world()` sequence was:
+1. `SceneSwitcher.switch_scene("main_world")` — triggers a deferred scene load
+2. `await SceneSwitcher.scene_added` — resumes after `add_child(new_scene)`
+3. **`mark_tp_point_triggered(_tp_point_id)`** ← marked HERE (too late!)
+
+The problem: `add_child(new_scene)` in `SceneSwitcher._deferred_switch_scene()` calls
+`_ready()` on **all child nodes synchronously** before the next line (`scene_added.emit()`)
+executes. This means every tp_point's `_ready()` already ran its
+`is_tp_point_triggered()` check (returning `false`) **before** BattleManager even resumed
+from `await scene_added`. The node therefore survived `_ready()`, started its 0.5 s cooldown,
+and became triggerable — even though it should have been destroyed.
+
+```
+add_child(new_scene)          ← tp_point._ready() fires HERE synchronously
+  → is_tp_point_triggered()   ← false (not marked yet!) → node SURVIVES
+scene_added.emit()            ← BattleManager resumes from await
+  → mark_tp_point_triggered() ← too late, _ready() already ran
+```
+
+### Solution
+Mark the tp_point as triggered **before** calling `SceneSwitcher.switch_scene()`, so the
+registry is populated when `_ready()` performs its check during `add_child()`.
+
+```gdscript
+# OLD — in _return_to_main_world(), after await scene_added:
+if _winning_team == Team.PLAYER and not _tp_point_id.is_empty():
+    mark_tp_point_triggered(_tp_point_id)   # ← AFTER _ready() already ran
+
+# NEW — before switch_scene():
+if _winning_team == Team.PLAYER and not _tp_point_id.is_empty():
+    mark_tp_point_triggered(_tp_point_id)   # ← BEFORE any _ready() calls
+SceneSwitcher.switch_scene(_return_scene, "fade")
+```
+
+**Files Changed:**
+- `scripts/battle/main/battle_manager.gd` — Moved `mark_tp_point_triggered()` from inside
+  the `await scene_added` block to immediately before `switch_scene()`, with a win-team guard.
+  The redundant step-3 win branch was removed; the loss-offset branch was simplified to a
+  single `if _winning_team != Team.PLAYER` check.
+
+### Result
+✅ tp_point `_ready()` sees the triggered ID in the registry and calls `queue_free()` immediately.
+✅ Area2D is never activated; the trigger can never fire again.
+✅ Loss path is unaffected — the mark only occurs on `Team.PLAYER` victory.
+
+### Key Learning
+`add_child()` in Godot calls `_ready()` on every descendant **synchronously**, before the
+next line of the calling function runs. Any state that `_ready()` reads must be set *before*
+`add_child()` is called, not in a callback that fires after it.
+
+---
+
+## Bug 21: Cutscenes Playing Twice During Stage Progression (FIXED)
+**Status:** ✅ FIXED
+
+### Symptoms
+- Cutscenes would play twice in trial/test/full modes when stage progression unlocked a memory shard, and both the stage and the memory mapped to the same cutscene ID.
+
+### Root Cause
+In `ProgressManager`:
+- When stage progression occurs, it calls `collect_memory(stage.unlocks_memory_id)`.
+- By default, `collect_memory` plays the cutscene associated with that memory.
+- `_check_stage_progression` also calls `_play_cutscene(stage.cutscene_id)` directly if the stage has a cutscene ID configured.
+- When both IDs are the same, the cutscene is triggered twice in rapid succession, resulting in duplicate playback.
+
+### Solution
+- Modified `collect_memory(id: String, play_cutscene: bool = true)` to support optional cutscene playback.
+- Modified `_check_stage_progression()` to check if the stage's `cutscene_id` matches the unlocked memory's `cutscene_id`. If they match, `play_cutscene` is set to `false` when calling `collect_memory()`, preventing the duplicate playback.
+
+**Files Changed:**
+- `scripts/global/progress_manager.gd` - Modified `collect_memory()` signature and `_check_stage_progression()` to prevent duplicate playback.
+
+---
+
 ## Related Documentation
 - [`../README.md`](../README.md) - Project architecture and core systems
 - [`ARCHITECTURE.md`](ARCHITECTURE.md) - Game architecture and signal interaction graphs

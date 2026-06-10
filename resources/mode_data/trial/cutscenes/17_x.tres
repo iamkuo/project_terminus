@@ -2,8 +2,8 @@
 
 [ext_resource type="Script" uid="uid://c7505rjkk6rpg" path="res://resources/data_structures/cutscene_script.gd" id="1_c0hg5"]
 [ext_resource type="Script" uid="uid://b2sxig6otw26p" path="res://resources/data_structures/cutscene_step.gd" id="2_u1oa5"]
-[ext_resource type="Texture2D" uid="uid://bba206b6hphl2" path="res://assets/images/objects/c17-1.png" id="3_ka7vt"]
-[ext_resource type="Texture2D" uid="uid://cbwyvowpqm30e" path="res://assets/images/objects/c17-2.png" id="4_w1s56"]
+[ext_resource type="Texture2D" uid="uid://bsu7jpcpq4rmx" path="res://assets/images/objects/c17-1.png" id="3_ka7vt"]
+[ext_resource type="Texture2D" uid="uid://c2o27eherxxem" path="res://assets/images/objects/c17-2.png" id="4_w1s56"]
 
 [sub_resource type="Resource" id="Resource_to5wf"]
 script = ExtResource("2_u1oa5")
