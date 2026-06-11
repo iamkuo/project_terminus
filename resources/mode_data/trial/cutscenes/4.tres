@@ -79,7 +79,7 @@ text = "...看來吸收永恆之火可以讓我看見一些過去啊。
 texture = ExtResource("3_gvmjc")
 metadata/_custom_type_script = "uid://b2sxig6otw26p"
 
-[sub_resource type="Resource" id="Resource_2evuo"]
+[sub_resource type="Resource" id="Resource_mrxlp"]
 script = ExtResource("2_step")
 speaker = "族長"
 text = "你接下來要前往前線對吧。"
@@ -148,5 +148,5 @@ metadata/_custom_type_script = "uid://b2sxig6otw26p"
 [resource]
 script = ExtResource("1_script")
 id = "4"
-steps = Array[ExtResource("2_step")]([SubResource("Resource_7cs7t"), SubResource("Resource_gvmjc"), SubResource("Resource_kit8b"), SubResource("Resource_w0rkk"), SubResource("Resource_6hpb7"), SubResource("Resource_cog5y"), SubResource("Resource_exu4h"), SubResource("Resource_dn1hu"), SubResource("Resource_bh0dc"), SubResource("Resource_ncldx"), SubResource("Resource_2evuo"), SubResource("Resource_m3trx"), SubResource("Resource_y6bwy"), SubResource("Resource_ybbwa"), SubResource("Resource_gcu5d"), SubResource("Resource_iris2"), SubResource("Resource_10re6"), SubResource("Resource_amtow"), SubResource("Resource_p0f51")])
+steps = Array[ExtResource("2_step")]([SubResource("Resource_7cs7t"), SubResource("Resource_gvmjc"), SubResource("Resource_kit8b"), SubResource("Resource_w0rkk"), SubResource("Resource_6hpb7"), SubResource("Resource_cog5y"), SubResource("Resource_exu4h"), SubResource("Resource_dn1hu"), SubResource("Resource_bh0dc"), SubResource("Resource_ncldx"), SubResource("Resource_mrxlp"), SubResource("Resource_m3trx"), SubResource("Resource_y6bwy"), SubResource("Resource_ybbwa"), SubResource("Resource_gcu5d"), SubResource("Resource_iris2"), SubResource("Resource_10re6"), SubResource("Resource_amtow"), SubResource("Resource_p0f51")])
 metadata/_custom_type_script = "uid://c7505rjkk6rpg"

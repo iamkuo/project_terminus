@@ -1266,6 +1266,64 @@ Three issues combined:
 
 ---
 
+## Bug 25: Backpack Opens in Battle / Attack-Mode Panel Won't Close (FIXED)
+**Status:** ✅ FIXED
+
+### Symptoms
+- Tab could open the exploration backpack during battle (or during battle-adjacent UI states)
+- The unit attack-mode panel (Properties UI) sometimes could not be closed with Esc or its buttons
+- Opening pause over the attack-mode panel left the panel frozen and uncloseable
+- Main-menu game mode selector back navigation was incomplete when using the Back button signal
+
+### Root Cause
+Three input-routing conflicts:
+
+1. **Pause stole Esc globally:** `pause.gd` toggled on every `ui_cancel` via `_unhandled_input` without checking for other modal UI. When the attack-mode panel was open, Esc opened pause instead of closing the panel. Pausing the tree then froze the panel's buttons and `_unhandled_input` handler.
+2. **Backpack used `ui_focus_next`:** The backpack bound Tab to Godot's built-in `ui_focus_next` action without checking battle/dialog state, so Tab could leak through during inappropriate contexts.
+3. **SpawnUI did not consume Tab while panel open:** Returning early without `set_input_as_handled()` let Tab propagate when the attack-mode panel was open.
+
+### Solution
+- `pause.gd` defers Esc when attack-mode panel, backpack, ending screen, dialog, or main-menu sub-panels are active.
+- `properties_ui.gd` handles Esc in `_input` (runs before pause) and uses `PROCESS_MODE_ALWAYS` while open so the panel stays interactive even if pause is visible.
+- `backpack_ui.gd` blocks input during battle (`BattleManager.game_state == READY`), pause, and dialog; uses explicit `KEY_TAB` instead of `ui_focus_next`.
+- `spawn_ui.gd` marks Tab as handled when the attack-mode panel is open.
+- `main_menu.gd` routes game-mode back signal through `_on_back_button_pressed()`.
+
+**Files Changed:**
+- `scripts/global/pause.gd` - Context-aware Esc deferral
+- `scripts/battle/ui/properties_ui.gd` - `_input` Esc handling, `PROCESS_MODE_ALWAYS` while open
+- `scripts/main_world/backpack_ui.gd` - Battle/dialog/pause guards, explicit Tab binding
+- `scripts/battle/ui/spawn_ui.gd` - Consume Tab when attack-mode panel is open
+- `scripts/main_menu/main_menu.gd` - Fix game-mode back handler
+
+---
+
+## Bug 26: Minimap Not Showing After boss_1_end Cutscene (FIXED)
+**Status:** ✅ FIXED
+
+### Symptoms
+- After the `boss_1_end` cutscene ("獲得小地圖：人族區" / "前往人界"), the backpack minimap stayed blank (locked scroll) or showed the wrong region map
+- Player remained on the goblin map even though the cutscene directs them to the human world
+
+### Root Cause
+Three issues combined:
+
+1. **Stale map path detection:** `minimap.gd` read `scene_file_path` from the map node instead of `MapTransitionManager.get_current_map_path()`, which could be empty or wrong after dynamic map swaps (same class of bug as Bug 23).
+2. **No post-cutscene world transition:** `boss_1_end` unlocked the human minimap in data, but nothing moved the player to the human sub-map, so the UI kept showing the goblin-region map.
+3. **Minimap layout offsets:** The map `TextureRect` in `backpack.tscn` had large positive `offset_right` / negative `offset_bottom` values that distorted the scroll image.
+
+### Solution
+- `minimap.gd` now uses `get_current_map_path()` with fallback, listens to `map_changed` / `scene_added`, and drops per-frame polling.
+- `map_transition_manager.gd` emits `map_changed` and auto-transitions to the human map after `boss_1_end`, using the existing transition spawn marker (`SpawnPointLower`).
+- `backpack.tscn` map panel anchors reset to clean bounds.
+
+**Files Changed:**
+- `scripts/main_world/minimap.gd` - Reliable path lookup and event-driven refresh
+- `scripts/main_world/map_transition_manager.gd` - `map_changed` signal and post-`boss_1_end` transition
+- `scenes/main_world/backpack.tscn` - Fixed minimap TextureRect layout
+
+---
+
 ## Related Documentation
 - [`../README.md`](../README.md) - Project architecture and core systems
 - [`ARCHITECTURE.md`](ARCHITECTURE.md) - Game architecture and signal interaction graphs

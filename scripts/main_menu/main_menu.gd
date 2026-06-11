@@ -45,4 +45,4 @@ func _on_back_button_pressed() -> void:
 	main_buttons.show()
 
 func _on_game_mode_back_pressed() -> void:
-	main_buttons.show()
+	_on_back_button_pressed()

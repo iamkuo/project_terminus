@@ -69,6 +69,7 @@ metadata/_custom_type_script = "uid://b2sxig6otw26p"
 
 [sub_resource type="Resource" id="Resource_24fpc"]
 script = ExtResource("2_wvyuy")
+type = 3
 texture = ExtResource("8_yok83")
 metadata/_custom_type_script = "uid://b2sxig6otw26p"
 
@@ -106,20 +107,20 @@ type = 3
 texture = ExtResource("11_5y5ur")
 metadata/_custom_type_script = "uid://b2sxig6otw26p"
 
-[sub_resource type="Resource" id="Resource_g5e8h"]
+[sub_resource type="Resource" id="Resource_ouqqn"]
 script = ExtResource("2_wvyuy")
 type = 3
 texture = ExtResource("12_2p2vo")
 metadata/_custom_type_script = "uid://b2sxig6otw26p"
 
-[sub_resource type="Resource" id="Resource_i7cpa"]
+[sub_resource type="Resource" id="Resource_lg0nk"]
 script = ExtResource("2_wvyuy")
 type = 2
-text = "而每個故事，不見得都已喜劇收場。"
+text = "完"
 metadata/_custom_type_script = "uid://b2sxig6otw26p"
 
 [resource]
 script = ExtResource("1_oeywh")
 id = "boss_6_end_x"
-steps = Array[ExtResource("2_wvyuy")]([SubResource("Resource_gmacf"), SubResource("Resource_oeywh"), SubResource("Resource_la62b"), SubResource("Resource_yvok5"), SubResource("Resource_wk374"), SubResource("Resource_15gcg"), SubResource("Resource_2veig"), SubResource("Resource_g6t1j"), SubResource("Resource_24fpc"), SubResource("Resource_wvyuy"), SubResource("Resource_itid1"), SubResource("Resource_rcxww"), SubResource("Resource_cebcq"), SubResource("Resource_ehrlx"), SubResource("Resource_g5e8h"), SubResource("Resource_i7cpa")])
+steps = Array[ExtResource("2_wvyuy")]([SubResource("Resource_gmacf"), SubResource("Resource_oeywh"), SubResource("Resource_la62b"), SubResource("Resource_yvok5"), SubResource("Resource_wk374"), SubResource("Resource_15gcg"), SubResource("Resource_2veig"), SubResource("Resource_g6t1j"), SubResource("Resource_24fpc"), SubResource("Resource_wvyuy"), SubResource("Resource_itid1"), SubResource("Resource_rcxww"), SubResource("Resource_cebcq"), SubResource("Resource_ehrlx"), SubResource("Resource_ouqqn"), SubResource("Resource_lg0nk")])
 metadata/_custom_type_script = "uid://c7505rjkk6rpg"

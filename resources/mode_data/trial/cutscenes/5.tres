@@ -27,7 +27,7 @@ metadata/_custom_type_script = "uid://b2sxig6otw26p"
 
 [sub_resource type="Resource" id="Resource_4eibp"]
 script = ExtResource("2_tqwp4")
-speaker = "維利夫"
+speaker = "瑞爾夫"
 text = "哥布林也開始學會說大話了嗎。
 "
 texture = ExtResource("3_4eibp")

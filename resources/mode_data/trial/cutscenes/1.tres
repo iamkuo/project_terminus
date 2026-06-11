@@ -46,14 +46,14 @@ metadata/_custom_type_script = "uid://b2sxig6otw26p"
 [sub_resource type="Resource" id="Resource_fe3og"]
 script = ExtResource("2_5kihr")
 speaker = "維利夫"
-text = "安息吧，格莉德。"
+text = "安息吧。"
 texture = ExtResource("4_t8ul2")
 metadata/_custom_type_script = "uid://b2sxig6otw26p"
 
 [sub_resource type="Resource" id="Resource_10nsj"]
 script = ExtResource("2_5kihr")
 speaker = "維利夫"
-text = "那麼，我出發囉。"
+text = "那麼，我出發了。"
 texture = ExtResource("4_t8ul2")
 metadata/_custom_type_script = "uid://b2sxig6otw26p"
 

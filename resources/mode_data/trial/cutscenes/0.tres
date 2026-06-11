@@ -14,7 +14,31 @@
 [ext_resource type="Texture2D" uid="uid://c70mce8ps6lfm" path="res://assets/images/objects/c0-9.png" id="12_oymvd"]
 [ext_resource type="Texture2D" uid="uid://bhn71nsffc61p" path="res://assets/images/objects/c0-10.png" id="13_6w2bl"]
 
-[sub_resource type="Resource" id="Resource_step_1"]
+[sub_resource type="Resource" id="Resource_8xqlw"]
+script = ExtResource("2_jcdir")
+type = 2
+text = "故事發生在一個末日將近的大地"
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_8aj34"]
+script = ExtResource("2_jcdir")
+type = 2
+text = "自從兩百年前開始，太陽變得越來越大。"
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_y5onf"]
+script = ExtResource("2_jcdir")
+type = 2
+text = "十幾年前，人族入侵至哥布林區，並在各地建起防禦塔。"
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_8c1ug"]
+script = ExtResource("2_jcdir")
+type = 3
+texture = ExtResource("3_xjwxv")
+metadata/_custom_type_script = "uid://b2sxig6otw26p"
+
+[sub_resource type="Resource" id="Resource_31qoq"]
 script = ExtResource("2_jcdir")
 type = 2
 text = "呼...呼..."
@@ -113,7 +137,7 @@ metadata/_custom_type_script = "uid://b2sxig6otw26p"
 [sub_resource type="Resource" id="Resource_3r0sj"]
 script = ExtResource("2_jcdir")
 speaker = "維利夫"
-text = ".............不要啊!我不能連妳也失去。"
+text = ".............不!我不能連妳也失去。"
 texture = ExtResource("7_pecdr")
 metadata/_custom_type_script = "uid://b2sxig6otw26p"
 
@@ -168,5 +192,5 @@ metadata/_custom_type_script = "uid://b2sxig6otw26p"
 [resource]
 script = ExtResource("1_jncgk")
 id = "0"
-steps = Array[ExtResource("2_jcdir")]([SubResource("Resource_step_1"), SubResource("Resource_step_2"), SubResource("Resource_gjmbf"), SubResource("Resource_nwty2"), SubResource("Resource_cfkc3"), SubResource("Resource_1y1mp"), SubResource("Resource_15nbn"), SubResource("Resource_7tots"), SubResource("Resource_xdx82"), SubResource("Resource_qrgqu"), SubResource("Resource_c2g1d"), SubResource("Resource_uxecc"), SubResource("Resource_1mjct"), SubResource("Resource_jx5eh"), SubResource("Resource_3r0sj"), SubResource("Resource_qd1ik"), SubResource("Resource_0h2pg"), SubResource("Resource_hacvf"), SubResource("Resource_petuq"), SubResource("Resource_qagdx"), SubResource("Resource_a5ypr"), SubResource("Resource_diaxw")])
+steps = Array[ExtResource("2_jcdir")]([SubResource("Resource_8xqlw"), SubResource("Resource_8aj34"), SubResource("Resource_y5onf"), SubResource("Resource_8c1ug"), SubResource("Resource_31qoq"), SubResource("Resource_step_2"), SubResource("Resource_gjmbf"), SubResource("Resource_nwty2"), SubResource("Resource_cfkc3"), SubResource("Resource_1y1mp"), SubResource("Resource_15nbn"), SubResource("Resource_7tots"), SubResource("Resource_xdx82"), SubResource("Resource_qrgqu"), SubResource("Resource_c2g1d"), SubResource("Resource_uxecc"), SubResource("Resource_1mjct"), SubResource("Resource_jx5eh"), SubResource("Resource_3r0sj"), SubResource("Resource_qd1ik"), SubResource("Resource_0h2pg"), SubResource("Resource_hacvf"), SubResource("Resource_petuq"), SubResource("Resource_qagdx"), SubResource("Resource_a5ypr"), SubResource("Resource_diaxw")])
 metadata/_custom_type_script = "uid://c7505rjkk6rpg"

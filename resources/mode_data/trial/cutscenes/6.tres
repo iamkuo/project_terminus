@@ -67,7 +67,7 @@ metadata/_custom_type_script = "uid://b2sxig6otw26p"
 
 [sub_resource type="Resource" id="Resource_m0tro"]
 script = ExtResource("2_5icvq")
-text = "(獲得人界的地圖了)
+text = "(獲得小地圖：人族區)
 "
 texture = ExtResource("4_m3u5l")
 metadata/_custom_type_script = "uid://b2sxig6otw26p"

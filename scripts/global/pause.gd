@@ -1,5 +1,7 @@
 extends Control
 
+const PropertiesUIPanel = preload("res://scripts/battle/ui/properties_ui.gd")
+
 @onready var volume_master_slider: HSlider = $Panel/VBoxContainer/GridContainer/main_volume_slider
 @onready var volume_music_slider: HSlider = $Panel/VBoxContainer/GridContainer/music_slider
 @onready var volume_sfx_slider: HSlider = $Panel/VBoxContainer/GridContainer/sound_effect_slider
@@ -46,10 +48,37 @@ func _initialize_settings() -> void:
 	cheat_mode_button.button_pressed = ConfigManager.cheat_mode
 
 func _unhandled_input(event: InputEvent) -> void:
-	if event.is_action_pressed("ui_cancel"):
-		toggle_pause()
-		# Optionally consume the event to prevent multiple pause toggles
-		get_viewport().set_input_as_handled()
+	if not event.is_action_pressed("ui_cancel"):
+		return
+	if _should_defer_cancel():
+		return
+	toggle_pause()
+	get_viewport().set_input_as_handled()
+
+func _should_defer_cancel() -> bool:
+	if PropertiesUIPanel.any_open(get_tree()):
+		return true
+	if GuiManager.current_state != GuiManager.gui_state.READY:
+		return true
+
+	var scene := SceneSwitcher.current_scene
+	if not scene:
+		return false
+
+	var backpack := scene.find_child("Backpack", true, false)
+	if backpack and backpack.visible:
+		return true
+
+	var ending := scene.find_child("EndingScreen", true, false)
+	if ending and ending.visible:
+		return true
+
+	if scene.has_node("GameModeSelector") and scene.get_node("GameModeSelector").visible:
+		return true
+	if scene.has_node("AboutPanel") and scene.get_node("AboutPanel").visible:
+		return true
+
+	return false
 
 func _process(_delta: float) -> void:
 	pass

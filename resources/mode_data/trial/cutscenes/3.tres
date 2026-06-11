@@ -132,7 +132,7 @@ metadata/_custom_type_script = "uid://b2sxig6otw26p"
 [sub_resource type="Resource" id="Resource_pv4sq"]
 script = ExtResource("2_step")
 speaker = "族長"
-text = "不過沒有人親眼所見，所以無法辯其真假。"
+text = "不過沒有人親眼所見，所以無法辨其真假。"
 texture = ExtResource("3_yhtkl")
 metadata/_custom_type_script = "uid://b2sxig6otw26p"
 
@@ -154,7 +154,7 @@ metadata/_custom_type_script = "uid://b2sxig6otw26p"
 [sub_resource type="Resource" id="Resource_tp0te"]
 script = ExtResource("2_step")
 speaker = "族長"
-text = "至於你手上那的暗界之樹與人族領域的世界之樹，雖在神話中並未提及，但是應為其難以被破壞的特性，先知們將它們稱為神的產物。"
+text = "至於你手上拿的暗界之樹與人族領域的世界之樹，雖在神話中並未提及，但是應為其難以被破壞的特性，先知們將它們稱為神的產物。"
 texture = ExtResource("3_yhtkl")
 metadata/_custom_type_script = "uid://b2sxig6otw26p"
 

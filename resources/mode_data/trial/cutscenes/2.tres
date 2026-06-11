@@ -40,14 +40,14 @@ metadata/_custom_type_script = "uid://b2sxig6otw26p"
 [sub_resource type="Resource" id="Resource_cd7rp"]
 script = ExtResource("2_step")
 speaker = " 村長"
-text = "可惡，人族已經入侵到這裡了嗎。"
+text = "可惡，人族已經入侵並在各地紮營了嗎。"
 texture = ExtResource("3_i50cu")
 metadata/_custom_type_script = "uid://b2sxig6otw26p"
 
 [sub_resource type="Resource" id="Resource_sra4q"]
 script = ExtResource("2_step")
 speaker = "村長"
-text = "我們民天會遷村。維利夫，你也一起來吧。
+text = "我們明天會遷村。維利夫，你也一起來吧。
 "
 texture = ExtResource("3_i50cu")
 metadata/_custom_type_script = "uid://b2sxig6otw26p"
@@ -67,7 +67,7 @@ text = "......不行，那不是你一個人能背負的東西，仇恨會把你
 texture = ExtResource("3_i50cu")
 metadata/_custom_type_script = "uid://b2sxig6otw26p"
 
-[sub_resource type="Resource" id="Resource_usokk"]
+[sub_resource type="Resource" id="Resource_rg2hp"]
 script = ExtResource("2_step")
 speaker = "維利夫"
 text = "隨便。"
@@ -93,14 +93,14 @@ metadata/_custom_type_script = "uid://b2sxig6otw26p"
 [sub_resource type="Resource" id="Resource_wqdki"]
 script = ExtResource("2_step")
 speaker = "村長"
-text = "好吧，我不會阻止你。"
+text = "......好吧，我不會阻止你。"
 texture = ExtResource("3_i50cu")
 metadata/_custom_type_script = "uid://b2sxig6otw26p"
 
 [sub_resource type="Resource" id="Resource_xnl78"]
 script = ExtResource("2_step")
 speaker = "村長"
-text = "但身為村長，我有義務保護大家，所以我不會將遷村的位置告訴可能成為破綻的你。
+text = "但身為村長，我有義務保護大家，所以我不會將遷村的位置告訴可能成為突破口的你。
 "
 texture = ExtResource("3_i50cu")
 metadata/_custom_type_script = "uid://b2sxig6otw26p"
@@ -143,5 +143,5 @@ metadata/_custom_type_script = "uid://b2sxig6otw26p"
 [resource]
 script = ExtResource("1_script")
 id = "2"
-steps = Array[ExtResource("2_step")]([SubResource("Resource_h5gef"), SubResource("Resource_i50cu"), SubResource("Resource_v3jpy"), SubResource("Resource_2hi1l"), SubResource("Resource_s2i6h"), SubResource("Resource_cd7rp"), SubResource("Resource_sra4q"), SubResource("Resource_webor"), SubResource("Resource_hcc1h"), SubResource("Resource_usokk"), SubResource("Resource_76ibb"), SubResource("Resource_0w0d8"), SubResource("Resource_wqdki"), SubResource("Resource_xnl78"), SubResource("Resource_5ryvc"), SubResource("Resource_17vok"), SubResource("Resource_b1h4u"), SubResource("Resource_wf175"), SubResource("Resource_x7q6k")])
+steps = Array[ExtResource("2_step")]([SubResource("Resource_h5gef"), SubResource("Resource_i50cu"), SubResource("Resource_v3jpy"), SubResource("Resource_2hi1l"), SubResource("Resource_s2i6h"), SubResource("Resource_cd7rp"), SubResource("Resource_sra4q"), SubResource("Resource_webor"), SubResource("Resource_hcc1h"), SubResource("Resource_rg2hp"), SubResource("Resource_76ibb"), SubResource("Resource_0w0d8"), SubResource("Resource_wqdki"), SubResource("Resource_xnl78"), SubResource("Resource_5ryvc"), SubResource("Resource_17vok"), SubResource("Resource_b1h4u"), SubResource("Resource_wf175"), SubResource("Resource_x7q6k")])
 metadata/_custom_type_script = "uid://c7505rjkk6rpg"

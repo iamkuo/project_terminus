@@ -1,0 +1,4 @@
+FILE: scenes/main_world/main_world_goblin_map.scn
+
+FILE: scenes/main_world/main_world_human_map.scn
+

@@ -48,8 +48,11 @@ func _ready():
 	_refresh_ui()
 
 func _input(event):
-	# Handle Tab (ui_focus_next) to toggle backpack
-	if event.is_action_pressed("ui_focus_next"):
+	if _is_input_blocked():
+		return
+
+	# Handle Tab to toggle backpack (explicit key — avoids ui_focus_next leaking into battle UI)
+	if event is InputEventKey and event.pressed and event.keycode == KEY_TAB:
 		backpack_root.visible = !backpack_root.visible
 		if backpack_root.visible:
 			_refresh_ui()
@@ -65,6 +68,15 @@ func _input(event):
 		elif backpack_root.visible:
 			backpack_root.visible = false
 			get_viewport().set_input_as_handled()
+
+func _is_input_blocked() -> bool:
+	if BattleManager.game_state == BattleManager.GameState.READY:
+		return true
+	if get_tree().paused:
+		return true
+	if GuiManager.current_state != GuiManager.gui_state.READY:
+		return true
+	return false
 
 func _process(_delta):
 	pass # Logic moved to _input for better control

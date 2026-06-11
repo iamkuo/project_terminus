@@ -1,5 +1,11 @@
 extends Node2D
 
+signal map_changed(map_path: String)
+
+const POST_CUTSCENE_MAP_TRANSITIONS: Dictionary = {
+	"boss_1_end": "res://scenes/main_world/main_world_human_map.scn",
+}
+
 @export var transitions: Array[TransitionConfig] = []
 var is_transitioning: bool = false
 var transition_cooldown: float = 0.0
@@ -10,6 +16,8 @@ var _current_map_path: String = ""
 func _ready() -> void:
 	_sync_current_map_path()
 	_connect_current_map_zones()
+	if not CutsceneManager.cutscene_finished.is_connected(_on_cutscene_finished):
+		CutsceneManager.cutscene_finished.connect(_on_cutscene_finished)
 
 func get_current_map_path() -> String:
 	return _current_map_path
@@ -92,6 +100,7 @@ func _swap_map_scene(target_scene_path: String) -> Node:
 	var new_map = new_scene.instantiate()
 	map_container.add_child(new_map)
 	_current_map_path = target_scene_path
+	map_changed.emit(_current_map_path)
 	return new_map
 
 func _sync_current_map_path() -> void:
@@ -101,6 +110,34 @@ func _sync_current_map_path() -> void:
 
 	var current_map = map_container.get_child(0)
 	_current_map_path = current_map.scene_file_path
+	if _current_map_path.is_empty():
+		_current_map_path = "res://scenes/main_world/main_world_goblin_map.scn"
+	map_changed.emit(_current_map_path)
+
+func _on_cutscene_finished(cutscene_id: String) -> void:
+	var target_path: String = POST_CUTSCENE_MAP_TRANSITIONS.get(cutscene_id, "")
+	if target_path.is_empty() or _current_map_path == target_path:
+		return
+	var spawn_marker := _get_spawn_marker_for_target(target_path)
+	if spawn_marker.is_empty():
+		push_warning("[MapTransitionManager] No spawn marker for post-cutscene map: ", target_path)
+		return
+	var player := _find_player()
+	if not player:
+		return
+	await _execute_map_transition(player, _make_transition_config(target_path, spawn_marker))
+
+func _get_spawn_marker_for_target(target_path: String) -> String:
+	for transition in transitions:
+		if transition.target_scene == target_path:
+			return transition.spawn_marker
+	return ""
+
+func _make_transition_config(target_path: String, spawn_marker: String) -> TransitionConfig:
+	var config := TransitionConfig.new()
+	config.target_scene = target_path
+	config.spawn_marker = spawn_marker
+	return config
 
 func _find_player() -> Node2D:
 	var player = get_node_or_null("%Player")

@@ -74,10 +74,11 @@ func show_for_unit(unit: UnitBase):
 	title_label.text = "[ %s ]" % (unit.stats.display_name if unit.stats.display_name != "" else unit.stats.unit_id)
 	z_index = 100
 	mouse_filter = Control.MOUSE_FILTER_STOP
+	process_mode = Node.PROCESS_MODE_ALWAYS
 	visible = true
 	_update_button_highlights()
 
-func _unhandled_input(event: InputEvent) -> void:
+func _input(event: InputEvent) -> void:
 	if not is_panel_open():
 		return
 	if event.is_action_pressed("ui_cancel"):
@@ -130,6 +131,7 @@ func hide_panel():
 	_panel_open = false
 	visible = false
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
+	process_mode = Node.PROCESS_MODE_INHERIT
 	z_index = 0
 	if parent_unit:
 		parent_unit.deselect_unit()

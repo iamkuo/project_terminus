@@ -622,18 +622,19 @@ The `ProgressManager` initializes resources in this order:
 
 ## 11. Minimap System
 
-- **Role**: Sidebar widget showing a static layout image of the current level, gated by memory unlocks
+- **Role**: Sidebar widget showing a static layout image of the current sub-map, gated by cutscene playback
 - **Key Properties (Editor Exports)**:
   - `goblin_map_texture: Texture2D` — map image for the goblin world (`map_goblin.png`)
   - `human_map_texture: Texture2D` — map image for the human world (`map_human.png`)
-  - `locked_map_texture: Texture2D` — map image to display when locked
-  - `goblin_memory_id: String` — memory ID required to view the goblin map
-  - `human_memory_id: String` — memory ID required to view the human map
-- **Dynamic Switching & Memory Locks**:
-  - The script checks the path of the current sub-scene under `MapContainer` to choose the active map texture and active memory lock ID.
-  - If the memory ID exists in `ProgressManager.active_memories` but is not yet unlocked in `unlocked_memory_ids`, the widget displays the custom `locked_map_texture`.
-  - If the memory ID is empty, or not found/unregistered in `active_memories`, the normal map texture is shown directly.
-- **Lives in**: Directly attached to the `TextureRect` on the right side of the `SkillsTab` in `backpack.tscn`
+  - `locked_map_texture: Texture2D` — blank scroll shown before the region map is unlocked
+  - `goblin_cutscene_id: String` — cutscene that unlocks the goblin map (trial: `"2"`)
+  - `human_cutscene_id: String` — cutscene that unlocks the human map (trial: `"boss_1_end"`)
+- **Dynamic Switching & Cutscene Locks**:
+  - `minimap.gd` reads the active path from `MapTransitionManager.get_current_map_path()` (not raw `scene_file_path`).
+  - Chooses goblin vs human texture from the path; shows `locked_map_texture` until the matching cutscene ID is in `CutsceneManager.played_cutscenes`.
+  - Listens to `MapTransitionManager.map_changed`, `CutsceneManager.cutscene_finished`, and `SceneSwitcher.scene_added` to refresh.
+- **Post-cutscene world flow**: `MapTransitionManager` auto-transitions to the human sub-map after `boss_1_end` (spawn: `SpawnPointLower`).
+- **Lives in**: `TextureRect` on the right side of `SkillsTab` in `backpack.tscn`
 
 ---
 
