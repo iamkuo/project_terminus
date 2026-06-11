@@ -9,8 +9,7 @@ const PropertiesUIPanel = preload("res://scripts/battle/ui/properties_ui.gd")
 var card_scene: PackedScene = preload("res://scenes/battle/ui/card.tscn")
 var active_cards: Array[Button] = []
 var _mouse_passthrough_active: bool = false
-
-func _ready():
+func _ready(): 
 	# Auto-generate cards from unit stats resources
 	_generate_cards()
 
@@ -66,10 +65,12 @@ func _is_properties_panel_open() -> bool:
 	return PropertiesUIPanel.any_open(get_tree())
 
 func _input(event: InputEvent) -> void:
+
 	if event.is_action_pressed("ui_accept") or (event is InputEventKey and event.keycode == KEY_TAB and event.pressed):
 		if _is_properties_panel_open():
 			get_viewport().set_input_as_handled()
 			return
+		
 		visible = not visible
 		get_viewport().set_input_as_handled()
 		return

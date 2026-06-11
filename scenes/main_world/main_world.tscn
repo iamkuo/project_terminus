@@ -33,7 +33,7 @@ y_sort_enabled = true
 unique_name_in_owner = true
 position = Vector2(-4316, 3940)
 rotation = 0.0
-speed = 1000.0
+speed = 200.0
 
 [node name="GUILayer" type="CanvasLayer" parent="." unique_id=451286200]
 
